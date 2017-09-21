@@ -1,0 +1,131 @@
+/* ---------------------------------------------------------
+   Author's styles
+   ---------------------------------------------------------*/
+   
+   /* Remove the navbar's default margin-bottom and rounded borders */ 
+   .navbar {
+    margin-bottom: 0;
+    border-radius: 0;
+  }
+  
+  /* Set height of the grid so .sidenav can be 100% (adjust as needed) */
+  .row.content {height: 1030.5px}
+  
+  /* Set gray background color and 100% height */
+  .sidenav {
+    padding-top: 20px;
+    padding-bottom: 20px;
+    background-color: #f1f1f1;
+    height: 100%;
+  }
+  
+  /* On small screens, set height to 'auto' for sidenav and grid */
+  @media screen and (max-width: 767px) {
+    .sidenav {
+      height: auto;
+      padding: 15px;
+    }
+    .row.content {height:auto;} 
+  }
+
+  .button {
+    background-color: #4CAF50; /* Green */
+    border: none;
+    color: white;
+    padding: 10px 10px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    width: 15%;
+  }
+  
+  .editbutton {
+    background-color: #222222; 
+    border: none;
+    border-radius: 8px;
+    color: white;
+    padding: 10px 10px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    margin: 4px 2px;
+    cursor: pointer;
+  }
+  
+/*  th {
+    background-color: #4CAF50;
+    color: white;
+  }
+  
+  th, td {
+    text-align: left;
+    padding: 8px;
+    border: 1px solid black
+  }*/
+
+ .table > tbody > tr > td {
+   vertical-align: middle;
+ }
+
+ input[type="password"] {
+  color: #222222;
+ }
+ 
+ ul.a {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  border: 1px solid #555;
+}
+
+li.a {
+  display: block;
+  color: #000;
+  padding: 8px 16px;
+  text-decoration: none;
+  text-align: center;
+  border-bottom: 1px solid #555;
+}
+
+li.a:last-child {
+  border-bottom: none;
+}
+
+/* ---------------------------------------------------------
+   Print styles
+   ---------------------------------------------------------*/
+   @media print {
+    * {
+      color:#000 !important;
+      box-shadow:none !important;
+      text-shadow:none !important;
+      background:transparent !important;
+    }
+    html { background-color:#fff; }
+    /* Hide navigation */
+    nav { display:none; }
+
+    /* Show link destinations in brackets after the link text */
+    a[href]:after { content: " (" attr(href) ") "; }
+    a[href] {
+      font-weight:bold;
+      text-decoration:underline;
+      color:#06c;
+      border:none;
+    }
+    /* Don't show link destinations for JavaScript or internal links */ 
+    a[href^="javascript:"]:after, a[href^="#"]:after { content:""; }
+    
+    /* Show abbr title value in brackets after the text */
+    abbr[title]:after { content: " (" attr(title) ")"; }
+
+    figure { 
+      margin-bottom:1em; 
+      overflow:hidden;
+    }
+
+    figure img { border:1px solid #000; }
+  }

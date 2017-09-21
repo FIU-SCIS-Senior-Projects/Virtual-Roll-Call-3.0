@@ -1,0 +1,116 @@
+<div style="margin: auto; width: 75%">
+	<h3>{{selected_cat}}</h3>
+	<hr>
+
+</div>
+
+<div style="margin: auto; width: 75%" ng-init='getActiveDocuments(id)'>
+	<div class='panel panel-primary'>
+		<div class='panel-heading'>Pinned Documents</div>
+
+		<div class='panel-body'>
+			<div class="row">
+				<div class="cat col-lg-4" ng-repeat='d in pinned_documents'>
+
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							{{d.name}}
+							<span class="badge badge-warning" style="background-color: #f0ad4e;">{{d.status}}</span>
+							<!--<h3 class="panel-title">Panel title</h3>-->
+						</div>
+						<div class="panel-body">
+
+							<div class="row">
+								<div class="col-md-3">
+									<a target="_blank" ng-click="document_log(id,d.id,'pinned', d.status)" href='../app/php/download-document.php?upload_name={{d.upload_name}}'>
+										<!-- <a href='../app/php/upload/{{d.upload_name}}'> -->
+										<!--<img border="0" src="img/document_icon.png" alt="File Icon" width="100" height="140">-->
+										<i class="fa fa-file-text fa-5x" style="color: #2780e3;"></i>
+										<br />
+										<br />
+									</a>
+								</div>
+								<div class="col-md-9">
+
+									<p>
+										{{d.doc_description}}
+									</p>
+
+								</div>
+							</div>
+
+							<div class="row">
+								<div class="col-md-9">
+									<p style="font-size: small; color: #2780e3">
+										By click on the check mark, I acknowledge I have read and understand the content of this document.
+									</p>
+								</div>
+								<div class="col-md-3">
+									<input style="height: 30px;width: 30px;" type="checkbox" class="form-check-input pull-right" ng-model="d.isDone" ng-disabled="d.doneDisable" ng-click="documentStatusUpdate(id,d.id,'pinned', d.status)">
+								</div>
+							</div>
+
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class='panel panel-primary'>
+		<div class='panel-heading'>Unpinned Documents</div>
+
+		<!-- TO DO: Overflow not detected until page reloads -->
+		<div class='panel-body'>
+			<div class="row">
+				<div class="cat col-lg-4" ng-repeat='d in unpinned_documents'>
+
+
+
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							{{d.name}}
+							<span class="badge badge-warning" style="background-color: #f0ad4e;">{{d.status}}</span>
+							<!--<h3 class="panel-title">Panel title</h3>-->
+						</div>
+						<div class="panel-body">
+
+							<div class="row">
+								<div class="col-md-3">
+									<a target="_blank" ng-click="document_log(id,d.id,'unpinned',d.status)" href='../app/php/download-document.php?upload_name={{d.upload_name}}'>
+										<!-- <a href='../app/php/upload/{{d.upload_name}}'> -->
+										<!--<img border="0" src="img/document_icon.png" alt="File Icon" width="100" height="140">-->
+										<i class="fa fa-file-text fa-5x" style="color: #2780e3;"></i>
+										<br />
+										<br />
+									</a>
+								</div>
+								<div class="col-md-9">
+
+									<p>
+										{{d.doc_description}}
+									</p>
+
+								</div>
+							</div>
+
+							<div class="row">
+								<div class="col-md-9">
+									<p style="font-size: small; color: #2780e3">
+										By click on the check mark, I acknowledge I have read and understand the content of this document.
+									</p>
+								</div>
+								<div class="col-md-3">
+									<input style="height: 30px;width: 30px;" type="checkbox" class="form-check-input pull-right" ng-model="d.isDone" ng-disabled="d.doneDisable" ng-click="documentStatusUpdate(id,d.id,'unpinned',d.status)">
+								</div>
+							</div>
+
+						</div>
+					</div>
+					
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

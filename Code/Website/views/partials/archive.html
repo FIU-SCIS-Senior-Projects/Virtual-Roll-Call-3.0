@@ -1,0 +1,29 @@
+
+<div class="col-sm-8 text-left">
+  <h3>Deletion of the archive documents</h3>
+  <hr>
+
+  <!-- success/error message for reset password function -->
+  <div uib-alert ng-repeat="a in alert.alerts" ng-class="'alert-' + a.type" close="alert.closeAlert($index)">{{a.msg}}</div>
+
+  <!-- CHANGE USER PASSWORD PANEL -->
+  <div class="panel panel-primary">
+    <div class="panel-body">
+      <div>
+        <form ng-submit='deleteArchive()'>
+          <div>
+             <label for="from">From</label>
+                <input type="text" ng-model="from" mydatepicker>
+                
+                <label for="to">to</label>
+                <input type="text" ng-model="to" mydatepickerto> 
+                <button>Submit</button>
+         </div>
+            
+        </form>
+          <div><label>Files deleted</label></div>
+          <div ng-repeat="files in files_deleted" >{{files.name}} | {{files.file}}</div>
+      </div>
+    </div>
+  </div>
+</div>

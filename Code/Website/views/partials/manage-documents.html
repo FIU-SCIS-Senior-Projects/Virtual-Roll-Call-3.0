@@ -1,0 +1,127 @@
+<div class='col-sm-8 text-left'> 
+	<h3>Manage Documents</h3>
+	<hr>
+
+	<!-- Upload Document Panel -->
+	<div class='panel panel-primary' ng-init='getCategories()'>
+		<div class='panel-heading'>Upload Documents</div>
+		<div class='panel-body'>
+			<div>
+
+				<!-- Upload Document Form -->
+				<form action="../app/php/upload-document.php" method="post" enctype="multipart/form-data" target="dummyframe">
+					<label>File <span class="glyphicon glyphicon-file"></span></label>
+					<br>
+					<input type="file" name='document' id='document'required>
+					<br>
+					<label>Document Name <span class="glyphicon glyphicon-file"></span></label>
+					<br>
+					<input type="text" name='document_name' required>
+					<br>
+					<br>
+					<label>Document Description <span class="glyphicon glyphicon-file"></span></label>
+					<br>
+					<textarea rows="4" name='document_description'></textarea>
+					<br>
+					<br>
+					<label>Category <span class="glyphicon glyphicon-list-alt"></span></label>
+					<br>
+					<select name="category_id" value='{{category.id}}' ng-options='category as category.name for category in categories track by category.id' ng-model='selected_category'>
+					</select>
+					<br>
+					<br>
+					<input type="checkbox" name='pinned' value="1">
+					<label>Pin Document <span class='glyphicon glyphicon-pushpin'></span></label> 
+					<input type="hidden" name="uploaded_by" value='{{name}}'>
+					<br>
+					<br>
+					<button type='submit' class='btn btn-success' ng-click="refresh()"><span class="glyphicon glyphicon-upload"></span> Upload</button>
+					<br>
+				</form>
+			</div>
+		</div>
+	</div>
+	
+	<div class='panel panel-primary' ng-init='getDocuments()'>
+		<div class='panel-heading'>Edit Documents</div>
+
+		<!-- TO DO: Overflow not detected until page reloads -->
+		<div class='panel-body' style="height:350px; overflow-y:scroll">
+			<div>
+				<table class="table table-striped table-hover" style='margin:auto; width:100%'>
+					<form class="form-inline">
+						<div class="form-group">
+							<!-- <label>Category</label> -->
+							<!-- <select ng-options="cat.name for cat in categories" ng-model="cat_filter"> -->
+							<label>Search</label>
+							<input type="text" ng-model="search" class="form-control" placeholder="Search">
+							</select>
+						</div>
+					</form>      
+					<thead>
+						<tr>
+							<th class="text-center">#</th>
+							<th ng-click="sortTable('name')">Document Name</th>
+							<th ng-click="sortTable('cat_name')">Category</th>
+							<th ng-click="sortTable('date')">Upload Date</th>
+							<th ng-click="sortTable('pinned')">Pinned</th>
+							<th ng-click="sortTable('uploadedBy')">Uploaded By</th>
+							<th ng-click="sortTable('archived')">Archived</th>
+							<th class="text-center">Edit</th>
+						</tr>
+					</thead>
+					<tbody>
+						<!-- <tr ng-repeat='d in documents | orderBy:orderBy |filter:cat_filter.name'> -->
+						<tr ng-repeat='d in documents | orderBy:orderBy |filter:search'>
+							<td class='text-center'>{{$index + 1}}</td>
+							<td>{{d.name}}</td>
+							<td>{{d.cat_name}}</td>
+							<td>{{d.date}}</td>
+							<td>{{d.pinned}}</td>
+							<td>{{d.uploadedBy}}</td>
+							<td>{{d.archived}}</td>
+							<td class='text-center'><button class="btn-default" ng-click="editDocument(d.id,d.name,d.pinned,d.cat_name)"><span class="glyphicon glyphicon-edit"></span> Edit</button></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>	
+	<div class="modal fade" id="editModal" role="dialog">
+		<div class="modal-dialog">
+			
+			<!-- Modal content-->
+			<div class="modal-content">
+				<div class="modal-header" style="padding:15px 15px;">
+					<button type="button" class="close" data-dismiss="modal" ng-click='updateErrorMessage = updateSuccessMessage = false'>&times;</button>
+					<h4><span class="glyphicon glyphicon-pencil"></span> Edit Document</h4>
+				</div>
+				<div class="modal-body" style="padding:40px 50px;">
+					<br>
+					<form role="form" ng-submit='updateDocument()'>
+						<div class="form-group">
+							<label>Document Name</label>
+							<input type="text" class="form-control" ng-model='doc_name' required>
+						</div>
+						<div class="form-group" >
+							<label>Categories</label>
+                            <select class="form-control" name="category_id" 
+                                    ng-options='category as category.name for category in categories track by category.name' ng-model='doc_cat_name'>
+					</select>
+						</div>
+						<div class="form-group">
+							<label>Pinned</label>
+							<input type="checkbox" class="form-control"  ng-model='doc_pinned' >
+						</div>
+						
+						<br>
+						<!-- TO DO: Don't show successful update message when no changes were made to the user -->
+						<button type="submit" class="btn btn-success btn-block">Update</button>
+						<br>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div> 
+	<iframe width="0" height="0" border="0" name="dummyframe" id="dummyframe" style="display:none"</iframe>
+</div>
