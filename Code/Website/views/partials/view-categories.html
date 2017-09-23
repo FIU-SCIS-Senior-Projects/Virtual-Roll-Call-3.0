@@ -1,4 +1,4 @@
-<div ng-init='getCategories()'>
+<div ng-init='getCategories(); getPendingDocuments(id, c.name);'>
   <div class="container">
     <h3>DOCUMENT CATEGORIES</h3>
     <hr>
@@ -12,8 +12,8 @@
         <div>
           <a class="archive-link" href='#/documents/{{c.name}}/archived'><i class="fa fa-archive fa-fw" aria-hidden="true"></i>&nbsp; Archived</a>
         </div>
-        <div ng-init='getPendingDocuments(id, c.name)'>
-          Unread Documents: {{ pending_count[c.name]? pending_count[c.name] : 0 }}
+        <div >
+          Pending Documents: {{ pending_count[c.name]? pending_count[c.name] : 0 }}
         </div>
       </div>
     </div>

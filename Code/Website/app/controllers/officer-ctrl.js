@@ -16,6 +16,7 @@ officerModule.controller('officerCtrl', ['$scope', 'localStorageService', 'dataS
     $scope.password_pattern = '^[a-zA-Z0-9]{8,}$';
     $scope.pattern_descr = 'Must contain at least 8 or more characters. Only alphanumeric characters allowed.';
 
+
     $scope.k = getPendingDocuments(id);
 
     /***** SHARED FUNCTIONS *****/
@@ -39,6 +40,10 @@ officerModule.controller('officerCtrl', ['$scope', 'localStorageService', 'dataS
    * GET ACTIVE DOCUMENTS *
    ***********************/
     $scope.getActiveDocuments = function (user_id) {
+
+
+          getPendingDocuments(id);
+
 
 
       $scope.selected_cat = $routeParams.selectedCategory;
@@ -97,9 +102,8 @@ officerModule.controller('officerCtrl', ['$scope', 'localStorageService', 'dataS
     /***********************
    * GET PENDING DOCUMENTS COUNT*
    ***********************/
-    function getPendingDocuments (user_id, cat_name) {
+    function getPendingDocuments (user_id) {
 
-      var category = cat_name;
       //$scope.selected_cat = $routeParams.selectedCategory;
 
       dataService.viewDocuments(user_id)
@@ -127,6 +131,7 @@ officerModule.controller('officerCtrl', ['$scope', 'localStorageService', 'dataS
             }
 
           }
+
             $scope.pending_count = dict
         },
         function (error) {
@@ -184,8 +189,14 @@ officerModule.controller('officerCtrl', ['$scope', 'localStorageService', 'dataS
     $scope.document_log = function (user_id, document_id, list_name, status) {
       dataService.documentSaveLog(user_id, document_id);
 
-      if (status == 'Pending')
+      if (status == 'Pending'){
         $scope.documentStatusUpdate(user_id, document_id, list_name, status);
+        getPendingDocuments(id)
+      }
+
+
+
+
     }
 
     $scope.documentStatusUpdate = function (user_id, document_id, list_name, status) {
