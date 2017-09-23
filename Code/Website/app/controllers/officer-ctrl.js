@@ -16,6 +16,8 @@ officerModule.controller('officerCtrl', ['$scope', 'localStorageService', 'dataS
     $scope.password_pattern = '^[a-zA-Z0-9]{8,}$';
     $scope.pattern_descr = 'Must contain at least 8 or more characters. Only alphanumeric characters allowed.';
 
+    $scope.k = getPendingDocuments(id);
+
     /***** SHARED FUNCTIONS *****/
     var sharedCtrl = $controller('sharedCtrl', { $scope: $scope });
     sharedCtrl.redirect($scope.login);
@@ -32,10 +34,12 @@ officerModule.controller('officerCtrl', ['$scope', 'localStorageService', 'dataS
       sharedCtrl.logout();
     }
 
+
     /***********************
    * GET ACTIVE DOCUMENTS *
    ***********************/
     $scope.getActiveDocuments = function (user_id) {
+
 
       $scope.selected_cat = $routeParams.selectedCategory;
 
@@ -47,6 +51,9 @@ officerModule.controller('officerCtrl', ['$scope', 'localStorageService', 'dataS
           //initialize an empty array to store results from the database
           var pinned_documents = [];
           var unpinned_documents = [];
+
+          //add var to count pending documents
+          var juan = 0;
 
           //for each category in the result
           for (var x in data) {
@@ -61,12 +68,16 @@ officerModule.controller('officerCtrl', ['$scope', 'localStorageService', 'dataS
               tmp.status = data[x].status;
               tmp.isDone = data[x].status == "Done" ? true : false;
               tmp.doneDisable = data[x].status == "Pending" || data[x].status == "Done" ? true : false;
+              if(data[x].status == "Pending"){
+                juan = 44;
+              }
               if (data[x].pinned == 1) {
                 pinned_documents.push(tmp);
               }
               else {
                 unpinned_documents.push(tmp);
               }
+
             }
           }
 
@@ -74,6 +85,49 @@ officerModule.controller('officerCtrl', ['$scope', 'localStorageService', 'dataS
           $scope.pinned_documents = pinned_documents;
           $scope.unpinned_documents = unpinned_documents;
 
+        //  $scope.pending_count = juan;
+
+        },
+        function (error) {
+          console.log('Error: ' + error);
+        });
+
+    };
+
+    /***********************
+   * GET PENDING DOCUMENTS COUNT*
+   ***********************/
+    function getPendingDocuments (user_id, cat_name) {
+
+      var category = cat_name;
+      //$scope.selected_cat = $routeParams.selectedCategory;
+
+      dataService.viewDocuments(user_id)
+        .then(
+        function (data) {
+
+          //add var to count pending documents
+          var archive_files = 0;
+          var bolo = 0;
+          var internal_memos = 0;
+
+          var dict = {};
+
+          //for each category in the result
+          for (var x in data) {
+            //create an object and set object properties (i.e. documents data)
+            if(data[x].status == "Pending"){
+              if(data[x].cat_name in dict){
+                dict[data[x].cat_name]++;
+              }
+              else{
+                dict[data[x].cat_name] = 1;
+              }
+
+            }
+
+          }
+            $scope.pending_count = dict
         },
         function (error) {
           console.log('Error: ' + error);
@@ -126,7 +180,7 @@ officerModule.controller('officerCtrl', ['$scope', 'localStorageService', 'dataS
         });
 
     };
-    
+
     $scope.document_log = function (user_id, document_id, list_name, status) {
       dataService.documentSaveLog(user_id, document_id);
 

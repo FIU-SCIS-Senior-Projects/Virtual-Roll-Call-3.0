@@ -2,6 +2,9 @@ sharedModule.controller('sharedCtrl', ['$scope', 'sharedService', 'localStorageS
 
   var self = this;
 
+  //ar officerCtrl = $controller('officerCtrl', { $scope: $scope });
+  //officerCtrl.redirect($scope.login);
+
   /***** GLOBALS *****/
   $scope.password_pattern = '^[a-zA-Z0-9]{8,}$';
   $scope.pattern_descr = 'Must contain at least 8 or more characters. Only alphanumeric characters allowed.';
@@ -114,6 +117,7 @@ sharedModule.controller('sharedCtrl', ['$scope', 'sharedService', 'localStorageS
 
   /***** GET ALL CATEGORIES *****/
   self.getCategories = function () {
+    //getPendingDocuments();
     sharedService.getCategories()
       .then(
       function (data) {
@@ -219,5 +223,3 @@ sharedModule.controller('sharedCtrl', ['$scope', 'sharedService', 'localStorageS
   return self;
 
 }]);
-
-

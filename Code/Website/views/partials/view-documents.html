@@ -1,7 +1,7 @@
 <div style="margin: auto; width: 75%">
 	<h3>{{selected_cat}}</h3>
 	<hr>
-
+  <h4>Pending Documents: {{ pending_count[selected_cat]? pending_count[selected_cat] : 0 }}</h4>
 </div>
 
 <div style="margin: auto; width: 75%" ng-init='getActiveDocuments(id)'>
@@ -108,7 +108,7 @@
 
 						</div>
 					</div>
-					
+
 				</div>
 			</div>
 		</div>
