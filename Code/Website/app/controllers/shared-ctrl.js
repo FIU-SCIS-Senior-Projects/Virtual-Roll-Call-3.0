@@ -114,6 +114,7 @@ sharedModule.controller('sharedCtrl', ['$scope', 'sharedService', 'localStorageS
 
   /***** GET ALL CATEGORIES *****/
   self.getCategories = function () {
+    //getPendingDocuments();
     sharedService.getCategories()
       .then(
       function (data) {
@@ -219,5 +220,3 @@ sharedModule.controller('sharedCtrl', ['$scope', 'sharedService', 'localStorageS
   return self;
 
 }]);
-
-

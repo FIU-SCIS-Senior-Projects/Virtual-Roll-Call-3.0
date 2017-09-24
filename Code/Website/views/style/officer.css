@@ -4,7 +4,7 @@
 
   .navbar {
     border-radius: 0;
-  }   
+  }
 
   a, a:hover{
     /*color: #FFFFFF;*/
@@ -24,7 +24,7 @@
     transition: all .1s ease-in-out;
   }
 
-  .cat-holder:hover { 
+  .cat-holder:hover {
     transform: scale(1.05);
   }
 
@@ -40,6 +40,29 @@
     font-size: 1.5em;
     background-color: #0d67c1;
   }
+
+
+
+  .cat-pendingCount[data-badge]:after {
+     content:attr(data-badge);
+     position:absolute;
+     top:-10px;
+     right:-10px;
+     font-size:1.5em;
+     background:red;
+     color:white;
+     width:25px;height:25px;
+     text-align:center;
+     line-height:22px;
+     border-radius:50%;
+     box-shadow:0 0 1px #333;
+  }
+
+  .cat-pendingCount[data-badge="0"]:after {
+    content: none;
+    }
+
+
 
   .archive-link{
     color: orange;
@@ -68,14 +91,14 @@
       color:#06c;
       border:none;
     }
-    /* Don't show link destinations for JavaScript or internal links */ 
+    /* Don't show link destinations for JavaScript or internal links */
     a[href^="javascript:"]:after, a[href^="#"]:after { content:""; }
-    
+
     /* Show abbr title value in brackets after the text */
     abbr[title]:after { content: " (" attr(title) ")"; }
 
-    figure { 
-      margin-bottom:1em; 
+    figure {
+      margin-bottom:1em;
       overflow:hidden;
     }
 
