@@ -1,6 +1,6 @@
 //CONTROLLER for login
 loginModule.controller('loginCtrl', ['$scope', 'localStorageService', 'dataService', '$window', '$controller', function($scope, localStorageService, dataService, $window, $controller) {
-  
+
   /***** SHARED FUNCTIONS *****/
   var sharedCtrl = $controller('sharedCtrl', {$scope: $scope});
 
@@ -13,19 +13,19 @@ loginModule.controller('loginCtrl', ['$scope', 'localStorageService', 'dataServi
   $scope.getSiteNames = function(){
     sharedCtrl.getSiteNames();
   };
-  
+
   //when login button is clicked...
   $scope.login = function(){
 
       //get values from the login input fields
       var username = $scope.username;
       var password = $scope.password;
-      
+
       var count = $scope.login_count[$scope.login_count.length-1];
       //authenticate user
       dataService.login(username, password)
       .then(
-          //http post request succeeded 
+          //http post request succeeded
           function(data){
              //if username/password found in the database
              if(data['Username'] && data['Password']){
@@ -34,6 +34,7 @@ loginModule.controller('loginCtrl', ['$scope', 'localStorageService', 'dataServi
                localStorageService.set('id', data['userID']);
                localStorageService.set('fname', data['First_Name']);
                localStorageService.set('lname', data['Last_Name']);
+               localStorageService.set('night-mode', false);
 
                //route to home page according to role
                if(data['Role'] === 'Administrator'){
@@ -57,11 +58,11 @@ loginModule.controller('loginCtrl', ['$scope', 'localStorageService', 'dataServi
           //http post request failed
           function(error){
             console.log('Error: ' + error);
-          });          
+          });
   };
-  
+
   $scope.logout = function (){
       sharedCtrl.logout();
   };
-  
+
 }]);

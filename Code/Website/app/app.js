@@ -61,8 +61,8 @@ supervisorModule.config(function($routeProvider){
 officerModule.config(function($routeProvider){
 	$routeProvider
 	.when('/categories', {
-		templateUrl: 'partials/view-categories.html',
-		controller: 'officerCtrl'
+		templateUrl: 'partials/view-categories.html'//,
+		//controller: 'officerCtrl'
     })
 	.when('/documents/:selectedCategory', {
 		templateUrl: 'partials/view-documents.html'

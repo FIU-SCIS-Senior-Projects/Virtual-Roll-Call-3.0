@@ -26,6 +26,7 @@ sharedModule.controller('sharedCtrl', ['$scope', 'sharedService', 'localStorageS
     localStorageService.set('id', "");
     localStorageService.set('fname', "");
     localStorageService.set('lname', "");
+    localStorageService.clearAll();
     delete $scope.login;
   };
 

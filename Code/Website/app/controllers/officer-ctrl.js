@@ -15,9 +15,10 @@ officerModule.controller('officerCtrl', ['$scope', 'localStorageService', 'dataS
     $scope.id = id;
     $scope.password_pattern = '^[a-zA-Z0-9]{8,}$';
     $scope.pattern_descr = 'Must contain at least 8 or more characters. Only alphanumeric characters allowed.';
-    $scope.background_color = getBackgroundColor(); //getCurrentDisplayMode();
+    $scope.background_color = getBackgroundColor();
     $scope.text_color = getTextColor();
-    $scope.displayMode = "juan";
+    $scope.display_mode = getDisplayMode();
+    $scope.night_mode = localStorageService.get('nightMode');
     getPendingDocuments(id); //$scope.k = getPendingDocuments(id);
 
     /***** SHARED FUNCTIONS *****/
@@ -41,11 +42,6 @@ officerModule.controller('officerCtrl', ['$scope', 'localStorageService', 'dataS
    * GET ACTIVE DOCUMENTS *
    ***********************/
     $scope.getActiveDocuments = function (user_id) {
-
-
-          getPendingDocuments(id);
-
-
 
       $scope.selected_cat = $routeParams.selectedCategory;
 
@@ -91,6 +87,7 @@ officerModule.controller('officerCtrl', ['$scope', 'localStorageService', 'dataS
           $scope.pinned_documents = pinned_documents;
           $scope.unpinned_documents = unpinned_documents;
 
+            getPendingDocuments(id);
         //  $scope.pending_count = juan;
 
         },
@@ -145,7 +142,7 @@ officerModule.controller('officerCtrl', ['$scope', 'localStorageService', 'dataS
    * Toggle between day and night mode*
    ***********************/
      $scope.changeDisplayMode = function changeDisplayMode() {
-       $scope.displayMode = "lopez";
+
        //$scope.background_color = "black";
        var nightMode = localStorageService.get('nightMode');
        if(nightMode == true)
@@ -162,8 +159,9 @@ officerModule.controller('officerCtrl', ['$scope', 'localStorageService', 'dataS
        }
 
 
-       $scope.displayMode = localStorageService.get('nightMode');
-       $scope.$apply();
+       $scope.display_mode = getDisplayMode();
+       $scope.night_mode = localStorageService.get('nightMode');
+
 
      };
 
@@ -175,7 +173,7 @@ officerModule.controller('officerCtrl', ['$scope', 'localStorageService', 'dataS
         else {
             return "";
         }
-        $scope.$apply();
+
      };
 
      function getTextColor(){
@@ -186,8 +184,19 @@ officerModule.controller('officerCtrl', ['$scope', 'localStorageService', 'dataS
        else {
            return "";
        }
-       $scope.$apply();
+
      };
+
+     function getDisplayMode(){
+       if(localStorageService.get('nightMode')){
+         return "night-mode";
+       }
+       else {
+           return "day-mode";
+       }
+     };
+
+
 
 
     /***********************
@@ -242,6 +251,7 @@ officerModule.controller('officerCtrl', ['$scope', 'localStorageService', 'dataS
         $scope.documentStatusUpdate(user_id, document_id, list_name, status);
         getPendingDocuments(id)
       }
+
 
 
 

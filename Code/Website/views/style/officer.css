@@ -67,6 +67,7 @@
     margin-left: 16px;
   }
 
+
 /* ---------------------------------------------------------
    Print styles
    ---------------------------------------------------------*/
@@ -101,4 +102,35 @@
     }
 
     figure img { border:1px solid #000; }
+  }
+
+  .acknowledge{
+    color: #2780e3;
+  }
+
+  /*Night Mode*/
+
+  .night-mode{
+    background-color: black;
+    color: white;
+  }
+
+  .cat-holder.night-mode{
+    background-color: black; /*#4f535d */
+    border-style: solid;
+    border-color: white;
+  }
+  .panel-heading.night-mode{
+    background-color: #454545;
+    color: inherit;
+  }
+
+
+
+  div{
+    /*background-color: black;*/
+  }
+
+  #night-mode{
+    background-color: black;
   }
