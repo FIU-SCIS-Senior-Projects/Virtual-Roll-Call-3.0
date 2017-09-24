@@ -125,11 +125,20 @@
     color: inherit;
   }
 
-
-
-  div{
-    /*background-color: black;*/
+  .fields.night-mode{
+    background-color: #454545;
+    color: white;
+    border-style: solid;
+    border-color: white;
   }
+
+  .password.night-mode{
+    border-style: solid;
+    border-color: white;
+  }
+
+
+
 
   #night-mode{
     background-color: black;
