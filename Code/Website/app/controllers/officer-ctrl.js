@@ -16,8 +16,8 @@ officerModule.controller('officerCtrl', ['$scope', 'localStorageService', 'dataS
     $scope.password_pattern = '^[a-zA-Z0-9]{8,}$';
     $scope.pattern_descr = 'Must contain at least 8 or more characters. Only alphanumeric characters allowed.';
 
-
-    $scope.k = getPendingDocuments(id);
+    $scope.no_content = "";
+    getPendingDocuments(id); //$scope.k = getPendingDocuments(id);
 
     /***** SHARED FUNCTIONS *****/
     var sharedCtrl = $controller('sharedCtrl', { $scope: $scope });
