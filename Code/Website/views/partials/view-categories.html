@@ -1,10 +1,10 @@
-<div ng-init='getCategories(); getPendingDocuments(id, c.name);'>
-  <div class="container">
-    <h3>DOCUMENT CATEGORIES</h3>
+<div ng-init='getCategories(); getPendingDocuments(id, c.name);'  >
+  <div class="container" >
+    <h3 ng-click="changeDisplayMode()">DOCUMENT CATEGORIES Name: {{displayMode}} </h3>
     <hr>
     <div class="row">
       <div class="cat col-lg-4" ng-repeat='c in categories'>
-        <a href='#/documents/{{c.name}}'>
+        <a href='#/documents/{{c.name}}' ng-click="changeDisplayMode()">
 
           <div class='cat-holder'>
             <div class = 'cat-pendingCount' data-badge = "{{ pending_count[c.name]? pending_count[c.name] : 0 }}"  >

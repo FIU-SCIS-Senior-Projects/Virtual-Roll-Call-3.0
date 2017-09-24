@@ -15,8 +15,9 @@ officerModule.controller('officerCtrl', ['$scope', 'localStorageService', 'dataS
     $scope.id = id;
     $scope.password_pattern = '^[a-zA-Z0-9]{8,}$';
     $scope.pattern_descr = 'Must contain at least 8 or more characters. Only alphanumeric characters allowed.';
-
-    $scope.no_content = "";
+    $scope.background_color = getBackgroundColor(); //getCurrentDisplayMode();
+    $scope.text_color = getTextColor();
+    $scope.displayMode = "juan";
     getPendingDocuments(id); //$scope.k = getPendingDocuments(id);
 
     /***** SHARED FUNCTIONS *****/
@@ -139,6 +140,54 @@ officerModule.controller('officerCtrl', ['$scope', 'localStorageService', 'dataS
         });
 
     };
+
+    /***********************
+   * Toggle between day and night mode*
+   ***********************/
+     $scope.changeDisplayMode = function changeDisplayMode() {
+       $scope.displayMode = "lopez";
+       //$scope.background_color = "black";
+       var nightMode = localStorageService.get('nightMode');
+       if(nightMode == true)
+       {
+         $scope.background_color = "";
+         $scope.text_color = "";
+         localStorageService.set('nightMode', false);
+       }
+       //else: daytime set, or not in local storage
+       else {
+         $scope.background_color = "black";
+         $scope.text_color = "white";
+         localStorageService.set('nightMode', true);
+       }
+
+
+       $scope.displayMode = localStorageService.get('nightMode');
+       $scope.$apply();
+
+     };
+
+     function getBackgroundColor() {
+        var nightMode = localStorageService.get('nightMode');
+        if(nightMode){
+          return "black";
+        }
+        else {
+            return "";
+        }
+        $scope.$apply();
+     };
+
+     function getTextColor(){
+       var nightMode = localStorageService.get('nightMode');
+       if(nightMode){
+         return "white";
+       }
+       else {
+           return "";
+       }
+       $scope.$apply();
+     };
 
 
     /***********************
