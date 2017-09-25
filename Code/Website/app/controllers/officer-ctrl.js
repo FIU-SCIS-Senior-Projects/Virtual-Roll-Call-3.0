@@ -15,15 +15,16 @@ officerModule.controller('officerCtrl', ['$scope', 'localStorageService', 'dataS
     $scope.id = id;
     $scope.password_pattern = '^[a-zA-Z0-9]{8,}$';
     $scope.pattern_descr = 'Must contain at least 8 or more characters. Only alphanumeric characters allowed.';
-    $scope.background_color = getBackgroundColor();
-    $scope.text_color = getTextColor();
-    $scope.display_mode = getDisplayMode();
-    $scope.night_mode = localStorageService.get('nightMode');
+
+
     getPendingDocuments(id); //$scope.k = getPendingDocuments(id);
 
     /***** SHARED FUNCTIONS *****/
     var sharedCtrl = $controller('sharedCtrl', { $scope: $scope });
     sharedCtrl.redirect($scope.login);
+
+    $scope.display_mode = getDisplayMode();
+    $scope.night_mode = localStorageService.get('nightMode');
 
     $scope.getSiteNames = function () {
       sharedCtrl.getSiteNames();
@@ -125,11 +126,8 @@ officerModule.controller('officerCtrl', ['$scope', 'localStorageService', 'dataS
               else{
                 dict[data[x].cat_name] = 1;
               }
-
             }
-
           }
-
             $scope.pending_count = dict
         },
         function (error) {
@@ -142,58 +140,14 @@ officerModule.controller('officerCtrl', ['$scope', 'localStorageService', 'dataS
    * Toggle between day and night mode*
    ***********************/
      $scope.changeDisplayMode = function changeDisplayMode() {
-
-       //$scope.background_color = "black";
-       var nightMode = localStorageService.get('nightMode');
-       if(nightMode == true)
-       {
-         $scope.background_color = "";
-         $scope.text_color = "";
-         localStorageService.set('nightMode', false);
-       }
-       //else: daytime set, or not in local storage
-       else {
-         $scope.background_color = "black";
-         $scope.text_color = "white";
-         localStorageService.set('nightMode', true);
-       }
-
-
-       $scope.display_mode = getDisplayMode();
-       $scope.night_mode = localStorageService.get('nightMode');
-
-
-     };
-
-     function getBackgroundColor() {
-        var nightMode = localStorageService.get('nightMode');
-        if(nightMode){
-          return "black";
-        }
-        else {
-            return "";
-        }
-
-     };
-
-     function getTextColor(){
-       var nightMode = localStorageService.get('nightMode');
-       if(nightMode){
-         return "white";
-       }
-       else {
-           return "";
-       }
+       sharedCtrl.changeDisplayMode();
+       //$scope.display_mode = getDisplayMode();
+      // $scope.night_mode = localStorageService.get('nightMode');
 
      };
 
      function getDisplayMode(){
-       if(localStorageService.get('nightMode')){
-         return "night-mode";
-       }
-       else {
-           return "day-mode";
-       }
+       return sharedCtrl.getDisplayMode();
      };
 
 

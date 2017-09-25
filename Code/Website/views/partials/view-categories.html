@@ -1,6 +1,6 @@
 <div class = "{{display_mode}}" ng-init='getCategories(); getPendingDocuments(id, c.name);'  >
   <div class="container" >
-    <h3>DOCUMENT CATEGORIES</h3>
+    <h3 ng-click = "testChange()" >DOCUMENT CATEGORIES {{juan}}</h3>
     <hr>
     <div class="row">
       <div class="cat col-lg-4" ng-repeat='c in categories'>
