@@ -141,9 +141,6 @@ officerModule.controller('officerCtrl', ['$scope', 'localStorageService', 'dataS
    ***********************/
      $scope.changeDisplayMode = function changeDisplayMode() {
        sharedCtrl.changeDisplayMode();
-       //$scope.display_mode = getDisplayMode();
-      // $scope.night_mode = localStorageService.get('nightMode');
-
      };
 
      function getDisplayMode(){

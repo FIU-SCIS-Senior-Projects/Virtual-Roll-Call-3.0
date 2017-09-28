@@ -183,6 +183,7 @@ sharedModule.controller('sharedCtrl', ['$scope', 'sharedService', 'localStorageS
       });
   };
 
+  /*Night mode toggle */
   self.changeDisplayMode = function(){
     if(localStorageService.get('nightMode')){
       localStorageService.set('nightMode', false);
@@ -204,8 +205,6 @@ sharedModule.controller('sharedCtrl', ['$scope', 'sharedService', 'localStorageS
         return "day-mode";
     }
   };
-
-
 
   self.getlogs = function () {
 

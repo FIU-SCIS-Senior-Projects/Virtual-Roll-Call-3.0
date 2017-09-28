@@ -38,20 +38,16 @@ adminModule.config(function($routeProvider){
 supervisorModule.config(function($routeProvider){
 	$routeProvider
 	.when('/upload', {
-		templateUrl: 'partials/manage-documents.html',
-		controller: 'supervisorCtrl'
+		templateUrl: 'partials/manage-documents.html'
 	})
 	.when('/reset', {
-		templateUrl: 'partials/reset-password.html',
-		controller: 'supervisorCtrl'
+		templateUrl: 'partials/reset-password.html'
 	})
 	.when('/password', {
-		templateUrl: 'partials/change-password.html',
-		controller: 'sharedCtrl'
+		templateUrl: 'partials/change-password.html'
 	})
 	.when('/log',{
-         templateUrl: 'partials/show-logs.html',
-         controlller: 'supervisorCtrol'
+         templateUrl: 'partials/show-logs.html'
         })
 	.otherwise({
 		redirectTo: '/upload'
