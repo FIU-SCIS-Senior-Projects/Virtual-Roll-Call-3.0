@@ -7,22 +7,22 @@
   <div uib-alert ng-repeat="a in alert.alerts" ng-class="'alert-' + a.type" close="alert.closeAlert($index)">{{a.msg}}</div>
 
   <!-- CHANGE USER PASSWORD PANEL -->
-  <div class="panel panel-primary">
+  <div class="panel panel-primary {{display_mode}}">
     <div class="panel-body">
       <div>
         <form ng-submit='deleteArchive()'>
           <div>
              <label for="from">From</label>
-                <input type="text" ng-model="from" mydatepicker>
-                
+                <input class = "fields {{display_mode}}" type="text" ng-model="from" mydatepicker>
+
                 <label for="to">to</label>
-                <input type="text" ng-model="to" mydatepickerto> 
-                <button>Submit</button>
+                <input class = "fields {{display_mode}}" type="text" ng-model="to" mydatepickerto>
+                <button type="input" class="btn btn-success fields">Submit</button>
          </div>
-            
+
         </form>
           <div><label>Files deleted</label></div>
-          <div ng-repeat="files in files_deleted" >{{files.name}} | {{files.file}}</div>
+          <div class="{{display_mode}}" ng-repeat="files in files_deleted" >{{files.name}} | {{files.file}}</div>
       </div>
     </div>
   </div>

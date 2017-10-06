@@ -3,7 +3,7 @@ adminModule.directive('mydatepicker', function () {
 return {
     restrict: 'A',
     require: 'ngModel',
-    
+
      link: function ($scope, element, attrs, adminCtrl) {
         element.datepicker({
             dateFormat: 'mm/dd/yy',
@@ -13,8 +13,8 @@ return {
             }
         });
     },
-      
-    
+
+
   };
 });
 adminModule.directive('mydatepickerto', function () {
@@ -75,6 +75,20 @@ $scope.getCategories = function(){
   sharedCtrl.getCategories();
 };
 
+/***********************
+* Toggle between day and night mode*
+***********************/
+ $scope.changeDisplayMode = function changeDisplayMode() {
+   sharedCtrl.changeDisplayMode();
+ };
+
+ function getDisplayMode(){
+   return sharedCtrl.getDisplayMode();
+ };
+
+ $scope.display_mode = getDisplayMode();
+ $scope.night_mode = localStorageService.get('nightMode');
+
 //alert functions (displays accordingly in views)
 $scope.alert = sharedCtrl.alert;
 
@@ -84,7 +98,7 @@ $scope.isActive = function(path) {
   return $location.path() === path; //TO DO: Pull this function into shared ctrl
 };
 
-/***** ADD NEW USER *****/ 
+/***** ADD NEW USER *****/
 $scope.addUser = function(){
 
 //get values from input fields
@@ -127,11 +141,13 @@ dataService.addUser(first_name, last_name, username, password, role)
           $scope.alert.closeAll();
           $scope.alert.addAlert('success', 'User successfully deleted!');
           sharedCtrl.getOfficers();
-          $('#editModal').modal('hide');
+          window.location.reload();
+          //$('#editModal').modal('hide');
         }else{
           $scope.alert.closeAll();
-          $scope.alert.addAlert('danger', 'Could not delete user!'); 
-          $('#editModal').modal('hide');
+          $scope.alert.addAlert('danger', 'Could not delete user!');
+          window.location.reload();
+          //$('#editModal').modal('hide');
         }
       },
       function(error){
@@ -140,21 +156,22 @@ dataService.addUser(first_name, last_name, username, password, role)
 
   /***** EDIT USER MODAL *****/
   $scope.editUser = function(update_id, update_first, update_last, update_username, update_role){
-    $scope.updateID = update_id; 
+    $scope.updateID = update_id;
     $scope.updateFirst = update_first;
     $scope.updateLast = update_last;
-    $scope.updateUsername = update_username; 
-    $scope.updateRole = update_role;  
+    $scope.updateUsername = update_username;
+    $scope.updateRole = update_role;
+    $scope.display_mode_modal = sharedCtrl.getDisplayMode();
     $('#editModal').modal();
   };
 
   /***** EDIT USER DATA *****/
   $scope.updateUser = function(){
-  var id = $scope.updateID; 
+  var id = $scope.updateID;
   var first_name = $scope.updateFirst;
   var last_name = $scope.updateLast;
-  var username =$scope.updateUsername; 
-  var role = $scope.updateRole; 
+  var username =$scope.updateUsername;
+  var role = $scope.updateRole;
   dataService.updateUser(id, first_name, last_name, username, role)
   .then(
     function(data){
@@ -162,19 +179,21 @@ dataService.addUser(first_name, last_name, username, password, role)
         $scope.alert.closeAll();
         $scope.alert.addAlert('success', 'User successfully updated!');
         sharedCtrl.getOfficers();
-        $('#editModal').modal('hide');
+        window.location.reload();
+        //$('#editModal').modal('hide');
       }
       else{
         $scope.alert.closeAll();
         $scope.alert.addAlert('danger', 'Could not update user!');
-        $('#editModal').modal('hide');  
+        window.location.reload();
+        //$('#editModal').modal('hide');
       }
     },
     function(error){
       console.log('Error: ' + error);
     });};
 
-  /***** ADD NEW CATEGORY *****/ 
+  /***** ADD NEW CATEGORY *****/
   $scope.addCategory = function(new_cat){
   //get values from input fields
   var category = new_cat;
@@ -192,7 +211,7 @@ dataService.addUser(first_name, last_name, username, password, role)
     else{
       //the add was unsucessful
       $scope.alert.closeAll();
-      $scope.alert.addAlert('danger', 'Could not add category! The category name may already exist.');;  
+      $scope.alert.addAlert('danger', 'Could not add category! The category name may already exist.');;
     }
   },
   function(error){
@@ -201,8 +220,9 @@ dataService.addUser(first_name, last_name, username, password, role)
 
   /***** EDIT CATEGORY MODAL *****/
   $scope.editCategory = function(update_id, update_name){
-    $scope.updateID = update_id; 
+    $scope.updateID = update_id;
     $scope.updateName = update_name;
+    $scope.display_mode_modal = sharedCtrl.getDisplayMode();
     $('#editModal').modal();
   };
 
@@ -220,11 +240,13 @@ dataService.addUser(first_name, last_name, username, password, role)
           $scope.alert.closeAll();
           $scope.alert.addAlert('success', 'Category successfully removed!');
           sharedCtrl.getCategories();
-          $('#editModal').modal('hide');
+          window.location.reload();
+          //$('#editModal').modal('hide');
         }else{
           $scope.alert.closeAll();
           $scope.alert.addAlert('danger', 'Could not remove category!');
-          $('#editModal').modal('hide');  
+          window.location.reload();
+          //$('#editModal').modal('hide');
         }
       },
       function(error){
@@ -234,7 +256,7 @@ dataService.addUser(first_name, last_name, username, password, role)
   /***** UPDATE CATEGORY *****/
   $scope.updateCategory = function(){
 
-  var id = $scope.updateID; 
+  var id = $scope.updateID;
   var name = $scope.updateName;
   dataService.updateCategory(id, name)
   .then(
@@ -243,12 +265,14 @@ dataService.addUser(first_name, last_name, username, password, role)
         $scope.alert.closeAll();
         $scope.alert.addAlert('success', 'Category successfully updated!');
         $scope.getCategories();
-        $('#editModal').modal('hide');
+        window.location.reload();
+        //$('#editModal').modal('hide');
       }
       else{
         $scope.alert.closeAll();
         $scope.alert.addAlert('danger', 'Could not update category! The category name may already exist.');
-        $('#editModal').modal('hide');
+        window.location.reload();
+        //$('#editModal').modal('hide');
       }
     },
     function(error){

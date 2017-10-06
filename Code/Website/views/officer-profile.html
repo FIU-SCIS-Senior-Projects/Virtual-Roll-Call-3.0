@@ -9,25 +9,25 @@
   <!-- STYLE SHEETS -->
   <link href='style/normalize.css' rel='stylesheet' media='all'>
 <!--   <link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css' media='all'> -->
-  <link rel='stylesheet' href='../app/vendor/3.3.7.bootstrap.min.css' media='all'> 
+  <link rel='stylesheet' href='../app/vendor/3.3.7.bootstrap.min.css' media='all'>
   <link href='style/bootstrap.min.css' rel='stylesheet' media='all'>
-  <link href='style/officer.css' rel='stylesheet' media='all'> 
+  <link href='style/officer.css' rel='stylesheet' media='all'>
   <link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css' media='all'>
 
-  
+
 
   <!-- SCRIPTS -->
   <!-- <script src='https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js'></script> -->
   <script src='../app/vendor/1.12.4.jquery.min.js'></script>
-  <!--<script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js'></script> --> 
-  <script src='../app/vendor/3.3.7.bootstrap.min.js'></script> 
+  <!--<script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js'></script> -->
+  <script src='../app/vendor/3.3.7.bootstrap.min.js'></script>
   <!-- <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.js"></script> -->
   <script src="../app/vendor/1.5.8.angular.js"></script>
 
   <!--UI-GRID-CDN-->
   <!-- <script src="https://cdn.rawgit.com/angular-ui/bower-ui-grid/master/ui-grid.min.js"></script> -->
   <script src="../app/vendor/ui-grid.min.js"></script>
-  
+
   <script src='../app/vendor/angular-route.min.js'></script>
   <script src='../app/vendor/angular-local-storage.min.js'></script>
   <script src='../app/vendor/ui-bootstrap-tpls-2.2.0.min.js'></script>
@@ -38,7 +38,7 @@
   <script src="../app/vendor/ng-flow/dist/ng-flow-standalone.min.js"></script>
 
 </head>
-<body ng-controller='officerCtrl' ng-init='getSiteNames()'>
+<body class = "{{display_mode}}" ng-controller='officerCtrl' ng-init='getSiteNames()' >
 
   <!-- Vertical Navigation -->
   <nav class='navbar navbar-default'>
@@ -47,7 +47,7 @@
         <button type='button' class='navbar-toggle' data-toggle='collapse' data-target='#myNavbar'>
           <span class='icon-bar'></span>
           <span class='icon-bar'></span>
-          <span class='icon-bar'></span>                        
+          <span class='icon-bar'></span>
         </button>
         <a class='navbar-brand' href='#'>Virtual Roll Call {{t}} </a>
       </div>
@@ -57,6 +57,9 @@
             <a class='dropdown-toggle' data-toggle='dropdown'>{{name}} <b class='caret'></b></a>
             <ul class='dropdown-menu'>
               <li>
+                <a href='' ng-click="changeDisplayMode()"><span class='glyphicon glyphicon-adjust'></span> Change to {{night_mode? "Day" : 'Night' }} Mode</a>
+              </li>
+              <li>
                 <a href='#password'><span class='glyphicon glyphicon-cog'></span> Change Password</a>
               </li>
               <li class='divider'></li>
@@ -65,14 +68,13 @@
               </li>
             </ul>
           </li>
+
         </ul>
       </div>
-    </div> 
+    </div>
   </nav>
-
   <!-- content will change according to route -->
   <section ng-view></section>
-  
+
 </body>
 </html>
-

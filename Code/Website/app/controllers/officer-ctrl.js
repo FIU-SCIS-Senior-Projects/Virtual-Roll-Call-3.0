@@ -16,12 +16,15 @@ officerModule.controller('officerCtrl', ['$scope', 'localStorageService', 'dataS
     $scope.password_pattern = '^[a-zA-Z0-9]{8,}$';
     $scope.pattern_descr = 'Must contain at least 8 or more characters. Only alphanumeric characters allowed.';
 
-    $scope.no_content = "";
+
     getPendingDocuments(id); //$scope.k = getPendingDocuments(id);
 
     /***** SHARED FUNCTIONS *****/
     var sharedCtrl = $controller('sharedCtrl', { $scope: $scope });
     sharedCtrl.redirect($scope.login);
+
+    $scope.display_mode = getDisplayMode();
+    $scope.night_mode = localStorageService.get('nightMode');
 
     $scope.getSiteNames = function () {
       sharedCtrl.getSiteNames();
@@ -40,11 +43,6 @@ officerModule.controller('officerCtrl', ['$scope', 'localStorageService', 'dataS
    * GET ACTIVE DOCUMENTS *
    ***********************/
     $scope.getActiveDocuments = function (user_id) {
-
-
-          getPendingDocuments(id);
-
-
 
       $scope.selected_cat = $routeParams.selectedCategory;
 
@@ -90,6 +88,7 @@ officerModule.controller('officerCtrl', ['$scope', 'localStorageService', 'dataS
           $scope.pinned_documents = pinned_documents;
           $scope.unpinned_documents = unpinned_documents;
 
+            getPendingDocuments(id);
         //  $scope.pending_count = juan;
 
         },
@@ -127,11 +126,8 @@ officerModule.controller('officerCtrl', ['$scope', 'localStorageService', 'dataS
               else{
                 dict[data[x].cat_name] = 1;
               }
-
             }
-
           }
-
             $scope.pending_count = dict
         },
         function (error) {
@@ -139,6 +135,19 @@ officerModule.controller('officerCtrl', ['$scope', 'localStorageService', 'dataS
         });
 
     };
+
+    /***********************
+   * Toggle between day and night mode*
+   ***********************/
+     $scope.changeDisplayMode = function changeDisplayMode() {
+       sharedCtrl.changeDisplayMode();
+     };
+
+     function getDisplayMode(){
+       return sharedCtrl.getDisplayMode();
+     };
+
+
 
 
     /***********************
@@ -193,6 +202,7 @@ officerModule.controller('officerCtrl', ['$scope', 'localStorageService', 'dataS
         $scope.documentStatusUpdate(user_id, document_id, list_name, status);
         getPendingDocuments(id)
       }
+
 
 
 

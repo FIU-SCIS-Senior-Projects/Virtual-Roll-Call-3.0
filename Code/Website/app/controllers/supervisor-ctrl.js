@@ -1,6 +1,6 @@
 //CONTROLLER for supervisor app
 supervisorModule.controller('supervisorCtrl', ['$scope', 'localStorageService', 'dataService', '$controller', '$location', function($scope, localStorageService, dataService, $controller, $location){
-  
+
   //TO DO: SAVE AS GLOBALS OR IN SHAREDCTRL
   /***** GLOBALS *****/
   //get name from local storage for user profile customization
@@ -21,7 +21,7 @@ supervisorModule.controller('supervisorCtrl', ['$scope', 'localStorageService', 
   $scope.getOfficers = function(){
     sharedCtrl.getOfficers();
   };
-  
+
   $scope.logout = function(){
       sharedCtrl.logout();
   }
@@ -36,38 +36,53 @@ supervisorModule.controller('supervisorCtrl', ['$scope', 'localStorageService', 
   $scope.getlogs = function(){
   	sharedCtrl.getlogs();
   }
-  
+
    $scope.refresh = function(){
        setTimeout(function(){ window.location.reload(); }, 3000);
   }
-  
+
   $scope.editDocument = function(id,name,pinned,category){
- 
+
   $scope.categories.forEach(function(element){
     if(element.name == category)
 	category = element;
   });
- 
+
   if(pinned == 1 )
       pinned = true;
   else
       pinned = false;
-  
-    $scope.doc_id = id; 
+
+    $scope.doc_id = id;
     $scope.doc_name = name;
     $scope.doc_cat_name = category;
-    $scope.doc_pinned = pinned; 
+    $scope.doc_pinned = pinned;
+    $scope.display_mode_modal = sharedCtrl.getDisplayMode();
     $('#editModal').modal();
   };
-  
+
   $scope.updateDocument = function(){
-  	var id = $scope.doc_id;
-     	var categorie =  $scope.doc_cat_name;
-     	var name = $scope.doc_name;
-	var pinned = $scope.doc_pinned;
-     sharedCtrl.updateDocument(id, categorie, name, pinned)
- 
-} 
+    var id = $scope.doc_id;
+    var categorie =  $scope.doc_cat_name;
+    var name = $scope.doc_name;
+    var pinned = $scope.doc_pinned;
+    sharedCtrl.updateDocument(id, categorie, name, pinned)
+    
+  }
+/***********************
+* Toggle between day and night mode*
+***********************/
+ $scope.changeDisplayMode = function changeDisplayMode() {
+   sharedCtrl.changeDisplayMode();
+ };
+
+ function getDisplayMode(){
+   return sharedCtrl.getDisplayMode();
+ };
+
+ $scope.display_mode = getDisplayMode();
+ $scope.night_mode = localStorageService.get('nightMode');
+
   /***** ALERT FUNCTIONS *****/
   //alert functions (displays accordingly in views)
   $scope.alert = sharedCtrl.alert;
@@ -88,7 +103,7 @@ supervisorModule.controller('supervisorCtrl', ['$scope', 'localStorageService', 
   };
 
   //TO DO: Clear input fields if another row is selected
-  
+
   //helper for ng-class
   $scope.is_selected = function(index){
     if($scope.pick === index){
@@ -97,8 +112,8 @@ supervisorModule.controller('supervisorCtrl', ['$scope', 'localStorageService', 
       return false;
     }
   }
-  
-  //resets selection when value in search bar is entered 
+
+  //resets selection when value in search bar is entered
   $scope.$watch('search', function() {
      $scope.selected = {};
      $scope.pick = null;
@@ -107,7 +122,7 @@ supervisorModule.controller('supervisorCtrl', ['$scope', 'localStorageService', 
   /***** RESET USER PASSWORD *****/
   $scope.resetPassword = function(reset_password, reset_password_conf){
 
-  //get the id of the selected user 
+  //get the id of the selected user
   var id = $scope.selected.id;
 
   //new password and confirmation must match
@@ -133,7 +148,7 @@ supervisorModule.controller('supervisorCtrl', ['$scope', 'localStorageService', 
 
   /***** SORT TABLE HEADERS *****/
   $scope.sortTable = function(order){
-    $scope.orderBy = order; 
+    $scope.orderBy = order;
   };
 
   // Listen event to set grid data after it is ready, event is triggered on sharedCtrl.getlogs()
@@ -168,6 +183,8 @@ supervisorModule.controller('supervisorCtrl', ['$scope', 'localStorageService', 
       docDefinition.styles.footerStyle = { fontSize: 10, bold: true };
       return docDefinition;
     },
+    //rowTemplate: '<div ng-style="{\'cursor\': row.cursor, \'z-index\': col.zIndex() }" class="ngCell {{col.cellClass}}" ng-cell></div>',
+
     exporterPdfOrientation: 'landscape',
     exporterPdfPageSize: 'LETTER',
     exporterPdfMaxGridWidth: 500,
@@ -175,6 +192,7 @@ supervisorModule.controller('supervisorCtrl', ['$scope', 'localStorageService', 
     onRegisterApi: function(gridApi){
       $scope.gridApi = gridApi;
     }
+
   };
 
 }]);

@@ -26,8 +26,10 @@ sharedModule.controller('sharedCtrl', ['$scope', 'sharedService', 'localStorageS
     localStorageService.set('id', "");
     localStorageService.set('fname', "");
     localStorageService.set('lname', "");
+    localStorageService.clearAll();
     delete $scope.login;
   };
+
 
   self.redirect = function (login) {
     if (login == "")
@@ -181,7 +183,28 @@ sharedModule.controller('sharedCtrl', ['$scope', 'sharedService', 'localStorageS
       });
   };
 
+  /*Night mode toggle */
+  self.changeDisplayMode = function(){
+    if(localStorageService.get('nightMode')){
+      localStorageService.set('nightMode', false);
+    }
+    //else: daytime set, or not in local storage
+    else {
+      localStorageService.set('nightMode', true);
+    }
+    $scope.display_mode = self.getDisplayMode();
+    $scope.night_mode = localStorageService.get('nightMode');
 
+  };
+
+  self.getDisplayMode = function(){
+    if(localStorageService.get('nightMode')){
+      return "night-mode";
+    }
+    else {
+        return "day-mode";
+    }
+  };
 
   self.getlogs = function () {
 

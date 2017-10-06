@@ -6,7 +6,7 @@
 
 <div style="margin: auto; width: 75%" ng-init='getArchivedDocuments(id)'>
 
-	<div class='panel panel-primary'>
+	<div class='panel panel-primary {{display_mode}}'>
 		<div class='panel-heading'>Archived Documents</div>
 
 		<!-- TO DO: Overflow not detected until page reloads -->
@@ -14,8 +14,8 @@
 			<div class="row">
 				<div class="cat col-lg-4" ng-repeat='d in unpinned_documents'>
 
-					<div class="panel panel-default">
-						<div class="panel-heading">
+					<div class="panel panel-default {{display_mode}}">
+						<div class="panel-heading {{display_mode}}">
 							{{d.name}}
 							<span class="badge badge-warning" style="background-color: #f0ad4e;">{{d.status}}</span>
 							<!--<h3 class="panel-title">Panel title</h3>-->
@@ -42,9 +42,9 @@
 							</div>
 
 							<div class="row">
-								<div class="col-md-9">
-									<p style="font-size: small; color: #2780e3">
-										By click on the check mark, I acknowledge I have read and understand the content of this document.
+								<div class="col-md-9 acknowledge {{display_mode}}">
+									<p style="font-size: small;">
+										By clicking on the check mark, I acknowledge I have read and understood the content of this document.
 									</p>
 								</div>
 								<div class="col-md-3">
@@ -54,7 +54,7 @@
 
 						</div>
 					</div>
-					
+
 				</div>
 			</div>
 		</div>

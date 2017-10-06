@@ -1,4 +1,4 @@
-<div class='col-sm-8 text-left' flow-init="{target: '../app/php/upload.php', testChunks:false}" flow-file-added="!!{png:1,gif:1,jpg:1,jpeg:1}[$file.getExtension()]" flow-file-success="alert.addAlert('success', 'Logo successfully updated!');"> 
+<div class='col-sm-8 text-left' flow-init="{target: '../app/php/upload.php', testChunks:false}" flow-file-added="!!{png:1,gif:1,jpg:1,jpeg:1}[$file.getExtension()]" flow-file-success="alert.addAlert('success', 'Logo successfully updated!');">
 	<h3>Site Settings</h3>
 	<hr>
 
@@ -6,7 +6,7 @@
   <div uib-alert ng-repeat="a in alert.alerts" ng-class="'alert-' + a.type" close="alert.closeAlert($index)">{{a.msg}}</div>
 
 	<!-- UPDATE SITE LOGO PANEL -->
-	<div class='panel panel-primary'>
+	<div class='panel panel-primary {{display_mode}}'>
 		<div class='panel-heading'>Site Logo</div>
 		<div class='panel-body'>
       <!-- Image Preview -->
@@ -30,14 +30,14 @@
   </div>
 
   <!-- APP NAME PANEL -->
-	<div class='panel panel-primary'>
+	<div class='panel panel-primary {{display_mode}}'>
 		<div class='panel-heading'>Application Name</div>
 		<div class='panel-body'>
 			<!-- Site Customizations Form -->
 			<form ng-submit='updateAppName(application_name)'>
         <label>Application Name</label>
         <br>
-        <input class='col-xs-6' type='text' ng-model='application_name' required>
+        <input class='col-xs-6 fields {{display_mode}}' type='text' ng-model='application_name' required>
         <br>
         <br>
         <button type="submit" class="btn btn-success">Update</button>
@@ -46,14 +46,14 @@
   </div>
 
   <!-- DEPT NAME PANEL -->
-  <div class='panel panel-primary'>
+  <div class='panel panel-primary {{display_mode}}'>
     <div class='panel-heading'>Department Name</div>
     <div class='panel-body'>
       <!-- Site Customizations Form -->
       <form ng-submit='updateDeptName(department_name)'>
         <label>Police Department Name</label>
         <br>
-        <input class='col-xs-6' type='text' ng-model='department_name' required>
+        <input class='col-xs-6 fields {{display_mode}}' type='text' ng-model='department_name' required>
         <br>
         <br>
         <button type="submit" class="btn btn-success">Update</button>

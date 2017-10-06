@@ -62,12 +62,11 @@
     content: none;
     }
 
-
-
   .archive-link{
     color: orange;
     margin-left: 16px;
   }
+
 
 /* ---------------------------------------------------------
    Print styles
@@ -103,4 +102,44 @@
     }
 
     figure img { border:1px solid #000; }
+  }
+
+  .acknowledge{
+    color: #2780e3;
+  }
+
+  /*Night Mode*/
+
+  .night-mode{
+    background-color: black;
+    color: white;
+  }
+
+  .cat-holder.night-mode{
+    background-color: black; /*#4f535d */
+    border-style: solid;
+    border-color: white;
+  }
+  .panel-heading.night-mode{
+    background-color: #454545;
+    color: inherit;
+  }
+
+  .fields.night-mode{
+    background-color: #454545;
+    color: white;
+    border-style: solid;
+    border-color: white;
+  }
+
+  .password.night-mode{
+    border-style: solid;
+    border-color: white;
+  }
+
+
+
+
+  #night-mode{
+    background-color: black;
   }

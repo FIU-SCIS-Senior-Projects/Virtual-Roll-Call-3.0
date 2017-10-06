@@ -7,28 +7,28 @@ var officerModule = angular.module('officer', ['ngRoute', 'LocalStorageModule', 
 adminModule.config(function($routeProvider){
 	$routeProvider
 	.when('/categories', {
-		templateUrl: 'partials/category-management.html',
-		controller: 'adminCtrl'
+		templateUrl: 'partials/category-management.html'//,
+		//controller: 'adminCtrl'
 	})
 	.when('/settings', {
-		templateUrl: 'partials/site-settings.html',
-		controller: 'adminCtrl'
+		templateUrl: 'partials/site-settings.html'//,
+		//controller: 'adminCtrl'
 	})
 	.when('/user-management', {
-		templateUrl: 'partials/user-management.html',
-		controller: 'adminCtrl'
+		templateUrl: 'partials/user-management.html'//,
+		//controller: 'adminCtrl'
 	})
 	.when('/password', {
-		templateUrl: 'partials/change-password.html',
-		controller: 'sharedCtrl'
+		templateUrl: 'partials/change-password.html'//,
+		//controller: 'sharedCtrl'
 	})
 	.when('/reporting', {
-		templateUrl: 'partials/reporting.html',
-		controller: 'adminCtrl'
+		templateUrl: 'partials/reporting.html'//,
+		//controller: 'adminCtrl'
 	})
 	.when('/archive',{
-		templateUrl: 'partials/archive.html',
-		controller: 'adminCtrl'
+		templateUrl: 'partials/archive.html'//,
+		//#controller: 'adminCtrl'
 	})
 	.otherwise({
 		redirectTo: '/user-management'
@@ -38,20 +38,16 @@ adminModule.config(function($routeProvider){
 supervisorModule.config(function($routeProvider){
 	$routeProvider
 	.when('/upload', {
-		templateUrl: 'partials/manage-documents.html',
-		controller: 'supervisorCtrl'
+		templateUrl: 'partials/manage-documents.html'
 	})
 	.when('/reset', {
-		templateUrl: 'partials/reset-password.html',
-		controller: 'supervisorCtrl'
+		templateUrl: 'partials/reset-password.html'
 	})
 	.when('/password', {
-		templateUrl: 'partials/change-password.html',
-		controller: 'sharedCtrl'
+		templateUrl: 'partials/change-password.html'
 	})
 	.when('/log',{
-         templateUrl: 'partials/show-logs.html',
-         controlller: 'supervisorCtrol'
+         templateUrl: 'partials/show-logs.html'
         })
 	.otherwise({
 		redirectTo: '/upload'
@@ -61,8 +57,8 @@ supervisorModule.config(function($routeProvider){
 officerModule.config(function($routeProvider){
 	$routeProvider
 	.when('/categories', {
-		templateUrl: 'partials/view-categories.html',
-		controller: 'officerCtrl'
+		templateUrl: 'partials/view-categories.html'//,
+		//controller: 'officerCtrl'
     })
 	.when('/documents/:selectedCategory', {
 		templateUrl: 'partials/view-documents.html'
