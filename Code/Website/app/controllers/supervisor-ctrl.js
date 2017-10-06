@@ -62,13 +62,13 @@ supervisorModule.controller('supervisorCtrl', ['$scope', 'localStorageService', 
   };
 
   $scope.updateDocument = function(){
-  	var id = $scope.doc_id;
-     	var categorie =  $scope.doc_cat_name;
-     	var name = $scope.doc_name;
-	var pinned = $scope.doc_pinned;
-     sharedCtrl.updateDocument(id, categorie, name, pinned)
-
-}
+    var id = $scope.doc_id;
+    var categorie =  $scope.doc_cat_name;
+    var name = $scope.doc_name;
+    var pinned = $scope.doc_pinned;
+    sharedCtrl.updateDocument(id, categorie, name, pinned)
+    
+  }
 /***********************
 * Toggle between day and night mode*
 ***********************/
@@ -159,7 +159,7 @@ supervisorModule.controller('supervisorCtrl', ['$scope', 'localStorageService', 
   $scope.gridOptions = {
     enableFiltering: true,
     columnDefs: [
-      { field: 'Full_Name', displayName: 'Officer Name', cellClass: '{{display_mode}}'},
+      { field: 'Full_Name', displayName: 'Officer Name'},
       { field: 'Document_Name'},
       { field: 'DOC', displayName: 'Log Date'},
       { field: 'Uploaded', displayName: 'Uploaded Date'},
