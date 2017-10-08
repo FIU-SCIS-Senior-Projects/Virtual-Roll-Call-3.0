@@ -193,3 +193,19 @@ tr.found {
 .col-sm-2.night-mode{
   background-color:#454545;
 }
+
+#failMessage{
+  margin-bottom: 1px;
+  height: 30px;
+  line-height:30px;
+  padding:0px 15px;
+  font-size: small;
+}
+
+#successMessage{
+  margin-bottom: 1px;
+  height: 30px;
+  line-height:30px;
+  padding:0px 15px;
+  font-size: small;
+}
