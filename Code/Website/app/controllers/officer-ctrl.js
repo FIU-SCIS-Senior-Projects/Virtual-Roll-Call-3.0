@@ -201,9 +201,10 @@ officerModule.controller('officerCtrl', ['$scope', 'localStorageService', 'dataS
       if (status == 'Pending'){
         $scope.documentStatusUpdate(user_id, document_id, list_name, status);
         getPendingDocuments(id)
+        //window.location.reload();
       }
 
-
+      getPendingDocuments(id)
 
 
 

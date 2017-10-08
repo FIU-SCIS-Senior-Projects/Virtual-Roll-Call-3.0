@@ -26,7 +26,8 @@
     <!--UI-GRID-CDN-->
   <!-- <script src="https://cdn.rawgit.com/angular-ui/bower-ui-grid/master/ui-grid.min.js"></script> -->
   <script src="../app/vendor/ui-grid.min.js"></script>
-
+  <script src="../app/vendor/papaparse.min.js"></script>
+  <script src="../app/vendor/bootbox.min.js"></script>
   <script src='../app/vendor/angular-route.min.js'></script>
   <script src='../app/vendor/angular-local-storage.min.js'></script>
   <script src='../app/vendor/ui-bootstrap-tpls-2.2.0.min.js'></script>
@@ -123,7 +124,7 @@
           <li data-ng-class="{active: isActive('/archive')}"><a href='#archive'>Archive Documents</a></li>
         </ul>
       </div>
-      <div class='col-sm-10'>
+      <div class='col-sm-10' >
       <!-- content will change according to route -->
       <section ng-view></section>
 

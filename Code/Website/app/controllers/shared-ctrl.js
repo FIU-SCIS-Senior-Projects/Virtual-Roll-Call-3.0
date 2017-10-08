@@ -194,6 +194,8 @@ sharedModule.controller('sharedCtrl', ['$scope', 'sharedService', 'localStorageS
     }
     $scope.display_mode = self.getDisplayMode();
     $scope.night_mode = localStorageService.get('nightMode');
+    
+    window.location.reload();
 
   };
 
