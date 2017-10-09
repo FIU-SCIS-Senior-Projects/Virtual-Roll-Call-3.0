@@ -49,7 +49,7 @@
      top:-10px;
      right:-10px;
      font-size:1.5em;
-     background:red;
+     background: #ff4444;
      color:white;
      width:25px;height:25px;
      text-align:center;
@@ -137,9 +137,29 @@
     border-color: white;
   }
 
+  .label-as-badge{
+    border-style: solid;
+    border-radius: 1em;
+    font-size: 13px;
+  }
+
+  .Pending{
+    border-color: #ff4444;
+    background: #ff4444;
+  }
+  .Reviewed{
+    border-color: #f0ad4e;
+    background-color: #f0ad4e;
+  }
+  .Done{
+    border-color: #45b429;
+    background-color: #45b429;
+  }
+
+
 
 
 
   #night-mode{
-    background-color: black;
+    /*background-color: black;*/
   }
