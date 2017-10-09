@@ -71,9 +71,7 @@ officerModule.controller('officerCtrl', ['$scope', 'localStorageService', 'dataS
               tmp.status = data[x].status;
               tmp.isDone = data[x].status == "Done" ? true : false;
               tmp.doneDisable = data[x].status == "Pending" || data[x].status == "Done" ? true : false;
-              if(data[x].status == "Pending"){
-                juan = 44;
-              }
+
               if (data[x].pinned == 1) {
                 pinned_documents.push(tmp);
               }
@@ -84,12 +82,16 @@ officerModule.controller('officerCtrl', ['$scope', 'localStorageService', 'dataS
             }
           }
 
+
+
           //update value in view for use in ng-repeat (to populate)
           $scope.pinned_documents = pinned_documents;
           $scope.unpinned_documents = unpinned_documents;
 
-            getPendingDocuments(id);
-        //  $scope.pending_count = juan;
+          sortDocuments();
+
+          getPendingDocuments(id);
+          //  $scope.pending_count = juan;
 
         },
         function (error) {
@@ -97,6 +99,38 @@ officerModule.controller('officerCtrl', ['$scope', 'localStorageService', 'dataS
         });
 
     };
+
+    function sortDocuments(){
+      $scope.pinned_documents.sort(function(a, b) {
+        if (a.status =="Pending" && b.status =="Reviewed")
+        {
+          return -1;
+        }
+        if (a.status =="Pending" && b.status =="Done")
+        {
+          return -1;
+        }
+        if (a.status =="Reviewed" && b.status =="Done")
+        {
+          return -1;
+        }
+        if (a.status =="Reviewed" && b.status =="Pending")
+        {
+          return 1;
+        }
+        if(a.status =="Done" && b.status =="Pending")
+        {
+          return 1;
+        }
+        if(a.status =="Done" && b.status =="Reviewed")
+        {
+          return 1;
+        }
+
+        return 0;
+
+      });
+    }
 
     /***********************
    * GET PENDING DOCUMENTS COUNT*
@@ -203,7 +237,6 @@ officerModule.controller('officerCtrl', ['$scope', 'localStorageService', 'dataS
         getPendingDocuments(id)
         //window.location.reload();
       }
-
       getPendingDocuments(id)
 
 
@@ -221,7 +254,7 @@ officerModule.controller('officerCtrl', ['$scope', 'localStorageService', 'dataS
             $scope.findDocAndUpdate($scope.pinned_documents, data.id, data.status);
           else if (list_name == 'unpinned')
             $scope.findDocAndUpdate($scope.unpinned_documents, data.id, data.status);
-
+            sortDocuments();
         },
         function (error) {
           console.log('Error: ' + error);
