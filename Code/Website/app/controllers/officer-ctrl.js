@@ -162,7 +162,8 @@ officerModule.controller('officerCtrl', ['$scope', 'localStorageService', 'dataS
               }
             }
           }
-            $scope.pending_count = dict
+              $scope.pending_count = dict;
+          
         },
         function (error) {
           console.log('Error: ' + error);
@@ -234,10 +235,11 @@ officerModule.controller('officerCtrl', ['$scope', 'localStorageService', 'dataS
 
       if (status == 'Pending'){
         $scope.documentStatusUpdate(user_id, document_id, list_name, status);
-        getPendingDocuments(id)
+        getPendingDocuments(id);
         //window.location.reload();
       }
-      getPendingDocuments(id)
+      getPendingDocuments(id);
+
 
 
 
@@ -254,6 +256,7 @@ officerModule.controller('officerCtrl', ['$scope', 'localStorageService', 'dataS
             $scope.findDocAndUpdate($scope.pinned_documents, data.id, data.status);
           else if (list_name == 'unpinned')
             $scope.findDocAndUpdate($scope.unpinned_documents, data.id, data.status);
+            getPendingDocuments(id);
             sortDocuments();
         },
         function (error) {
