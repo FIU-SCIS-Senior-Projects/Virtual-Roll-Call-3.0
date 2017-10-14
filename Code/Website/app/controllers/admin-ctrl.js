@@ -321,14 +321,17 @@ adminModule.controller('adminCtrl', ['$scope', 'dataService', 'localStorageServi
                     var password = user[3];
                     var role = user[4];
 
-                    if(password.length < 8)
-                    {
+                    if(password.length < 8){
                       resolve(false);
                       return;
                     }
 
-                    if(!(role == "Administrator" || role == "Supervisor" || role == "Officer") )
-                    {
+                    if(!username || !first_name || !last_name){
+                      resolve(false);
+                      return;
+                    }
+
+                    if(!(role == "Administrator" || role == "Supervisor" || role == "Officer") ){
                       resolve(false);
                       return;
                     }
