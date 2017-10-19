@@ -20,8 +20,14 @@ SET time_zone = "+00:00";
 -- Database: `VIRTUAL_ROLL_CALL`
 --
 
+
 -- --------------------------------------------------------
 
+--
+-- Create The Database
+--
+CREATE DATABASE VIRTUAL_ROLL_CALL;
+--
 --
 -- Table structure for table `CATEGORIES`
 --
@@ -110,6 +116,19 @@ INSERT INTO `DOCUMENT_STATUS` (`Id`, `Description`) VALUES
 (3, 'Done');
 
 -- --------------------------------------------------------
+
+--
+-- Table structure for table `LOGIN LOGS`
+--
+
+CREATE TABLE IF NOT EXISTS `LOGIN_LOGS` (
+  `log_id` int(11) NOT NULL AUTO_INCREMENT,
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime,
+  `lock_count` tinyint NOT NULL,
+  `lock_status` int(11) NOT NULL,
+  PRIMARY KEY (`log_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=129 ;
 
 --
 -- Table structure for table `LOGS`
@@ -262,7 +281,7 @@ CREATE TABLE IF NOT EXISTS `OFFICERS` (
   `First_Name` varchar(20) NOT NULL,
   `Last_Name` varchar(20) NOT NULL,
   `Username` varchar(20) NOT NULL,
-  `Password` varchar(40) NOT NULL,
+  `Password` varchar(60) NOT NULL,
   `Role` varchar(40) NOT NULL,
   `Active` tinyint(1) NOT NULL DEFAULT '1',
   PRIMARY KEY (`userID`),

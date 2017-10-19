@@ -13,10 +13,9 @@ adminModule.directive('mydatepicker', function () {
         }
       });
     },
-
-
   };
 });
+
 adminModule.directive('mydatepickerto', function () {
   return {
     restrict: 'A',
@@ -41,7 +40,6 @@ adminModule.controller('adminCtrl', ['$scope', 'dataService', 'localStorageServi
   var fname = localStorageService.get('fname');
   var lname = localStorageService.get('lname');
   $scope.login = localStorageService.get('login');
-
 
   $scope.name = fname + ' ' + lname;
 

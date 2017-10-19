@@ -102,6 +102,42 @@ loginModule.factory('dataService', function ($http, $q) {
             reject(error);
           });
       });
+    },
+
+    getTally: function( username ) 
+    {
+        return $q(function (resolve) {
+          $http.post('../app/php/get-tally.php', {'username': username})
+              .then( function(response) { resolve(response.data); });
+        });
+    },
+
+    updateFailedLog: function( found, id, count ) {
+      return $q(function (resolve, reject)
+      {
+        $http.post('../app/php/updateFailedLog.php', { 'lock_found' : found, 'lock_id': id, 'lock_count': count})
+          .then(
+                  function (response) { resolve(response.data); },
+                  function (error) { reject(error); }
+            );
+      });
+    },
+
+    lockUser: function (userid) 
+    {
+        return $q(function (resolve) {
+          $http.post('../app/php/lockUser.php', {'userid': userid})
+            .then( function(response) { resolve(response.data); });
+        });
+    },
+
+    resetLock: function(userid)
+    {
+        return $q(function(resolve) {
+          $http.post('../app/php/resetLock.php', {'userid': userid})
+            .then( function(response) { 
+              resolve(response.data); });
+        }); 
     }
   }
 });

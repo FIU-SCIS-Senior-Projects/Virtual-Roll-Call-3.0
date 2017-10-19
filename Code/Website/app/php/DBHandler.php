@@ -1,21 +1,23 @@
 <?php
-
+require_once('encryption.php');
 //TO DO: Notify admin when a username already exists in the db
 
 class DBHandler{
 	//Must be updated to match production environment
 	function __construct(){
 		global $db_connection;
+		global $crypter;
+
 		$un = 'root';
 		$pw = 'VirtualRollCall';
 		$dbName = 'VIRTUAL_ROLL_CALL';
 		$address = 'localhost';
 		$db_connection = new mysqli($address, $un, $pw, $dbName);
+		$crypter = new JCrypter();
 
 		if ($db_connection->connect_errno > 0) {
 			die('Unable to connect to database[' . $db_connection->connect_error . ']');
 		}
-
 	}
 
 	function GetStatusDescription($statusId){
@@ -62,16 +64,18 @@ class DBHandler{
   //ADD NEW USER TO DATABASE
 	function addUser($first_name, $last_name, $username, $password, $role) {
 		global $db_connection;
-		$result = ['Added' => false,'Username' => $username];
+		global $crypter;
+		$hash_password = $crypter->hash($password);
+
+		$result = ['Added' => false,'Username' => $username, 'Password' => $hash_password];
 		$sql = "INSERT INTO OFFICERS (First_Name, Last_Name, Username, Password, Role) VALUES (?,?,?,?,?)"; 
 		$stmt = $db_connection->prepare($sql);
-		if (!$stmt->bind_param('sssss', $first_name, $last_name, $username, $password, $role)){
+		if (!$stmt->bind_param('sssss', $first_name, $last_name, $username, $hash_password, $role))
 			echo "Binding parameters failed: (" . $stmt->errno . ") " . $stmt->error;
-		}
-		if (!$stmt->execute()){
+		if (!$stmt->execute())
 			return $result;
-		}
-    $result['Added'] = true;
+
+    	$result['Added'] = true;
 		$stmt->close();
 		$db_connection->close();
 		return $result;
@@ -138,16 +142,30 @@ class DBHandler{
 
 	function loginUser($username, $password){
 		global $db_connection;
+		global $crypter;
+
         //store the result here
-		$result = ['userID' => NULL, 'First_Name' => NULL, 'Last_Name' => NULL, 'Username' => NULL, 'Password' => NULL, 'Role' => NULL];
-		$sql = 'SELECT userID, First_Name, Last_Name, Username, Password, Role FROM OFFICERS WHERE Username=? AND Password=? and Active = 1';
+		$result = ['userID' => NULL, 
+				   'First_Name' => NULL, 'Last_Name' => NULL, 
+				   'Username' => NULL, 'Password' => NULL, 'Role' => NULL, 
+				   'Lock_Count' => NULL];
+		$failed = $result;
+
+		$sql = 'SELECT userID, First_Name, Last_Name, Username, Password, Role, lock_count 
+				FROM OFFICERS o
+				LEFT JOIN LOGIN_LOGS l ON o.userID = l.log_id
+				WHERE lower(Username) = lower(?) AND Active = 1';
 		$stmt = $db_connection->prepare($sql);
-		$stmt->bind_param('ss', $username, $password);
+		$stmt->bind_param('s', $username);
 		$stmt->execute();
-		$stmt->bind_result($result['userID'], $result['First_Name'], $result['Last_Name'], $result['Username'], $result['Password'], $result['Role']);
-		if (!$stmt->fetch()){
-			return $result;
-		}
+		$stmt->bind_result(	$result['userID'], 
+							$result['First_Name'], $result['Last_Name'], 
+						   	$result['Username'], $result['Password'], 
+						   	$result['Role'], $result['Lock_Count'] );
+
+		if (!$stmt->fetch()) return $failed;
+		if ( !$crypter->verify($password, $result['Password'])) return $failed;
+		
 		$stmt->close();
 		$db_connection->close();		
 		return $result;
@@ -155,23 +173,108 @@ class DBHandler{
 
 	function changePassword($id, $curr_pw, $new_pw){
 		global $db_connection;
+		global $crypter;
+		$hash_new_pw = $crypter->hash($new_pw);
+
 		$result = ['userID' => NULL, 'Updated' => NULL];
-		$sql = 'SELECT userID FROM OFFICERS WHERE userID=? AND Password=?';
-		$stmt = $db_connection->prepare($sql);
-		$stmt->bind_param('ss', $id, $curr_pw);
+		
+		$stmt = $db_connection->prepare('UPDATE OFFICERS SET Password=? WHERE UserID=?');
+		$stmt->bind_param('sd', $hash_new_pw, $id);
 		$stmt->execute();
-		$stmt->bind_result($result['userID']);
-		if (!$stmt->fetch()){
-			return $result;
-		}
-		$stmt->close();
-		$sql = 'UPDATE OFFICERS SET Password=? WHERE UserID=?';
-		$stmt = $db_connection->prepare($sql);
-		$stmt->bind_param('sd', $new_pw, $id);
-		$stmt->execute();
-		if ($stmt->affected_rows === 1){
+		if ($stmt->affected_rows === 1)
 			$result['Updated'] = true;
+		
+		$stmt->close();
+		$db_connection->close();
+		return $result;
+	}
+
+	function getTally( $username ) {
+		global $db_connection;
+		$result = ['userid' => 0, 'count' => 0, 'locked' => 0, 'created' => NULL];
+
+		$query = "SELECT userID, lock_count, lock_status, l.created_at
+				  FROM OFFICERS O LEFT JOIN LOGIN_LOGS L ON O.userID = L.log_id
+				  WHERE lower(O.username) = lower(?) ";
+
+		$stmt = $db_connection->prepare($query);
+	    $stmt->bind_param('s', $username);
+	    $stmt->execute();
+	    $stmt->bind_result( $result['userid'], 
+	    					$result['count'], 
+	    					$result['locked'],
+	    					$result['created'] );
+
+	    if (!$stmt->fetch()) return $result; 
+		$stmt->close();
+		$db_connection->close();
+		return $result;
+	}
+
+	function updateFailedLog( $lock_found, $log_id, $lock_count ) 
+	{
+		global $db_connection;
+		$result = ['status' => ''];
+		$lockStatus = 0;
+
+		if ( $lock_found )
+		{
+			$query =  'UPDATE login_logs SET lock_count = ?, updated_at = now() ';
+			if ( $lock_count == 1) 
+				$query .= ', created_at = now() ';
+			$query .= 'WHERE log_id = ? ';
+			$stmt = $db_connection->prepare($query);
+			if ( !$stmt->bind_param('ii', $lock_count, $log_id ) )
+				$result["status"] = "Query failed at biding. ";
 		}
+		else
+		{	
+			$stmt = $db_connection
+					->prepare('INSERT INTO login_logs (log_id, created_at, lock_count, lock_status ) 
+							   VALUES (?,now(),?,?) ');
+			if ( !$stmt->bind_param('iii', $log_id, $lock_count, $lockStatus) )
+				$result["status"] = "Query failed at biding. ";	
+			else
+				$result["status"] = "Failed Attempt Recorded.";
+		}	
+
+		if (!$stmt->execute()) return $result;
+		$stmt->close();
+		$db_connection->close();
+
+		return $result;
+	}
+
+	function lockUser( $id )
+	{
+		global $db_connection;
+		$result = ['status' => ''];
+		$query = "UPDATE login_logs SET lock_status = 1 WHERE log_id = ?";
+		$stmt = $db_connection->prepare($query);	
+		if( !$stmt->bind_param('i', $id) ) return $result;
+		if (!$stmt->execute())  return $result;
+
+		$query = 'UPDATE officers SET Active = 0 WHERE userID = ?';
+		$stmt = $db_connection->prepare($query);	
+		if( !$stmt->bind_param('i', $id) ) return $result;
+		if (!$stmt->execute())  return $result;
+
+		$result['status'] = 'Your account has been locked!';
+		$stmt->close();
+		$db_connection->close();
+		return $result;
+	}
+
+	function resetLock ( $id )
+	{
+		global $db_connection;
+		$result = ['reset' => false];
+		$logCount = 0; 
+		$stmt = $db_connection->
+			prepare('UPDATE LOGIN_LOGS SET lock_count=?, created_at=now() WHERE log_id=?');
+		if(!$stmt->bind_param('ii', $logCount, $id)) return $result;
+		if(!$stmt->execute()) return $result;
+		$result['reset'] = true;
 		$stmt->close();
 		$db_connection->close();
 		return $result;
@@ -435,15 +538,23 @@ class DBHandler{
     //RESET OFFICER PASSWORD IN THE DATABASE
 	function resetPassword($id, $reset_pw){
 		global $db_connection;
+		global $crypter;
+
+		$hash_reset = $crypter->hash($reset_pw);
 		$result = ['userID' => $id, 'Updated' => false];
-		$sql = 'UPDATE OFFICERS SET Password=? WHERE UserID=?';
-		$stmt = $db_connection->prepare($sql);
-		if(!$stmt->bind_param('sd', $reset_pw, $id)){
-			return $result;
-		}
-		if(!$stmt->execute()){
-			return $result;
-		}
+		$active = 1;
+
+		//Update the Officers Relation
+		$stmt = $db_connection->prepare('UPDATE OFFICERS SET Password=?, Active=? WHERE UserID=?');
+		if(!$stmt->bind_param('sid', $hash_reset, $active, $id)) return $result;
+		if(!$stmt->execute()) return $result; 
+
+		//Update the Login_logs Relation
+		$logCount = 0; $lockStatus = 0;
+		$stmt = $db_connection->prepare('UPDATE LOGIN_LOGS SET lock_count=?, lock_status=? WHERE log_id=?');
+		if(!$stmt->bind_param('iii', $logCount, $lockStatus, $id)) return $result;
+		if(!$stmt->execute()) return $result; 
+
 		$result["Updated"] = true;
 		$stmt->close();
 		$db_connection->close();

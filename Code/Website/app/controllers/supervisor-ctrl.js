@@ -133,7 +133,7 @@ supervisorModule.controller('supervisorCtrl', ['$scope', 'localStorageService', 
   }else{
     this.reset_pass = this.reset_pass_conf = '';
   //call reset password function in data service
-  dataService.resetPassword(id, reset_password, reset_password_conf)
+  dataService.resetPassword(id, reset_password)
     .then(
       function(data){
       if(data['Updated'] === true){
