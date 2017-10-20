@@ -74,6 +74,9 @@ supervisorModule.config(function($routeProvider){
 	.when('/upload', {
 		templateUrl: 'partials/manage-documents.html'
 	})
+	.when('/manage-watch-orders', {
+		templateUrl: 'partials/manage-watch-orders.html'
+	})
 	.when('/reset', {
 		templateUrl: 'partials/reset-password.html'
 	})
@@ -99,6 +102,9 @@ officerModule.config(function($routeProvider){
 	})
 	.when('/documents/:selectedCategory/archived', {
 		templateUrl: 'partials/view-documents-archived.html'
+	})
+	.when('/watch-orders', {
+		templateUrl: 'partials/watch-orders.html'
 	})
 	.otherwise({
 		redirectTo: '/categories'

@@ -228,9 +228,6 @@ adminModule.controller('adminCtrl', ['$scope', 'dataService', 'localStorageServi
                     alert("The file must of type CSV.");
                     return;
                   }
-
-                  //var csvfile = document.getElementById("files").files[0];
-
                   Papa.parse(file, {
                     complete: function(results) {
                       $scope.$apply(function () {

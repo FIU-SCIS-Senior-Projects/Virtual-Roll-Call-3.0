@@ -67,7 +67,7 @@ supervisorModule.controller('supervisorCtrl', ['$scope', 'localStorageService', 
     var name = $scope.doc_name;
     var pinned = $scope.doc_pinned;
     sharedCtrl.updateDocument(id, categorie, name, pinned)
-    
+
   }
 /***********************
 * Toggle between day and night mode*

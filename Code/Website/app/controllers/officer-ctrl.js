@@ -55,9 +55,6 @@ officerModule.controller('officerCtrl', ['$scope', 'localStorageService', 'dataS
           var pinned_documents = [];
           var unpinned_documents = [];
 
-          //add var to count pending documents
-          var juan = 0;
-
           //for each category in the result
           for (var x in data) {
             //create an object and set object properties (i.e. documents data)
@@ -91,7 +88,6 @@ officerModule.controller('officerCtrl', ['$scope', 'localStorageService', 'dataS
           sortDocuments();
 
           getPendingDocuments(id);
-          //  $scope.pending_count = juan;
 
         },
         function (error) {
@@ -137,8 +133,6 @@ officerModule.controller('officerCtrl', ['$scope', 'localStorageService', 'dataS
    ***********************/
     function getPendingDocuments (user_id) {
 
-      //$scope.selected_cat = $routeParams.selectedCategory;
-
       dataService.viewDocuments(user_id)
         .then(
         function (data) {
@@ -163,7 +157,7 @@ officerModule.controller('officerCtrl', ['$scope', 'localStorageService', 'dataS
             }
           }
               $scope.pending_count = dict;
-          
+
         },
         function (error) {
           console.log('Error: ' + error);
@@ -181,6 +175,47 @@ officerModule.controller('officerCtrl', ['$scope', 'localStorageService', 'dataS
      function getDisplayMode(){
        return sharedCtrl.getDisplayMode();
      };
+
+
+     /***********************
+    * Get watch-orders*
+    ***********************/
+      $scope.getWatchOrders = function getWatchOrders() {
+
+          $scope.initMap();
+
+      };
+
+
+
+      $scope.initMap = function initMap() {
+        var map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 8,
+          center: {lat: -34.397, lng: 150.644}
+        });
+        var geocoder = new google.maps.Geocoder();
+
+        document.getElementById('submit').addEventListener('click', function() {
+          geocodeAddress(geocoder, map);
+        });
+      }
+
+      function geocodeAddress(geocoder, resultsMap) {
+        var address = document.getElementById('address').value;
+        geocoder.geocode({'address': address}, function(results, status) {
+          if (status === 'OK') {
+            resultsMap.setCenter(results[0].geometry.location);
+            var marker = new google.maps.Marker({
+              map: resultsMap,
+              position: results[0].geometry.location
+            });
+          } else {
+            alert('Geocode was not successful for the following reason: ' + status);
+          }
+        });
+      }
+
+
 
 
 

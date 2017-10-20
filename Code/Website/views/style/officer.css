@@ -156,9 +156,9 @@
     background-color: #45b429;
   }
 
-
-
-
+  #map {
+  height: 100%;
+}
 
   #night-mode{
     /*background-color: black;*/
