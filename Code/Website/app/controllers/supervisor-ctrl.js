@@ -83,6 +83,167 @@ supervisorModule.controller('supervisorCtrl', ['$scope', 'localStorageService', 
  $scope.display_mode = getDisplayMode();
  $scope.night_mode = localStorageService.get('nightMode');
 
+ /***** BATCH ADD WATCH ORDERS MODAL *****/
+ $scope.addBatchWatchOrders = function(){
+   document.getElementById("parsedWatchOrdersPanel").style.display = "none";
+   document.getElementById("successMessage").style.display = "none";
+   document.getElementById("failMessage").style.display = "none";
+   $scope.display_mode_modal = sharedCtrl.getDisplayMode();
+   $scope.parsedWatchOrders = [];
+   $('#batchWatchOrdersModal').modal('show');
+ };
+
+/***** PARSE CSV file*****/
+ $scope.parseCSV = function(){
+
+   if (!$('#files')[0].files.length)
+   {
+     alert("Please choose a CSV file to parse.");
+     return;
+   }
+
+   var file = $('#files')[0].files[0];
+
+   if(file.type != "text/csv")
+   {
+     alert("The file must of type CSV.");
+     return;
+   }
+   Papa.parse(file, {
+     complete: function(results) {
+       $scope.$apply(function () {
+         $scope.parsedWatchOrders = results.data;
+       });
+
+       if(results.data.length == 0)
+       {
+         document.getElementById("parsedUsersPanel").style.display = "none";
+         document.getElementById("successMessage").style.display = "none";
+         document.getElementById("failMessage").style.display = "none";
+         alert("No watch orders could be parsed from CSV file");
+
+         return;
+       }
+
+       var message = "Parsed (" + results.data.length + ") watch orders from CSV file";
+       document.getElementById("parseTitle").innerHTML = message;
+       //alert(message);
+
+     }
+   });
+   document.getElementById("parsedWatchOrdersPanel").style.display = "block";
+   document.getElementById("successMessage").style.display = "none";
+   document.getElementById("failMessage").style.display = "none";
+ };
+
+/***** ATTEMPT TO ADD ALL PARSED ORDERS FROM CSV FILE TO DATABASE *****/
+ $scope.addParsedWatchOrders = function(){
+
+   var orders = $scope.parsedWatchOrders;
+   var success = 0;
+   var fail = 0;
+   var processed = 0;
+   var total = orders.length;
+
+   orders.forEach(function(order){
+     addWatchOrder(order).then(
+       function(data){
+         if(data == true )
+         {
+           var index = $scope.parsedWatchOrders.indexOf(order);
+           $scope.parsedWatchOrders.splice(index,1);
+           success++;
+         }
+         else {
+           fail++;
+         }
+         processed++;
+         if(processed == total)
+         {
+           var successLabel = document.getElementById("successMessage");
+           var failLabel = document.getElementById("failMessage");
+           successLabel.style.display = "none";
+           failLabel.style.display = "none";
+
+           if(fail == 0){
+             var x = document.getElementById("parsedWatchOrdersPanel");
+             x.style.display = "none";
+             successLabel.innerHTML = success + " orders(s) successfully added";
+             successLabel.style.display = "block";
+           }
+           else {
+             if(success > 0)
+             {
+               successLabel.innerHTML = success + " orders(s) successfully added";
+               successLabel.style.display = "block";
+
+             }
+             failLabel.innerHTML = fail + " orders(s) could not be added";
+             failLabel.style.display = "block";
+           }
+
+         }
+       });
+   });
+ };
+
+/***** ATTEMPT TO ADD A PARSED WATCH ORDER TO THE DATABASE *****/
+ self.addWatchOrder = function(order){
+
+   return new Promise(function(resolve, reject) {
+
+     //get values from parsed watch order
+     var desc = order[0];
+     var address = order[1];
+
+     if(!address){
+       resolve(false);
+       return;
+     }
+
+
+     var username = user[2];
+     var password = user[3];
+     var role = user[4];
+
+     if(password.length < 8){
+       resolve(false);
+       return;
+     }
+
+     if(!username || !first_name || !last_name){
+       resolve(false);
+       return;
+     }
+
+     if(!(role == "Administrator" || role == "Supervisor" || role == "Officer") ){
+       resolve(false);
+       return;
+     }
+
+     dataService.addUser(first_name, last_name, username, password, role)
+     .then(
+       function(data){
+         if(data['Added'] === true){
+           sharedCtrl.getOfficers();
+           resolve(true);
+           console.log("true");
+         }
+         else{
+           //  $scope.alert.closeAll();
+           //$scope.alert.addAlert('danger', 'Could not add user!');
+           resolve(false);
+           console.log("fail");
+           //return false;
+         }
+       },
+       function(error){
+         console.log('Error: ' + error);
+       });
+
+     });
+   };
+
   /***** ALERT FUNCTIONS *****/
   //alert functions (displays accordingly in views)
   $scope.alert = sharedCtrl.alert;
