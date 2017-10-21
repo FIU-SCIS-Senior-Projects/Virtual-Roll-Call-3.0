@@ -62,7 +62,7 @@ sharedModule.factory('sharedService', function ($http, $q) {
       });
     },
 
-   
+
    updateDocument: function(id,categorie,name,pinned){
      return $q(function (resolve, reject){
    	$http.post('../app/php/update-document.php',{'id':id,'categories':categorie,'name':name,'pinned':pinned})
@@ -71,7 +71,7 @@ sharedModule.factory('sharedService', function ($http, $q) {
 		function (error) {reject(error);})
 	});
   },
- 
+
    changePassword: function (id, curr_pass, new_pass) {
       return $q(function (resolve, reject) {
         $http.post('../app/php/change-password.php', { 'id': id, 'current': curr_pass, 'new': new_pass })
@@ -104,7 +104,7 @@ loginModule.factory('dataService', function ($http, $q) {
       });
     },
 
-    getTally: function( username ) 
+    getTally: function( username )
     {
         return $q(function (resolve) {
           $http.post('../app/php/get-tally.php', {'username': username})
@@ -123,7 +123,7 @@ loginModule.factory('dataService', function ($http, $q) {
       });
     },
 
-    lockUser: function (userid) 
+    lockUser: function (userid)
     {
         return $q(function (resolve) {
           $http.post('../app/php/lockUser.php', {'userid': userid})
@@ -135,17 +135,16 @@ loginModule.factory('dataService', function ($http, $q) {
     {
         return $q(function(resolve) {
           $http.post('../app/php/resetLock.php', {'userid': userid})
-            .then( function(response) { 
+            .then( function(response) {
               resolve(response.data); });
-        }); 
+        });
     }
   }
 });
 
 
-//SERVICE for supervisor controller
+//SERVICE for admin controller
 adminModule.factory('dataService', function ($http, $q) {
-
   return {
     addUser: function (fname, lname, email, password, role) {
       return $q(function (resolve, reject) {
@@ -240,7 +239,7 @@ adminModule.factory('dataService', function ($http, $q) {
 
     updateAppName: function (name) {
       return $q(function (resolve, reject) {
-        
+
         $http.post('../app/php/update-app-name.php', { 'name': name })
           .then(
           function (response) {
@@ -253,7 +252,7 @@ adminModule.factory('dataService', function ($http, $q) {
     },
     deleteArchive: function(from,to) {
       return $q(function (resolve, reject) {
-        
+
         $http.post('../app/php/delete-archive.php', { 'from': from,'to':to })
           .then(
           function (response) {
@@ -284,6 +283,30 @@ adminModule.factory('dataService', function ($http, $q) {
 //SERVICE for supervisor controller
 supervisorModule.factory('dataService', function ($http, $q) {
   return {
+    addWatchOrder: function (desc, address, lat, long) {
+      return $q(function (resolve, reject) {
+        $http.post('../app/php/add-watch-order.php', { 'desc': desc, 'address': address, 'lat': lat, 'long': long })
+          .then(
+          function (response) {
+            resolve(response.data);
+          },
+          function (error) {
+            reject(error);
+          });
+      });
+    },
+    removeWatchOrders: function () {
+      return $q(function (resolve, reject) {
+        $http.post('../app/php/remove-watch-orders.php', {'something': "test"})
+          .then(
+          function (response) {
+            resolve(response.data);
+          },
+          function (error) {
+            reject(error);
+          });
+      });
+    },
     resetPassword: function (id, reset_pass) {
       return $q(function (resolve, reject) {
         $http.post('../app/php/reset-password.php', { 'id': id, 'reset_pass': reset_pass })
@@ -301,7 +324,7 @@ supervisorModule.factory('dataService', function ($http, $q) {
 
 //SERVICE for officer controller
 officerModule.factory('dataService', function ($http, $q) {
-  return {
+return {
     viewDocuments: function (user_id) {
       return $q(function (resolve, reject) {
         $http.post('../app/php/get-documents.php', {'type': 'active', 'user_id': user_id})
