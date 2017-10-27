@@ -295,6 +295,18 @@ supervisorModule.factory('dataService', function ($http, $q) {
           });
       });
     },
+    viewWatchOrders: function () {
+      return $q(function (resolve, reject) {
+        $http.post('../app/php/get-watch-orders.php')
+          .then(
+          function (response) {
+            resolve(response.data);
+          },
+          function (error) {
+            reject(error);
+          });
+      });
+    },
     removeWatchOrders: function () {
       return $q(function (resolve, reject) {
         $http.post('../app/php/remove-watch-orders.php')

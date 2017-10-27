@@ -8,62 +8,10 @@
 	<button class="btn btn-success" data-toggle="modal" ng-click='addBatchWatchOrders()'><span class="glyphicon glyphicon-th-list"></span> Batch Add Watch Orders</button>
 	<br>
 	<br>
-	<!-- Add User Panel -->
-	<div class='panel panel-primary {{display_mode}}'>
-		<div class='panel-heading'>Add User</div>
-		<div class='panel-body'>
 
-
-			<!-- Add User Form -->
-			<form ng-submit='addUser()'>
-
-				<label>First Name</label>
-				<br>
-				<input class='fields {{display_mode}}' type='text' ng-model='fName' required>
-				<br>
-				<br>
-				<label>Last Name</label>
-				<br>
-				<input class='fields {{display_mode}}' type='text' ng-model='lName' required>
-				<br>
-				<br>
-				<label>Username</label>
-				<br>
-				<input class='fields {{display_mode}}' type='text' ng-model='username' required>
-				<br>
-				<br>
-				<label>Password</label>
-				<br>
-				<!-- TO DO: Validate password pattern in controller as well -->
-				<input class='fields {{display_mode}}' class='fields {{display_mode}}' type='password' ng-model='password' pattern='^[a-zA-Z0-9]{8,}$' title='Must contain at least 8 or more characters. Only alphanumeric characters allowed.' required>
-				<br>
-				<br>
-				<label>Role</label><br>
-				<select class='fields {{display_mode}}' ng-model='role'>
-					<option value='Officer'>Officer</option>
-					<option value='Supervisor'>Supervisor</option>
-					<option value='Administrator'>Administrator</option>
-				</select>
-				<br>
-				<br>
-				<button type='submit' class='btn btn-success'>Add User</button>
-				<br>
-				<br>
-
-				<!-- display message accordingly -->
-				<div class='alert alert-danger' ng-show='errorMessage' style='margin-bottom: 0'>
-					{{message}}
-				</div>
-				<div class='alert alert-success' ng-show='successMessage' style='margin-bottom: 0'>
-					{{message}}
-				</div>
-			</form>
-		</div>
-	</div>
-
-	<!-- Edit User Panel -->
-	<div class='panel panel-primary' ng-init='getOfficers()'>
-		<div class='panel-heading'>Edit User</div>
+	<!-- Edit Watch Order Panel -->
+	<div class='panel panel-primary' ng-init='getWatchOrders()'>
+		<div class='panel-heading'>Edit Watch Orders</div>
 
 		<!-- TO DO: Overflow not detected until page reloads -->
 		<div class='panel-body {{display_mode}}' style="height:350px; overflow-y:scroll">
@@ -78,20 +26,22 @@
 					<thead>
 						<tr>
 							<th class="text-center">#</th>
-							<th>First Name</th>
-							<th>Last Name</th>
-							<th>Username</th>
-							<th>Role</th>
+							<th>Address</th>
+							<th>Description</th>
+							<th>Latitude</th>
+							<th>Longitude</th>
+							<th>Date</th>
 							<th class="text-center">Edit</th>
 						</tr>
 					</thead>
 					<tbody>
-						<tr {{display_mode}} ng-repeat='o in officers|filter:search'>
+						<tr {{display_mode}} ng-repeat='o in watch_orders|filter:search'>
 							<td class='text-center'>{{$index + 1}}</td>
-							<td>{{o.firstName}}</td>
-							<td>{{o.lastName}}</td>
-							<td>{{o.username}}</td>
-							<td>{{o.role}}</td>
+							<td>{{o.Address}}</td>
+							<td>{{o.Desc}}</td>
+							<td>{{o.Lat}}</td>
+							<td>{{o.Lng}}</td>
+							<td>{{o.Date}}</td>
 							<td class='text-center'><button class="btn-default" ng-click='editUser(o.id, o.firstName, o.lastName, o.username, o.role)'><span class="glyphicon glyphicon-edit"></span> Edit</button></td>
 						</tr>
 					</tbody>

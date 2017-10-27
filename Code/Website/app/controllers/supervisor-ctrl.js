@@ -231,6 +231,7 @@ supervisorModule.controller('supervisorCtrl', ['$scope', 'localStorageService', 
               });
             });
         }
+        $scope.getWatchOrders;
       },
       function(error){
         console.log('Error: ' + error);
@@ -277,6 +278,46 @@ supervisorModule.controller('supervisorCtrl', ['$scope', 'localStorageService', 
           });
 
         });
+      };
+
+      /***********************
+     * GET WATCH ORDERS
+     ***********************/
+      $scope.getWatchOrders = function getWatchOrders(){
+
+
+          dataService.viewWatchOrders()
+            .then(
+            function (data) {
+
+              //initialize an empty array to store results from the database
+              var watch_orders = [];
+
+              //for each category in the result
+              for (var x in data) {
+
+                //create an object and set object properties
+                  var tmp = new Object();
+                  tmp.Id = data[x].Id;
+                  tmp.Desc = data[x].Desc;
+                  tmp.Address = data[x].Address;
+                  tmp.Lat = data[x].Lat;
+                  tmp.Lng = data[x].Lng;
+                  tmp.Date = data[x].Date;
+
+                  watch_orders.push(tmp);
+              }
+
+              //update for use in view
+              $scope.watch_orders = watch_orders;
+
+            },
+            function (error) {
+              console.log('Error: ' + error);
+            });
+
+
+
       };
 
       /***** ALERT FUNCTIONS *****/
