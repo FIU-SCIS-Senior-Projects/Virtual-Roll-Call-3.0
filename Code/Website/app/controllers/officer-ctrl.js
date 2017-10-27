@@ -177,28 +177,140 @@ officerModule.controller('officerCtrl', ['$scope', 'localStorageService', 'dataS
      };
 
 
-     /***********************
-    * Get watch-orders*
-    ***********************/
-      $scope.getWatchOrders = function getWatchOrders() {
 
-          $scope.initMap();
+      /***********************
+     * GET WATCH ORDERS
+     ***********************/
+      function getWatchOrders(){
 
-      };
+        return new Promise(function(resolve, reject) {
 
+          dataService.viewWatchOrders()
+            .then(
+            function (data) {
 
+              //initialize an empty array to store results from the database
+              var watch_orders = [];
 
-      $scope.initMap = function initMap() {
-        var map = new google.maps.Map(document.getElementById('map'), {
-          zoom: 8,
-          center: {lat: -34.397, lng: 150.644}
+              //for each category in the result
+              for (var x in data) {
+
+                //create an object and set object properties
+                  var tmp = new Object();
+                  tmp.Id = data[x].Id;
+                  tmp.Desc = data[x].Desc;
+                  tmp.Address = data[x].Address;
+                  tmp.Lat = data[x].Lat;
+                  tmp.Lng = data[x].Lng;
+                  tmp.Date = data[x].Date;
+
+                  watch_orders.push(tmp);
+              }
+
+              resolve(watch_orders);
+
+            },
+            function (error) {
+              console.log('Error: ' + error);
+              reject(error);
+            });
+
         });
+
+
+
+      }
+
+
+
+
+      //Initialize map
+      $scope.initMap = function initMap() {
+
+        $scope.markerCount = 0;
+        var defaultLocation = {lat: 25.6622835, lng: -80.307}; //default location set in Pinecrest,FL
+
+        var map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 13,
+          center: defaultLocation
+        });
+
+
+        getWatchOrders().then(
+          function (data) {
+
+            var markerCount = 0;
+            data.forEach(function(order){
+
+              var contentString = "<h5><b>" + order.Address + "</b> </h5><hr>";
+              contentString += "<p><b>Description:</b> " + order.Desc + "</p>";
+              contentString += "<p><b>Date Added:</b> " + order.Date + "</p>";
+
+              var infowindow = new google.maps.InfoWindow({
+                content: contentString
+              });
+
+              var marker = new google.maps.Marker({
+                position: {lat: order.Lat, lng: order.Lng},
+                label: String(++markerCount),
+                map: map
+              });
+
+              marker.addListener('click', function() {
+                infowindow.open(map, marker);
+              });
+            }
+
+
+
+          );
+
+          $scope.$apply(function () {
+            $scope.markerCount = markerCount;
+          });
+
+
+          }
+        );
+
+
+
+
         var geocoder = new google.maps.Geocoder();
 
         document.getElementById('submit').addEventListener('click', function() {
           geocodeAddress(geocoder, map);
         });
-      }
+
+        var contentString = "juan is cool";
+        var uluru = {lat: -25.363, lng: 131.044};
+        var uluru2 = {lat: -22.363, lng: 130.044};
+
+        var infowindow = new google.maps.InfoWindow({
+          content: contentString
+        });
+
+        var marker = new google.maps.Marker({
+          position: uluru,
+          label: "A",
+          map: map,
+          title: 'Uluru (Ayers Rock)'
+        });
+        marker.addListener('click', function() {
+          infowindow.open(map, marker);
+        });
+
+        var marker2 = new google.maps.Marker({
+          position: uluru2,
+          map: map,
+          title: 'Uluru (Ayers Rock)'
+        });
+        marker.addListener('click', function() {
+          infowindow.open(map, marker);
+        });
+
+
+      };
 
       function geocodeAddress(geocoder, resultsMap) {
         var address = document.getElementById('address').value;

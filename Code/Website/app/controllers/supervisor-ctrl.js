@@ -113,8 +113,6 @@ supervisorModule.controller('supervisorCtrl', ['$scope', 'localStorageService', 
       complete: function(results) {
         $scope.$apply(function () {
           $scope.parsedWatchOrders = results.data;
-
-          //covert address before
         });
 
         if(results.data.length == 0)
