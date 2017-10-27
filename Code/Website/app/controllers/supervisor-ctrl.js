@@ -205,6 +205,7 @@ supervisorModule.controller('supervisorCtrl', ['$scope', 'localStorageService', 
                 processed++;
                 if(processed == total)
                 {
+                  $scope.getWatchOrders();
                   var successLabel = document.getElementById("successMessage");
                   var failLabel = document.getElementById("failMessage");
                   successLabel.style.display = "none";
@@ -231,7 +232,7 @@ supervisorModule.controller('supervisorCtrl', ['$scope', 'localStorageService', 
               });
             });
         }
-        $scope.getWatchOrders;
+
       },
       function(error){
         console.log('Error: ' + error);
