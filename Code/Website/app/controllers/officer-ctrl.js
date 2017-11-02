@@ -272,44 +272,6 @@ officerModule.controller('officerCtrl', ['$scope', 'localStorageService', 'dataS
 
           }
         );
-
-
-
-
-        var geocoder = new google.maps.Geocoder();
-
-        document.getElementById('submit').addEventListener('click', function() {
-          geocodeAddress(geocoder, map);
-        });
-
-        var contentString = "juan is cool";
-        var uluru = {lat: -25.363, lng: 131.044};
-        var uluru2 = {lat: -22.363, lng: 130.044};
-
-        var infowindow = new google.maps.InfoWindow({
-          content: contentString
-        });
-
-        var marker = new google.maps.Marker({
-          position: uluru,
-          label: "A",
-          map: map,
-          title: 'Uluru (Ayers Rock)'
-        });
-        marker.addListener('click', function() {
-          infowindow.open(map, marker);
-        });
-
-        var marker2 = new google.maps.Marker({
-          position: uluru2,
-          map: map,
-          title: 'Uluru (Ayers Rock)'
-        });
-        marker.addListener('click', function() {
-          infowindow.open(map, marker);
-        });
-
-
       };
 
       function geocodeAddress(geocoder, resultsMap) {
