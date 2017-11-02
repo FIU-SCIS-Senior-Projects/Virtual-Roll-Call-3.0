@@ -9,7 +9,7 @@ class DBHandler{
 		global $crypter;
 
 		$un = 'root';
-		$pw = 'VirtualRollCall';
+		$pw = 'root';
 		$dbName = 'VIRTUAL_ROLL_CALL';
 		$address = 'localhost';
 		$db_connection = new mysqli($address, $un, $pw, $dbName);
@@ -24,7 +24,7 @@ class DBHandler{
 		global $db_connection;
 		$result = [];
 		$statusDescription = 'Not Defined';
-		
+
 		$sql = "SELECT Description FROM DOCUMENT_STATUS WHERE Id=?";
 		$stmt = $db_connection->prepare($sql);
 
@@ -41,11 +41,11 @@ class DBHandler{
 
 		return $statusDescription;
 	}
-	
+
 	function GetStatusArray(){
 		global $db_connection;
 		$result = [];
-		
+
 		$sql = "SELECT Id, Description FROM DOCUMENT_STATUS ORDER BY Id";
 		$stmt = $db_connection->prepare($sql);
 
@@ -55,9 +55,9 @@ class DBHandler{
 			while($stmt->fetch()){
 					array_push($result, $statusDescription);
 			}
-			$stmt->close();			
+			$stmt->close();
 		}
-		
+
 		return $result;
 	}
 
@@ -68,7 +68,7 @@ class DBHandler{
 		$hash_password = $crypter->hash($password);
 
 		$result = ['Added' => false,'Username' => $username, 'Password' => $hash_password];
-		$sql = "INSERT INTO OFFICERS (First_Name, Last_Name, Username, Password, Role) VALUES (?,?,?,?,?)"; 
+		$sql = "INSERT INTO OFFICERS (First_Name, Last_Name, Username, Password, Role) VALUES (?,?,?,?,?)";
 		$stmt = $db_connection->prepare($sql);
 		if (!$stmt->bind_param('sssss', $first_name, $last_name, $username, $hash_password, $role))
 			echo "Binding parameters failed: (" . $stmt->errno . ") " . $stmt->error;
@@ -80,8 +80,8 @@ class DBHandler{
 		$db_connection->close();
 		return $result;
 	}
-  
-  // RETRIEVE USER 
+
+  // RETRIEVE USER
   function getUser($username){
     global $db_connection;
     $result = ['userID' => NULL, 'First_Name' => NULL, 'Last_Name' => NULL, 'Username' => NULL, 'Role' => NULL];
@@ -109,7 +109,7 @@ class DBHandler{
 		{
 			return $result;
 		}
-		if (!$stmt->execute()) 
+		if (!$stmt->execute())
 		{
 			return $result;
 		}
@@ -130,7 +130,7 @@ class DBHandler{
 		{
 			return $result;
 		}
-		if (!$stmt->execute()) 
+		if (!$stmt->execute())
 		{
 			return $result;
 		}
@@ -145,29 +145,29 @@ class DBHandler{
 		global $crypter;
 
         //store the result here
-		$result = ['userID' => NULL, 
-				   'First_Name' => NULL, 'Last_Name' => NULL, 
-				   'Username' => NULL, 'Password' => NULL, 'Role' => NULL, 
+		$result = ['userID' => NULL,
+				   'First_Name' => NULL, 'Last_Name' => NULL,
+				   'Username' => NULL, 'Password' => NULL, 'Role' => NULL,
 				   'Lock_Count' => NULL];
 		$failed = $result;
 
-		$sql = 'SELECT userID, First_Name, Last_Name, Username, Password, Role, lock_count 
+		$sql = 'SELECT userID, First_Name, Last_Name, Username, Password, Role, lock_count
 				FROM OFFICERS o
 				LEFT JOIN LOGIN_LOGS l ON o.userID = l.log_id
 				WHERE lower(Username) = lower(?) AND Active = 1';
 		$stmt = $db_connection->prepare($sql);
 		$stmt->bind_param('s', $username);
 		$stmt->execute();
-		$stmt->bind_result(	$result['userID'], 
-							$result['First_Name'], $result['Last_Name'], 
-						   	$result['Username'], $result['Password'], 
+		$stmt->bind_result(	$result['userID'],
+							$result['First_Name'], $result['Last_Name'],
+						   	$result['Username'], $result['Password'],
 						   	$result['Role'], $result['Lock_Count'] );
 
 		if (!$stmt->fetch()) return $failed;
 		if ( !$crypter->verify($password, $result['Password'])) return $failed;
-		
+
 		$stmt->close();
-		$db_connection->close();		
+		$db_connection->close();
 		return $result;
 	}
 
@@ -177,13 +177,13 @@ class DBHandler{
 		$hash_new_pw = $crypter->hash($new_pw);
 
 		$result = ['userID' => NULL, 'Updated' => NULL];
-		
+
 		$stmt = $db_connection->prepare('UPDATE OFFICERS SET Password=? WHERE UserID=?');
 		$stmt->bind_param('sd', $hash_new_pw, $id);
 		$stmt->execute();
 		if ($stmt->affected_rows === 1)
 			$result['Updated'] = true;
-		
+
 		$stmt->close();
 		$db_connection->close();
 		return $result;
@@ -200,18 +200,18 @@ class DBHandler{
 		$stmt = $db_connection->prepare($query);
 	    $stmt->bind_param('s', $username);
 	    $stmt->execute();
-	    $stmt->bind_result( $result['userid'], 
-	    					$result['count'], 
+	    $stmt->bind_result( $result['userid'],
+	    					$result['count'],
 	    					$result['locked'],
 	    					$result['created'] );
 
-	    if (!$stmt->fetch()) return $result; 
+	    if (!$stmt->fetch()) return $result;
 		$stmt->close();
 		$db_connection->close();
 		return $result;
 	}
 
-	function updateFailedLog( $lock_found, $log_id, $lock_count ) 
+	function updateFailedLog( $lock_found, $log_id, $lock_count )
 	{
 		global $db_connection;
 		$result = ['status' => ''];
@@ -220,7 +220,7 @@ class DBHandler{
 		if ( $lock_found )
 		{
 			$query =  'UPDATE login_logs SET lock_count = ?, updated_at = now() ';
-			if ( $lock_count == 1) 
+			if ( $lock_count == 1)
 				$query .= ', created_at = now() ';
 			$query .= 'WHERE log_id = ? ';
 			$stmt = $db_connection->prepare($query);
@@ -228,15 +228,15 @@ class DBHandler{
 				$result["status"] = "Query failed at biding. ";
 		}
 		else
-		{	
+		{
 			$stmt = $db_connection
-					->prepare('INSERT INTO login_logs (log_id, created_at, lock_count, lock_status ) 
+					->prepare('INSERT INTO login_logs (log_id, created_at, lock_count, lock_status )
 							   VALUES (?,now(),?,?) ');
 			if ( !$stmt->bind_param('iii', $log_id, $lock_count, $lockStatus) )
-				$result["status"] = "Query failed at biding. ";	
+				$result["status"] = "Query failed at biding. ";
 			else
 				$result["status"] = "Failed Attempt Recorded.";
-		}	
+		}
 
 		if (!$stmt->execute()) return $result;
 		$stmt->close();
@@ -250,12 +250,12 @@ class DBHandler{
 		global $db_connection;
 		$result = ['status' => ''];
 		$query = "UPDATE login_logs SET lock_status = 1 WHERE log_id = ?";
-		$stmt = $db_connection->prepare($query);	
+		$stmt = $db_connection->prepare($query);
 		if( !$stmt->bind_param('i', $id) ) return $result;
 		if (!$stmt->execute())  return $result;
 
 		$query = 'UPDATE officers SET Active = 0 WHERE userID = ?';
-		$stmt = $db_connection->prepare($query);	
+		$stmt = $db_connection->prepare($query);
 		if( !$stmt->bind_param('i', $id) ) return $result;
 		if (!$stmt->execute())  return $result;
 
@@ -269,7 +269,7 @@ class DBHandler{
 	{
 		global $db_connection;
 		$result = ['reset' => false];
-		$logCount = 0; 
+		$logCount = 0;
 		$stmt = $db_connection->
 			prepare('UPDATE LOGIN_LOGS SET lock_count=?, created_at=now() WHERE log_id=?');
 		if(!$stmt->bind_param('ii', $logCount, $id)) return $result;
@@ -312,16 +312,16 @@ class DBHandler{
 			$status =
 			'(
                 SELECT DOCUMENT_STATUS.Description AS Status
-                FROM DOCUMENT_STATUS 
-                WHERE DOCUMENT_STATUS.Id = 
+                FROM DOCUMENT_STATUS
+                WHERE DOCUMENT_STATUS.Id =
                 (
-                    SELECT StatusId 
-                    FROM USER_DOC_STATUS 
+                    SELECT StatusId
+                    FROM USER_DOC_STATUS
                     WHERE DOCUMENTS.document_ID = USER_DOC_STATUS.DocumentId
                     AND USER_DOC_STATUS.OfficerId = '.$user_id.'
                 )
-             
-            ) 
+
+            )
 			AS Status';
 		}
 
@@ -341,8 +341,8 @@ class DBHandler{
 			$tmp = ["id" => $message_id,
 					"officer_id" => $officer_id,
 					"title" => $title,
-					"message" => $message, 
-					"createdAt" => $created_at, 
+					"message" => $message,
+					"createdAt" => $created_at,
 					"updatedBy" => $updated_by,
 					"updatedAt" => $updated_at];
 			array_push($messages, $tmp);
@@ -360,23 +360,23 @@ class DBHandler{
 
 		global $db_connection;
 		$documents = [];
-		$sql = 'SELECT 
-				DOCUMENTS.document_ID, 
-				DOCUMENTS.Document_Name, 
-				DOCUMENTS.Category_ID, 
-				DOCUMENTS.Upload_Date, 
-				DOCUMENTS.Pinned, 
-				DOCUMENTS.Uploaded_By, 
-				CATEGORIES.category_name, 
-				DOCUMENTS.Upload_Name, 
+		$sql = 'SELECT
+				DOCUMENTS.document_ID,
+				DOCUMENTS.Document_Name,
+				DOCUMENTS.Category_ID,
+				DOCUMENTS.Upload_Date,
+				DOCUMENTS.Pinned,
+				DOCUMENTS.Uploaded_By,
+				CATEGORIES.category_name,
+				DOCUMENTS.Upload_Name,
 				DOCUMENTS.Description,
 					IF(
-					((DOCUMENTS.Upload_Date < (DATE(NOW()) - INTERVAL 7 DAY) AND DOCUMENTS.Pinned = false) OR DOCUMENTS.Manual_Archived = true), 
-					\'Yes\', 
+					((DOCUMENTS.Upload_Date < (DATE(NOW()) - INTERVAL 7 DAY) AND DOCUMENTS.Pinned = false) OR DOCUMENTS.Manual_Archived = true),
+					\'Yes\',
 					\'No\'
 				) AS Archived,
 				'.$status.'
-				FROM DOCUMENTS 
+				FROM DOCUMENTS
 				INNER JOIN CATEGORIES ON DOCUMENTS.Category_ID = CATEGORIES.Category_ID
 				';
 
@@ -396,8 +396,8 @@ class DBHandler{
 			$tmp = ["id" => $id,
 			"name" => $name,
 			"cat_name" => $cat_name,
-			"date" => $date, 
-			"pinned" => $pinned, 
+			"date" => $date,
+			"pinned" => $pinned,
 			"uploadedBy" => $uploadedBy,
 			"upload_name" => $upload_name,
 			"doc_description" => $doc_description,
@@ -417,18 +417,18 @@ class DBHandler{
 
                 global $db_connection;
                 $logs = [];
-                $sql = 'SELECT 
+                $sql = 'SELECT
 						OFFICERS.First_Name,
 						OFFICERS.Last_Name,
 						DOCUMENTS.Document_Name,
-						LOGS.DOC, 
+						LOGS.DOC,
 						DOCUMENTS.Upload_Date AS Uploaded,
 						USER_DOC_STATUS.StartDateTime AS Started,
 						USER_DOC_STATUS.EndDateTime AS Completed,
 						CONCAT(TRUNCATE((TIMESTAMPDIFF(SECOND, USER_DOC_STATUS.startdatetime, USER_DOC_STATUS.enddatetime)), 2), \' Sec\') AS Duration,
 						USER_DOC_STATUS.StatusId
-						FROM DOCUMENTS 
-						LEFT JOIN LOGS ON LOGS.documentid = DOCUMENTS.document_ID 
+						FROM DOCUMENTS
+						LEFT JOIN LOGS ON LOGS.documentid = DOCUMENTS.document_ID
 						LEFT JOIN OFFICERS ON LOGS.userid = OFFICERS.userID
 						LEFT JOIN USER_DOC_STATUS ON DOCUMENTS.document_ID = USER_DOC_STATUS.DocumentId AND OFFICERS.userID = USER_DOC_STATUS.OfficerId
 						LEFT JOIN DOCUMENT_STATUS ON USER_DOC_STATUS.StatusId = DOCUMENT_STATUS.Id
@@ -460,15 +460,15 @@ class DBHandler{
                 $db_connection->close();
                 return $logs;
         }
-	
+
 	//TODO: UPLOAD DATE COME WITH 1 DAY MORE THAN THE ACTUAL DATE
 	//ADD DOCUMENT METADATA  TO THE DATABASE
 	function addDocument($document, $category, $upload_date, $pinned, $uploaded_by, $upload_name, $upload_description){
 		global $db_connection;
 		$result = ['Added' => false];
-		$sql = "INSERT INTO DOCUMENTS (Document_Name, Category_ID, Upload_Date, Pinned, Uploaded_By, Upload_Name, Description) VALUES (?,?,?,?,?,?,?)"; 
+		$sql = "INSERT INTO DOCUMENTS (Document_Name, Category_ID, Upload_Date, Pinned, Uploaded_By, Upload_Name, Description) VALUES (?,?,?,?,?,?,?)";
 		$stmt = $db_connection->prepare($sql);
-		
+
 		if (!$stmt->bind_param('sdsdsss', $document, $category, $upload_date, $pinned, $uploaded_by, $upload_name, $upload_description))
 		{
 			echo "Binding parameters failed: (" . $stmt->errno . ") " . $stmt->error;
@@ -497,7 +497,7 @@ class DBHandler{
 		$stmt->close();
 		return $result;
 	}
-    
+
     //GET ALL CATEGORIES FROM THE DATABASE
 	function getCategories(){
 		global $db_connection;
@@ -520,7 +520,7 @@ class DBHandler{
 	function addCategory($name) {
 		global $db_connection;
 		$result = ['Added' => false,'name' => $name];
-		$sql = "INSERT INTO CATEGORIES (Category_Name) VALUES (?)"; 
+		$sql = "INSERT INTO CATEGORIES (Category_Name) VALUES (?)";
 		$stmt = $db_connection->prepare($sql);
 		if (!$stmt->bind_param('s', $name)){
 			echo "Binding parameters failed: (" . $stmt->errno . ") " . $stmt->error;
@@ -546,7 +546,7 @@ class DBHandler{
 		{
 			return $result;
 		}
-		if (!$stmt->execute()) 
+		if (!$stmt->execute())
 		{
 			return $result;
 		}
@@ -555,7 +555,7 @@ class DBHandler{
 		$db_connection->close();
 		return $result;
 	}
-    
+
     //UPDATE CATEGORY IN THE DATABASE
 	function updateCategory($cat_id, $cat_name) {
 		global $db_connection;
@@ -586,13 +586,13 @@ class DBHandler{
 		//Update the Officers Relation
 		$stmt = $db_connection->prepare('UPDATE OFFICERS SET Password=?, Active=? WHERE UserID=?');
 		if(!$stmt->bind_param('sid', $hash_reset, $active, $id)) return $result;
-		if(!$stmt->execute()) return $result; 
+		if(!$stmt->execute()) return $result;
 
 		//Update the Login_logs Relation
 		$logCount = 0; $lockStatus = 0;
 		$stmt = $db_connection->prepare('UPDATE LOGIN_LOGS SET lock_count=?, lock_status=? WHERE log_id=?');
 		if(!$stmt->bind_param('iii', $logCount, $lockStatus, $id)) return $result;
-		if(!$stmt->execute()) return $result; 
+		if(!$stmt->execute()) return $result;
 
 		$result["Updated"] = true;
 		$stmt->close();
@@ -658,8 +658,8 @@ class DBHandler{
 		$stmt = $db_connection->prepare($sql);
 		$stmt->bind_param('ii',$document_id,$user_id);
 		$stmt->execute();
-		
-	}	
+
+	}
 
 	function updateDocument($id,$name,$categories,$pinned){
 			global $db_connection;
@@ -667,7 +667,7 @@ class DBHandler{
 			$rs = $db_connection->prepare($sql);
 			if(!$rs->bind_param('siii',$name,$categories,$pinned,$id))
 					return "Bind paramenter error";
-            
+
 			if(!$rs->execute()){
 					return "Execute Error";
 			}
@@ -675,13 +675,13 @@ class DBHandler{
 			$db_connection->close();
 			return true;
 	}
-    
+
         function deleteArchive($from,$to){
                 global $db_connection;
                 $officers = [];
                 $from = date("Y-m-d",  strtotime($from));
                 $to = date("Y-m-d",  strtotime($to));
-                
+
                 $sql = "select Document_name,Uploaded_By,Upload_Name from DOCUMENTS WHERE (Upload_Date BETWEEN ? AND ?) and pinned = 0";
                 $rs = $db_connection->prepare($sql);
                 if(!$rs->bind_param('ss',$from,$to))
@@ -690,7 +690,7 @@ class DBHandler{
                 $rs->execute();
                 $rs->bind_result($Document_name, $Uploaded_By,$upload_Name);
                 while($rs->fetch()){
-                    
+
                     unlink("uploads/".$upload_Name);
                     $tmp = ["name" => $Document_name,
                         "uploaded" => $Uploaded_By,
@@ -700,20 +700,20 @@ class DBHandler{
                 $sql = "SET SQL_SAFE_UPDATES = 0;";
                 $rs = $db_connection->prepare($sql);
                 $rs->execute();
-                
+
                 $sql = "delete from DOCUMENTS WHERE (Upload_Date BETWEEN ? AND ?) and pinned = 0";
                 $rs = $db_connection->prepare($sql);
                 if(!$rs->bind_param('ss',$from,$to))
                         return "Bind paramenter error";
 
                 $rs->execute();
-                
+
                 $rs->close();
                 $db_connection->close();
                 return $officers;
-                
+
         }
-	
+
 	//UPDATE DOCUMENT STATUS
 	function documentStatusUpdate($user_id,$document_id,$new_status){
 
@@ -756,7 +756,7 @@ class DBHandler{
 				$db_connection->close();
 				return $result;
 			}
-		}	
+		}
 		else{//document has been mark as done, status will be change to done and end date time will be set as well
 			//$EndDateTime = getdate();
 			$sql = "UPDATE USER_DOC_STATUS SET StatusId=?,EndDateTime=now() WHERE DocumentId=? AND OfficerId=?";
@@ -772,8 +772,8 @@ class DBHandler{
 				//$stmt->close();
 
 				$sql = 'SELECT
-				USER_DOC_STATUS.DocumentId, 
-				DOCUMENT_STATUS.Description 
+				USER_DOC_STATUS.DocumentId,
+				DOCUMENT_STATUS.Description
 				FROM USER_DOC_STATUS
 				LEFT JOIN DOCUMENT_STATUS ON USER_DOC_STATUS.StatusId = DOCUMENT_STATUS.Id
 				WHERE DocumentId=? AND OfficerId=?
@@ -799,11 +799,10 @@ class DBHandler{
 					return $result;
 				}
 			}
-			
-		}	
+
+		}
 
 		return $result;
 	}
 
 }
-
