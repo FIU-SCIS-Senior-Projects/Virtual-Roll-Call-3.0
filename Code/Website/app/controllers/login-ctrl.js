@@ -36,6 +36,7 @@ loginModule.controller('loginCtrl', ['$scope', 'localStorageService', 'dataServi
                  localStorageService.set('id', data['userID']);
                  localStorageService.set('fname', data['First_Name']);
                  localStorageService.set('lname', data['Last_Name']);
+                 localStorageService.set('role', data['Role']);
 
                  var locks = data['Lock_Count'] == null ? 0 : parseInt(data['Lock_Count']);
                  
@@ -45,15 +46,15 @@ loginModule.controller('loginCtrl', ['$scope', 'localStorageService', 'dataServi
                  //route to home page according to role
                  if(data['Role'] === 'Administrator')
                  {
-                    $window.location.href = 'admin-profile.html';
+                    $window.location.href = 'admin-profile.php';
                     localStorageService.set('login','administrator');
                  }
                  else if (data['Role'] === 'Supervisor'){
-                    $window.location.href = 'supervisor-profile.html';
+                    $window.location.href = 'supervisor-profile.php';
                     localStorageService.set('login','supervisor');
                  }
                  else{
-                    $window.location.href = 'officer-profile.html';
+                    $window.location.href = 'officer-profile.php';
                     localStorageService.set('login','officer');
                  }
              }

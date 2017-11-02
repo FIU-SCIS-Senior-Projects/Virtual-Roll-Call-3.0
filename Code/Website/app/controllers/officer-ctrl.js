@@ -1,4 +1,4 @@
-//CONTROLLER for officer app
+   //CONTROLLER for officer app
 officerModule.controller('officerCtrl', ['$scope', 'localStorageService', 'dataService', '$controller', '$routeParams',
   function ($scope, localStorageService, dataService, $controller, $routeParams) {
 
@@ -6,16 +6,22 @@ officerModule.controller('officerCtrl', ['$scope', 'localStorageService', 'dataS
     /***** GLOBALS *****/
     //get name from local storage for user profile customization
 
-
     var fname = localStorageService.get('fname');
     var lname = localStorageService.get('lname');
     var id = localStorageService.get('id');
     $scope.login = localStorageService.get('login');
     $scope.name = fname + ' ' + lname;
     $scope.id = id;
+    var role = localStorageService.get('role');
+
+    $scope.admin = 0;
+    $scope.super = 0;
+
+    if ( role === 'Administrator' ) $scope.admin = 1;
+    if ( role === 'Supervisor' )    $scope.super = 1;
+
     $scope.password_pattern = '^[a-zA-Z0-9]{8,}$';
     $scope.pattern_descr = 'Must contain at least 8 or more characters. Only alphanumeric characters allowed.';
-
 
     getPendingDocuments(id); //$scope.k = getPendingDocuments(id);
 
@@ -37,13 +43,11 @@ officerModule.controller('officerCtrl', ['$scope', 'localStorageService', 'dataS
     $scope.logout = function () {
       sharedCtrl.logout();
     }
-
-
+    
     /***********************
    * GET ACTIVE DOCUMENTS *
    ***********************/
     $scope.getActiveDocuments = function (user_id) {
-
       $scope.selected_cat = $routeParams.selectedCategory;
 
       dataService.viewDocuments(user_id)
@@ -54,9 +58,6 @@ officerModule.controller('officerCtrl', ['$scope', 'localStorageService', 'dataS
           //initialize an empty array to store results from the database
           var pinned_documents = [];
           var unpinned_documents = [];
-
-          //add var to count pending documents
-          var juan = 0;
 
           //for each category in the result
           for (var x in data) {
@@ -72,26 +73,19 @@ officerModule.controller('officerCtrl', ['$scope', 'localStorageService', 'dataS
               tmp.isDone = data[x].status == "Done" ? true : false;
               tmp.doneDisable = data[x].status == "Pending" || data[x].status == "Done" ? true : false;
 
-              if (data[x].pinned == 1) {
+              if (data[x].pinned == 1) 
                 pinned_documents.push(tmp);
-              }
-              else {
+              else 
                 unpinned_documents.push(tmp);
-              }
-
             }
           }
-
-
 
           //update value in view for use in ng-repeat (to populate)
           $scope.pinned_documents = pinned_documents;
           $scope.unpinned_documents = unpinned_documents;
 
           sortDocuments();
-
           getPendingDocuments(id);
-          //  $scope.pending_count = juan;
 
         },
         function (error) {
@@ -102,33 +96,19 @@ officerModule.controller('officerCtrl', ['$scope', 'localStorageService', 'dataS
 
     function sortDocuments(){
       $scope.pinned_documents.sort(function(a, b) {
-        if (a.status =="Pending" && b.status =="Reviewed")
-        {
+        if (a.status =="Pending" && (b.status =="Reviewed" || b.status =="Done"))
           return -1;
-        }
-        if (a.status =="Pending" && b.status =="Done")
+
+        if (a.status =="Reviewed")
         {
-          return -1;
+          if (b.status =="Done") return -1;
+          if (b.status =="Pending") return 1;
         }
-        if (a.status =="Reviewed" && b.status =="Done")
-        {
-          return -1;
-        }
-        if (a.status =="Reviewed" && b.status =="Pending")
-        {
+
+        if(a.status =="Done" && (b.status =="Pending" || b.status =="Reviewed"))
           return 1;
-        }
-        if(a.status =="Done" && b.status =="Pending")
-        {
-          return 1;
-        }
-        if(a.status =="Done" && b.status =="Reviewed")
-        {
-          return 1;
-        }
 
         return 0;
-
       });
     }
 
@@ -154,21 +134,15 @@ officerModule.controller('officerCtrl', ['$scope', 'localStorageService', 'dataS
           for (var x in data) {
             //create an object and set object properties (i.e. documents data)
             if(data[x].status == "Pending"){
-              if(data[x].cat_name in dict){
-                dict[data[x].cat_name]++;
-              }
-              else{
-                dict[data[x].cat_name] = 1;
-              }
+              if(data[x].cat_name in dict) dict[data[x].cat_name]++;
+              else  dict[data[x].cat_name] = 1;
             }
           }
               $scope.pending_count = dict;
-          
         },
         function (error) {
           console.log('Error: ' + error);
         });
-
     };
 
     /***********************
@@ -183,7 +157,136 @@ officerModule.controller('officerCtrl', ['$scope', 'localStorageService', 'dataS
      };
 
 
+      /***********************
+     * GET WATCH ORDERS
+     ***********************/
+      function getWatchOrders(){
 
+        return new Promise(function(resolve, reject) {
+
+          dataService.viewWatchOrders()
+            .then(
+            function (data) {
+
+              //initialize an empty array to store results from the database
+              var watch_orders = [];
+
+              //for each category in the result
+              for (var x in data) {
+
+                //create an object and set object properties
+                  var tmp = new Object();
+                  tmp.Id = data[x].Id;
+                  tmp.Desc = data[x].Desc;
+                  tmp.Address = data[x].Address;
+                  tmp.Lat = data[x].Lat;
+                  tmp.Lng = data[x].Lng;
+                  tmp.Date = data[x].Date;
+
+                  watch_orders.push(tmp);
+              }
+
+              resolve(watch_orders);
+
+            },
+            function (error) {
+              console.log('Error: ' + error);
+              reject(error);
+            });
+        });
+      }
+
+      //Initialize map
+      $scope.initMap = function initMap() {
+
+        $scope.markerCount = 0;
+        var defaultLocation = {lat: 25.6622835, lng: -80.307}; //default location set in Pinecrest,FL
+
+        var map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 13,
+          center: defaultLocation
+        });
+
+        getWatchOrders().then(
+          function (data) {
+
+            var markerCount = 0;
+            data.forEach(function(order){
+
+              var contentString = "<h5><b>" + order.Address + "</b> </h5><hr>";
+              contentString += "<p><b>Description:</b> " + order.Desc + "</p>";
+              contentString += "<p><b>Date Added:</b> " + order.Date + "</p>";
+
+              var infowindow = new google.maps.InfoWindow({
+                content: contentString
+              });
+
+              var marker = new google.maps.Marker({
+                position: {lat: order.Lat, lng: order.Lng},
+                label: String(++markerCount),
+                map: map
+              });
+
+              marker.addListener('click', function() {
+                infowindow.open(map, marker);
+              });
+            }
+          );
+
+          $scope.$apply(function () {
+            $scope.markerCount = markerCount;
+          });
+          }
+        );
+
+        var geocoder = new google.maps.Geocoder();
+
+        document.getElementById('submit').addEventListener('click', function() {
+          geocodeAddress(geocoder, map);
+        });
+
+        var contentString = "juan is cool";
+        var uluru = {lat: -25.363, lng: 131.044};
+        var uluru2 = {lat: -22.363, lng: 130.044};
+
+        var infowindow = new google.maps.InfoWindow({
+          content: contentString
+        });
+
+        var marker = new google.maps.Marker({
+          position: uluru,
+          label: "A",
+          map: map,
+          title: 'Uluru (Ayers Rock)'
+        });
+        marker.addListener('click', function() {
+          infowindow.open(map, marker);
+        });
+
+        var marker2 = new google.maps.Marker({
+          position: uluru2,
+          map: map,
+          title: 'Uluru (Ayers Rock)'
+        });
+        marker.addListener('click', function() {
+          infowindow.open(map, marker);
+        });
+      };
+
+      function geocodeAddress(geocoder, resultsMap) {
+        var address = document.getElementById('address').value;
+        geocoder.geocode({'address': address}, function(results, status) {
+          if (status === 'OK') {
+            resultsMap.setCenter(results[0].geometry.location);
+            var marker = new google.maps.Marker({
+              map: resultsMap,
+              position: results[0].geometry.location
+            });
+          } else {
+            alert('Geocode was not successful for the following reason: ' + status);
+          }
+        });
+      }
 
     /***********************
    * GET ARCHIVED DOCUMENTS *
@@ -239,9 +342,6 @@ officerModule.controller('officerCtrl', ['$scope', 'localStorageService', 'dataS
         //window.location.reload();
       }
       getPendingDocuments(id);
-
-
-
 
     }
 

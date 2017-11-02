@@ -39,6 +39,8 @@ adminModule.controller('adminCtrl', ['$scope', 'dataService', 'localStorageServi
   //get name from local storage for user profile customization
   var fname = localStorageService.get('fname');
   var lname = localStorageService.get('lname');
+  if ( !$scope.role )
+      $scope.role = localStorageService.get('role');
   $scope.login = localStorageService.get('login');
 
   $scope.name = fname + ' ' + lname;
@@ -108,7 +110,6 @@ adminModule.controller('adminCtrl', ['$scope', 'dataService', 'localStorageServi
   /***** ADD NEW USER *****/
   $scope.addUser = function(){
 
-
     //get values from input fields
     var first_name = $scope.fName;
     var last_name = $scope.lName;
@@ -135,6 +136,10 @@ adminModule.controller('adminCtrl', ['$scope', 'dataService', 'localStorageServi
       function(error){
         console.log('Error: ' + error);
       });};
+
+    $scope.addMessage = function() {
+        alert("here");
+    };
 
       /***** REMOVE USER *****/
       $scope.removeUser = function(){
@@ -369,8 +374,6 @@ adminModule.controller('adminCtrl', ['$scope', 'dataService', 'localStorageServi
                     $('#editParseModal').modal('show');
                   };
 
-
-
                   $scope.updateParseUser = function(){
                     var index = $scope.index;
                     var first_name = $scope.updateFirst;
@@ -395,14 +398,7 @@ adminModule.controller('adminCtrl', ['$scope', 'dataService', 'localStorageServi
                       $scope.parsedUsers.splice($scope.index,1);
                       $('#editParseModal').modal('hide');
                     }
-
-
                   };
-
-
-
-
-
 
                   /***** ADD NEW CATEGORY *****/
                   $scope.addCategory = function(new_cat){

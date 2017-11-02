@@ -328,6 +328,30 @@ class DBHandler{
 		return $status;
 	}
 
+	//GET ALL MESSAGES FROM THE DATABASE
+	function getMessages()
+	{
+		global $db_connection;
+		$messages = [];
+		$query = 'SELECT MessageId, OfficerId, Title, Message, Created_at, Updated_by, Updated_at FROM Messages';
+		$stmt = $db_connection->prepare($query);
+		$stmt->execute();
+		$stmt->bind_result($message_id, $officer_id, $title, $message, $created_at, $updated_by, $updated_at);
+		while($stmt->fetch()){
+			$tmp = ["id" => $message_id,
+					"officer_id" => $officer_id,
+					"title" => $title,
+					"message" => $message, 
+					"createdAt" => $created_at, 
+					"updatedBy" => $updated_by,
+					"updatedAt" => $updated_at];
+			array_push($messages, $tmp);
+		}
+		$stmt->close();
+		$db_connection->close();
+		return $messages;
+	}
+
 	//GET ALL DOCUMENTS FROM THE DATABASE
 	function getDocuments($type, $user_id){
 
@@ -456,6 +480,21 @@ class DBHandler{
 		$result['Added'] = true;
 		$stmt->close();
 		$db_connection->close();
+		return $result;
+	}
+
+	function uploadMessage($title, $new_msg, $uploaded_by) {
+		global $db_connection;
+		$result = ['Added' => false];
+		$query = 'INSERT INTO Messages (Title, Message, OfficerId) VALUES(?,?,?)';
+		$stmt = $db_connection->prepare($query);
+
+		if( !$stmt->bind_param('ssi', $title, $new_msg, $uploaded_by) )
+			$result['Added'] = "Unable to add message";
+		if (!$stmt->execute())
+			return $result;
+		$result['Added'] = true;
+		$stmt->close();
 		return $result;
 	}
     

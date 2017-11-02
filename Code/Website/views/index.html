@@ -12,7 +12,7 @@
   <link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css' media='all'>
   <link href='style/bootstrap.min.css' rel='stylesheet' media='all'>
   <link href='style/login.css' rel='stylesheet' media='all'>
-
+  
   <!-- SCRIPTS -->
   <script src='https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js'></script>
   <script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js'></script>
@@ -51,14 +51,14 @@
 
   <!-- success/error message for login function -->
   <div uib-alert ng-repeat="a in alert.alerts" ng-class="'alert-' + a.type" close="alert.closeAlert($index)">{{a.msg}}</div>
-
+    
     <div class='panel panel-primary'>
       <div class='panel-heading'>Login</div>
       <div class='panel-body'>
-
+          
         <main role='main'>
           <form role='form' method='post' ng-submit='login()'>
-
+              
             <!-- Input Fields -->
             <div class='form-group'>
               <label><span class='glyphicon glyphicon-user'></span> Username</label>

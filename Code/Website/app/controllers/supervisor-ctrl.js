@@ -8,44 +8,33 @@ supervisorModule.controller('supervisorCtrl', ['$scope', 'localStorageService', 
   var lname = localStorageService.get('lname');
   $scope.login = localStorageService.get('login');
   $scope.name = fname + ' ' + lname;
+  $scope.id = localStorageService.get('id');;
+  
+  if ( !$scope.role )
+    $scope.role = localStorageService.get('role');
+
   $scope.password_pattern = '^[a-zA-Z0-9]{8,}$';
   $scope.pattern_descr = 'Must contain at least 8 or more characters. Only alphanumeric characters allowed.';
 
   /***** SHARED FUNCTIONS *****/
   var sharedCtrl = $controller('sharedCtrl', {$scope: $scope});
   sharedCtrl.redirect($scope.login);
-  $scope.getSiteNames = function(){
-    sharedCtrl.getSiteNames();
-  };
 
-  $scope.getOfficers = function(){
-    sharedCtrl.getOfficers();
-  };
-
-  $scope.logout = function(){
-      sharedCtrl.logout();
-  }
-
-  $scope.getCategories = function(){
-    sharedCtrl.getCategories();
-  }
-
-  $scope.getDocuments = function(){
-    sharedCtrl.getDocuments();
-  }
-  $scope.getlogs = function(){
-  	sharedCtrl.getlogs();
-  }
-
-   $scope.refresh = function(){
+  $scope.getSiteNames = function(){ sharedCtrl.getSiteNames(); };
+  $scope.getOfficers = function(){ sharedCtrl.getOfficers(); };
+  $scope.logout = function(){ sharedCtrl.logout(); }
+  $scope.getCategories = function(){ sharedCtrl.getCategories(); }
+  $scope.getDocuments = function(){ sharedCtrl.getDocuments(); }
+  $scope.getMessages = function() { sharedCtrl.getMessages(); }
+  $scope.getlogs = function(){ sharedCtrl.getlogs(); }
+  $scope.refresh = function(){
        setTimeout(function(){ window.location.reload(); }, 3000);
   }
 
   $scope.editDocument = function(id,name,pinned,category){
 
   $scope.categories.forEach(function(element){
-    if(element.name == category)
-	category = element;
+    if(element.name == category) category = element;
   });
 
   if(pinned == 1 )
@@ -68,7 +57,7 @@ supervisorModule.controller('supervisorCtrl', ['$scope', 'localStorageService', 
     var pinned = $scope.doc_pinned;
     sharedCtrl.updateDocument(id, categorie, name, pinned)
     
-  }
+  };
 /***********************
 * Toggle between day and night mode*
 ***********************/
@@ -82,6 +71,228 @@ supervisorModule.controller('supervisorCtrl', ['$scope', 'localStorageService', 
 
  $scope.display_mode = getDisplayMode();
  $scope.night_mode = localStorageService.get('nightMode');
+
+  /***** BATCH ADD WATCH ORDERS MODAL *****/
+  $scope.addBatchWatchOrders = function(){
+    document.getElementById("parsedWatchOrdersPanel").style.display = "none";
+    document.getElementById("successMessage").style.display = "none";
+    document.getElementById("failMessage").style.display = "none";
+    $scope.display_mode_modal = sharedCtrl.getDisplayMode();
+    $scope.parsedWatchOrders = [];
+    $('#batchWatchOrdersModal').modal('show');
+  };
+
+  /***** PARSE CSV FILE*****/
+  $scope.parseCSV = function(){
+
+    if (!$('#files')[0].files.length)
+    {
+      alert("Please choose a CSV file to parse.");
+      return;
+    }
+
+    var file = $('#files')[0].files[0];
+
+    if(file.type != "text/csv")
+    {
+      alert("The file must of type CSV.");
+      return;
+    }
+    Papa.parse(file, {
+      complete: function(results) {
+        $scope.$apply(function () {
+          $scope.parsedWatchOrders = results.data;
+        });
+
+        if(results.data.length == 0)
+        {
+          document.getElementById("parsedUsersPanel").style.display = "none";
+          document.getElementById("successMessage").style.display = "none";
+          document.getElementById("failMessage").style.display = "none";
+          alert("No watch orders could be parsed from CSV file");
+          return;
+        }
+
+        var message = "Parsed (" + results.data.length + ") watch orders from CSV file";
+        document.getElementById("parseTitle").innerHTML = message;
+        geoCodeAddresses();
+
+      }
+    });
+    document.getElementById("parsedWatchOrdersPanel").style.display = "block";
+    document.getElementById("successMessage").style.display = "none";
+    document.getElementById("failMessage").style.display = "none";
+  };
+
+  /***** USE GOOGLE API TO CONVERT WATCH ORDER ADDRESSES TO COORDINATES*****/
+  function geoCodeAddresses(){
+
+    var orders = $scope.parsedWatchOrders;
+    var geocoder = new google.maps.Geocoder();
+    //change search boundary for South Florida
+    var southWest = new google.maps.LatLng({lat: 5.395327, lng:  -80.583131});
+    var northEast = new google.maps.LatLng({lat: 26.316590, lng: -80.075519});
+    var searchBoundary = new google.maps.LatLngBounds(northEast, southWest);
+
+    orders.forEach(function(order){
+
+      //convert address into geo coordinates
+      geocoder.geocode({address: order[1], bounds: searchBoundary }, function(results, status) {
+
+        if (status == google.maps.GeocoderStatus.OK) {
+
+          $scope.$apply(function () {
+            var index = $scope.parsedWatchOrders.indexOf(order);
+            $scope.parsedWatchOrders[index][1] = results[0].formatted_address;   //pick first formatted address returned
+            $scope.parsedWatchOrders[index].push(results[0].geometry.viewport.f.b, results[0].geometry.viewport.b.b);   // add lat and long coordinates
+          });
+
+        }
+        else {
+          $scope.$apply(function () {
+            var index = $scope.parsedWatchOrders.indexOf(order);
+            $scope.parsedWatchOrders[index][1] = "Invalid Address";
+          });
+        }
+      });
+    });
+  }
+
+
+  /***** ATTEMPT TO ADD ALL PARSED ORDERS FROM CSV FILE TO DATABASE *****/
+  $scope.addParsedWatchOrders = function(){
+
+    var orders = $scope.parsedWatchOrders;
+    var success = 0;
+    var fail = 0;
+    var processed = 0;
+    var total = orders.length;
+
+    //delete all watch orders from db before adding new orders
+    dataService.removeWatchOrders()
+    .then(
+      function(data){
+        if(data['RemovedAll'] === true){
+          orders.forEach(function(order){
+            addWatchOrder(order).then(
+              function(data){
+                if(data == true )
+                {
+                  $scope.$apply(function () {
+                    var index = $scope.parsedWatchOrders.indexOf(order);
+                    $scope.parsedWatchOrders.splice(index,1);
+                  });
+                  success++;
+                }
+                else 
+                  fail++;
+                
+                processed++;
+                if(processed == total)
+                {
+                  $scope.getWatchOrders();
+                  var successLabel = document.getElementById("successMessage");
+                  var failLabel = document.getElementById("failMessage");
+                  successLabel.style.display = "none";
+                  failLabel.style.display = "none";
+
+                  if(fail == 0){
+                    var x = document.getElementById("parsedWatchOrdersPanel");
+                    x.style.display = "none";
+                    successLabel.innerHTML = success + " orders(s) successfully added";
+                    successLabel.style.display = "block";
+                  }
+                  else {
+                    if(success > 0)
+                    {
+                      successLabel.innerHTML = success + " orders(s) successfully added";
+                      successLabel.style.display = "block";
+
+                    }
+                    failLabel.innerHTML = fail + " orders(s) could not be added";
+                    failLabel.style.display = "block";
+                  }
+                }
+              });
+            });
+        }
+      },
+      function(error){
+        console.log('Error: ' + error);
+      });
+    };
+
+    /***** ATTEMPT TO ADD A PARSED WATCH ORDER TO THE DATABASE *****/
+    self.addWatchOrder = function(order){
+
+      return new Promise(function(resolve, reject) {
+
+        //get values from parsed watch order
+        var desc = order[0];
+        var address = order[1];
+
+        if(!address || address == "Invalid Address" ){
+          resolve(false);
+          return;
+        }
+        var lat = order[2];
+        var long = order[3];
+        if(lat == 0 || long == 0 ){
+          resolve(false);
+          return;
+        }
+
+        dataService.addWatchOrder(desc, address, lat, long)
+        .then(
+          function(data){
+            if(data['Added'] === true){
+              resolve(true);
+              console.log("true");
+            }
+            else{
+              resolve(false);
+              console.log("fail");
+            }
+          },
+          function(error){
+            console.log('Error: ' + error);
+          });
+
+        });
+      };
+
+      /***********************
+     * GET WATCH ORDERS
+     ***********************/
+      $scope.getWatchOrders = function getWatchOrders(){
+          dataService.viewWatchOrders()
+            .then(
+            function (data) {
+
+              //initialize an empty array to store results from the database
+              var watch_orders = [];
+
+              //for each category in the result
+              for (var x in data) {
+
+                //create an object and set object properties
+                  var tmp = new Object();
+                  tmp.Id = data[x].Id;
+                  tmp.Desc = data[x].Desc;
+                  tmp.Address = data[x].Address;
+                  tmp.Lat = data[x].Lat;
+                  tmp.Lng = data[x].Lng;
+                  tmp.Date = data[x].Date;
+
+                  watch_orders.push(tmp);
+              }
+              //update for use in view
+              $scope.watch_orders = watch_orders;
+            },
+            function (error) {
+              console.log('Error: ' + error);
+            });
+      };
 
   /***** ALERT FUNCTIONS *****/
   //alert functions (displays accordingly in views)
@@ -192,7 +403,6 @@ supervisorModule.controller('supervisorCtrl', ['$scope', 'localStorageService', 
     onRegisterApi: function(gridApi){
       $scope.gridApi = gridApi;
     }
-
   };
 
 }]);

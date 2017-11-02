@@ -17,24 +17,20 @@
 					<label>Document Name <span class="glyphicon glyphicon-file"></span></label>
 					<br>
 					<input class='fields {{display_mode}}' type="text" name='document_name' required>
-					<br>
-					<br>
+					<br><br>
 					<label>Document Description <span class="glyphicon glyphicon-file"></span></label>
 					<br>
 					<textarea class='fields {{display_mode}}' rows="4" name='document_description'></textarea>
-					<br>
-					<br>
+					<br><br>
 					<label>Category <span class="glyphicon glyphicon-list-alt"></span></label>
 					<br>
 					<select class='fields {{display_mode}}' name="category_id" value='{{category.id}}' ng-options='category as category.name for category in categories track by category.id' ng-model='selected_category'>
 					</select>
-					<br>
-					<br>
+					<br><br>
 					<input type="checkbox" name='pinned' value="1">
 					<label>Pin Document <span class='glyphicon glyphicon-pushpin'></span></label>
 					<input type="hidden" name="uploaded_by" value='{{name}}'>
-					<br>
-					<br>
+					<br><br>
 					<button type='submit' class='btn btn-success' ng-click="refresh()"><span class="glyphicon glyphicon-upload"></span> Upload</button>
 					<br>
 				</form>

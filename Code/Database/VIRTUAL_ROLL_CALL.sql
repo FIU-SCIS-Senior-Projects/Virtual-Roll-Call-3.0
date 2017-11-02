@@ -1,43 +1,29 @@
 -- phpMyAdmin SQL Dump
--- version 4.0.10deb1
--- http://www.phpmyadmin.net
+-- version 4.7.3
+-- https://www.phpmyadmin.net/
 --
--- Host: localhost
--- Generation Time: Jul 28, 2017 at 02:41 PM
--- Server version: 5.5.55-0ubuntu0.14.04.1
--- PHP Version: 5.5.9-1ubuntu4.21
+-- Host: localhost:8889
+-- Generation Time: Oct 27, 2017 at 05:25 PM
+-- Server version: 5.6.35
+-- PHP Version: 7.1.8
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
-
-
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
 
 --
 -- Database: `VIRTUAL_ROLL_CALL`
 --
 
-
 -- --------------------------------------------------------
 
---
--- Create The Database
---
-CREATE DATABASE VIRTUAL_ROLL_CALL;
---
 --
 -- Table structure for table `CATEGORIES`
 --
 
-CREATE TABLE IF NOT EXISTS `CATEGORIES` (
-  `category_ID` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `Category_Name` varchar(50) NOT NULL,
-  PRIMARY KEY (`category_ID`),
-  UNIQUE KEY `category_name` (`Category_Name`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=17 ;
+CREATE TABLE `CATEGORIES` (
+  `category_ID` int(10) UNSIGNED NOT NULL,
+  `Category_Name` varchar(50) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `CATEGORIES`
@@ -51,8 +37,8 @@ INSERT INTO `CATEGORIES` (`category_ID`, `Category_Name`) VALUES
 (14, 'Officer Safety'),
 (2, 'Shift Line Up'),
 (5, 'Training'),
-(3, 'Watch Orders'),
-(15, 'Written Directives');
+(15, 'Written Directives'),
+(16, 'Free Text');
 
 -- --------------------------------------------------------
 
@@ -60,20 +46,17 @@ INSERT INTO `CATEGORIES` (`category_ID`, `Category_Name`) VALUES
 -- Table structure for table `DOCUMENTS`
 --
 
-CREATE TABLE IF NOT EXISTS `DOCUMENTS` (
-  `document_ID` int(10) unsigned NOT NULL AUTO_INCREMENT,
+CREATE TABLE `DOCUMENTS` (
+  `document_ID` int(10) UNSIGNED NOT NULL,
   `Document_Name` varchar(50) NOT NULL,
-  `Category_ID` int(10) unsigned NOT NULL,
+  `Category_ID` int(10) UNSIGNED NOT NULL,
   `Upload_Date` date NOT NULL,
   `Pinned` tinyint(1) NOT NULL,
   `Uploaded_By` varchar(255) NOT NULL,
   `Upload_Name` varchar(255) NOT NULL,
   `Description` varchar(200) NOT NULL,
-  `Manual_Archived` tinyint(1) NOT NULL,
-  PRIMARY KEY (`document_ID`),
-  UNIQUE KEY `Document_Name` (`Document_Name`),
-  KEY `Category_ID` (`Category_ID`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=118 ;
+  `Manual_Archived` tinyint(1) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `DOCUMENTS`
@@ -100,11 +83,10 @@ INSERT INTO `DOCUMENTS` (`document_ID`, `Document_Name`, `Category_ID`, `Upload_
 -- Table structure for table `DOCUMENT_STATUS`
 --
 
-CREATE TABLE IF NOT EXISTS `DOCUMENT_STATUS` (
-  `Id` int(11) NOT NULL AUTO_INCREMENT,
-  `Description` text NOT NULL,
-  PRIMARY KEY (`Id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
+CREATE TABLE `DOCUMENT_STATUS` (
+  `Id` int(11) NOT NULL,
+  `Description` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `DOCUMENT_STATUS`
@@ -118,29 +100,36 @@ INSERT INTO `DOCUMENT_STATUS` (`Id`, `Description`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `LOGIN LOGS`
+-- Table structure for table `LOGIN_LOGS`
 --
 
-CREATE TABLE IF NOT EXISTS `LOGIN_LOGS` (
-  `log_id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `LOGIN_LOGS` (
+  `log_id` int(11) NOT NULL,
   `created_at` datetime NOT NULL,
-  `updated_at` datetime,
-  `lock_count` tinyint NOT NULL,
-  `lock_status` int(11) NOT NULL,
-  PRIMARY KEY (`log_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=129 ;
+  `updated_at` datetime DEFAULT NULL,
+  `lock_count` tinyint(4) NOT NULL,
+  `lock_status` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `LOGIN_LOGS`
+--
+
+INSERT INTO `LOGIN_LOGS` (`log_id`, `created_at`, `updated_at`, `lock_count`, `lock_status`) VALUES
+(2, '2017-10-19 12:53:01', '2017-10-26 17:59:23', 0, 0);
+
+-- --------------------------------------------------------
 
 --
 -- Table structure for table `LOGS`
 --
 
-CREATE TABLE IF NOT EXISTS `LOGS` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `LOGS` (
+  `id` int(11) NOT NULL,
   `DOC` datetime NOT NULL,
   `userid` int(11) NOT NULL,
-  `documentid` int(11) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=129 ;
+  `documentid` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `LOGS`
@@ -268,7 +257,20 @@ INSERT INTO `LOGS` (`id`, `DOC`, `userid`, `documentid`) VALUES
 (125, '2017-07-24 21:09:09', 3, 108),
 (126, '2017-07-24 23:43:24', 3, 110),
 (127, '2017-07-24 23:43:57', 3, 110),
-(128, '2017-07-24 23:44:21', 3, 106);
+(128, '2017-07-24 23:44:21', 3, 106),
+(129, '2017-10-19 12:53:18', 2, 100),
+(130, '2017-10-19 12:53:24', 2, 100),
+(131, '2017-10-19 12:55:57', 1, 100),
+(132, '2017-10-19 12:57:28', 27, 100),
+(133, '2017-10-19 17:59:50', 1, 104),
+(134, '2017-10-19 22:43:07', 1, 102),
+(135, '2017-10-19 22:43:12', 1, 102),
+(136, '2017-10-20 16:59:51', 2, 104),
+(137, '2017-10-20 16:59:55', 2, 104),
+(138, '2017-10-20 16:59:58', 2, 102),
+(139, '2017-10-26 19:12:59', 2, 105),
+(140, '2017-10-26 23:53:34', 1, 105),
+(141, '2017-10-26 23:53:42', 1, 107);
 
 -- --------------------------------------------------------
 
@@ -276,33 +278,30 @@ INSERT INTO `LOGS` (`id`, `DOC`, `userid`, `documentid`) VALUES
 -- Table structure for table `OFFICERS`
 --
 
-CREATE TABLE IF NOT EXISTS `OFFICERS` (
-  `userID` int(10) unsigned NOT NULL AUTO_INCREMENT,
+CREATE TABLE `OFFICERS` (
+  `userID` int(10) UNSIGNED NOT NULL,
   `First_Name` varchar(20) NOT NULL,
   `Last_Name` varchar(20) NOT NULL,
   `Username` varchar(20) NOT NULL,
   `Password` varchar(60) NOT NULL,
   `Role` varchar(40) NOT NULL,
-  `Active` tinyint(1) NOT NULL DEFAULT '1',
-  PRIMARY KEY (`userID`),
-  UNIQUE KEY `Username` (`Username`),
-  UNIQUE KEY `Username_2` (`Username`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=26 ;
+  `Active` tinyint(1) NOT NULL DEFAULT '1'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `OFFICERS`
 --
 
 INSERT INTO `OFFICERS` (`userID`, `First_Name`, `Last_Name`, `Username`, `Password`, `Role`, `Active`) VALUES
-(1, 'Jason', 'Cohen', 'jcohen001', 'jason123', 'Administrator', 1),
-(2, 'Super', 'Super', 'supervisor', 'test', 'Supervisor', 1),
-(3, 'Juan', 'Gonzales', 'officer', 'test', 'Officer', 1),
-(13, 'Ivana', 'Rodriguez', 'irodr041', '12345678', 'Supervisor', 1),
-(15, 'Shonda', 'Witherspoon', 'swith004', 'shonda123', 'Supervisor', 1),
-(16, 'Frank', 'Alvarado', 'falva001', 'frank123', 'Administrator', 1),
-(22, 'Test', 'Tester', 'test001', 'test1234', 'Officer', 1),
-(23, 'Admin', 'Admin', 'administrator', 'test', 'Administrator', 1),
-(25, 'Tomas', 'Smith', 'tomas', '12345678', 'Officer', 1);
+(1, 'Jason', 'Cohen', 'jcohen001', '$2y$10$PfU/BmmtIzwszGmWWGqoi.eDWDBLNSC4IiXC94ELRLqXONmcOuqIS', 'Administrator', 1),
+(2, 'Super', 'Super', 'supervisor', '$2y$10$iXegOwJ96slhTLcMFTz6W.e5yMyfZQ6F5oeXP4I/.dG4IaKZoW43e', 'Supervisor', 1),
+(3, 'Juan', 'Gonzales', 'officer', '$2y$10$J.Bl3AyWveiHed.uBhlCNONcbw0MKjJjp.G55i4WKDJmjDoEK/7ky', 'Officer', 1),
+(13, 'Ivana', 'Rodriguez', 'irodr041', '$2y$10$qNa2mOnevOnHvn7BdG6tY.W8cmgIHWx24IKM5kxkahSbD77HIGxP2', 'Supervisor', 1),
+(15, 'Shonda', 'Witherspoon', 'swith004', '$2y$10$mUBvXvLxY2DfIwZG1OsmSeMK8lLBa6aETdbjJwKlX8.ph8ND6PGVG', 'Supervisor', 1),
+(16, 'Frank', 'Alvarado', 'falva001', '$2y$10$0CftMSQ9naAKHyW2u/.F5.u0h9MxWoo6GcRxIZ85gWyRpEzxvleJ6', 'Administrator', 1),
+(22, 'Test', 'Tester', 'test001', '$2y$10$brSJDzFjow79t.62DY0VF.p.O2qdFoKh81N3/GBOiQosHEl6rjrYe', 'Officer', 1),
+(23, 'Admin', 'Admin', 'administrator', '$2y$10$lThJX.sp5ftsZ.WBBCx5RenM/MwrYOIOE140Yrw09G6nVdIsGF9ui', 'Administrator', 1),
+(25, 'Tomas', 'Smith', 'tomas', '$2y$10$iH9.7NqjBFo1jGCBInb78uXTcYnddmrotvXSSHuW.MhwtQelyNjSe', 'Officer', 1);
 
 -- --------------------------------------------------------
 
@@ -310,7 +309,7 @@ INSERT INTO `OFFICERS` (`userID`, `First_Name`, `Last_Name`, `Username`, `Passwo
 -- Table structure for table `SETTINGS`
 --
 
-CREATE TABLE IF NOT EXISTS `SETTINGS` (
+CREATE TABLE `SETTINGS` (
   `Application_Name` varchar(255) NOT NULL,
   `Department_Name` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -325,50 +324,180 @@ INSERT INTO `SETTINGS` (`Application_Name`, `Department_Name`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `MESSAGES`
+--
+
+CREATE TABLE `MESSAGES` (
+  `MessageId` int(11) NOT NULL,
+  `OfficerId` int(11) NOT NULL,
+  `Message` int(11) NOT NULL,
+  `Created_at` datetime NOT NULL,
+  `Update_by` varchar(60),
+  `Updated_at` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `USER_DOC_STATUS`
 --
 
-CREATE TABLE IF NOT EXISTS `USER_DOC_STATUS` (
+CREATE TABLE `USER_DOC_STATUS` (
   `OfficerId` int(11) NOT NULL,
   `StatusId` int(11) NOT NULL,
   `DocumentId` int(11) NOT NULL,
   `StartDateTime` datetime NOT NULL,
   `EndDateTime` datetime NOT NULL,
-  `Id` int(11) NOT NULL AUTO_INCREMENT,
-  PRIMARY KEY (`Id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=70 ;
+  `Id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `USER_DOC_STATUS`
 --
 
 INSERT INTO `USER_DOC_STATUS` (`OfficerId`, `StatusId`, `DocumentId`, `StartDateTime`, `EndDateTime`, `Id`) VALUES
-(3, 2, 93, '2017-06-22 13:32:04', '0000-00-00 00:00:00', 45),
-(3, 3, 91, '2017-06-22 13:34:29', '2017-06-22 13:34:51', 46),
-(22, 2, 92, '2017-06-22 13:50:10', '0000-00-00 00:00:00', 47),
-(22, 2, 88, '2017-06-22 13:50:14', '0000-00-00 00:00:00', 48),
-(3, 3, 92, '2017-06-22 14:50:21', '2017-06-22 14:50:30', 49),
-(3, 2, 89, '2017-06-22 14:50:26', '0000-00-00 00:00:00', 50),
-(3, 2, 98, '2017-06-23 10:55:05', '0000-00-00 00:00:00', 51),
-(3, 3, 100, '2017-06-23 10:56:39', '2017-06-29 10:09:38', 52),
-(3, 3, 99, '2017-06-23 10:56:45', '2017-06-29 10:09:49', 53),
-(3, 3, 101, '2017-06-24 18:05:25', '2017-07-06 10:08:26', 54),
-(3, 3, 102, '2017-06-24 18:11:36', '2017-07-06 10:08:27', 55),
-(3, 3, 105, '2017-07-06 13:15:31', '2017-07-21 15:29:25', 56),
-(3, 3, 106, '2017-07-06 13:15:58', '2017-07-06 13:17:02', 57),
-(23, 3, 100, '2017-07-18 14:55:05', '2017-07-18 14:55:13', 58),
-(23, 3, 101, '2017-07-18 14:57:00', '2017-07-18 14:57:05', 59),
-(23, 2, 102, '2017-07-18 15:02:22', '0000-00-00 00:00:00', 60),
-(23, 2, 104, '2017-07-18 15:02:25', '0000-00-00 00:00:00', 61),
-(23, 2, 105, '2017-07-18 15:02:27', '0000-00-00 00:00:00', 62),
-(23, 2, 106, '2017-07-18 15:02:39', '0000-00-00 00:00:00', 63),
-(2, 2, 109, '2017-07-21 17:51:02', '0000-00-00 00:00:00', 64),
-(23, 3, 110, '2017-07-21 17:55:28', '2017-07-21 18:27:44', 65),
-(23, 2, 107, '2017-07-21 18:27:27', '0000-00-00 00:00:00', 66),
-(23, 3, 108, '2017-07-21 20:00:49', '2017-07-21 20:01:08', 67),
-(3, 3, 108, '2017-07-24 21:08:45', '2017-07-24 21:09:09', 68),
-(3, 3, 110, '2017-07-24 23:43:25', '2017-07-24 23:43:57', 69);
+(1, 3, 102, '2017-10-19 22:43:07', '2017-10-19 22:43:11', 74),
+(2, 3, 104, '2017-10-20 16:59:51', '2017-10-20 16:59:55', 75),
+(2, 2, 102, '2017-10-20 16:59:58', '0000-00-00 00:00:00', 76),
+(2, 2, 105, '2017-10-26 19:12:59', '0000-00-00 00:00:00', 77),
+(1, 2, 105, '2017-10-26 23:53:34', '0000-00-00 00:00:00', 78),
+(1, 2, 107, '2017-10-26 23:53:42', '0000-00-00 00:00:00', 79);
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `WATCH_ORDERS`
+--
+
+CREATE TABLE `WATCH_ORDERS` (
+  `Id` int(10) NOT NULL,
+  `Desc` varchar(60) DEFAULT 'No Description',
+  `Address` varchar(100) NOT NULL,
+  `Lat` float(10,6) NOT NULL,
+  `Lng` float(10,6) NOT NULL,
+  `Date` date NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `WATCH_ORDERS`
+--
+
+INSERT INTO `WATCH_ORDERS` (`Id`, `Desc`, `Address`, `Lat`, `Lng`, `Date`) VALUES
+(228, 'robbery', '8888 SW 136th St, Miami, FL 33176, USA', 25.642885, -80.339722, '2017-10-27'),
+(229, 'emergency	', '7535 N Kendall Dr, Kendall, FL 33156, USA', 25.689037, -80.315445, '2017-10-27'),
+(230, 'accident', '11000 Red Rd, Pinecrest, FL 33156, USA', 25.668188, -80.286591, '2017-10-27');
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `CATEGORIES`
+--
+ALTER TABLE `CATEGORIES`
+  ADD PRIMARY KEY (`category_ID`),
+  ADD UNIQUE KEY `category_name` (`Category_Name`);
+
+--
+-- Indexes for table `DOCUMENTS`
+--
+ALTER TABLE `DOCUMENTS`
+  ADD PRIMARY KEY (`document_ID`),
+  ADD UNIQUE KEY `Document_Name` (`Document_Name`),
+  ADD KEY `Category_ID` (`Category_ID`);
+
+--
+-- Indexes for table `DOCUMENT_STATUS`
+--
+ALTER TABLE `DOCUMENT_STATUS`
+  ADD PRIMARY KEY (`Id`);
+
+--
+-- Indexes for table `LOGIN_LOGS`
+--
+ALTER TABLE `LOGIN_LOGS`
+  ADD PRIMARY KEY (`log_id`);
+
+--
+-- Indexes for table `LOGS`
+--
+ALTER TABLE `MESSAGES`
+  ADD PRIMARY KEY (`MessageId`);
+
+--
+-- Indexes for table `LOGS`
+--
+ALTER TABLE `LOGS`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `OFFICERS`
+--
+ALTER TABLE `OFFICERS`
+  ADD PRIMARY KEY (`userID`),
+  ADD UNIQUE KEY `Username` (`Username`),
+  ADD UNIQUE KEY `Username_2` (`Username`);
+
+--
+-- Indexes for table `USER_DOC_STATUS`
+--
+ALTER TABLE `USER_DOC_STATUS`
+  ADD PRIMARY KEY (`Id`);
+
+--
+-- Indexes for table `WATCH_ORDERS`
+--
+ALTER TABLE `WATCH_ORDERS`
+  ADD PRIMARY KEY (`Id`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+--
+-- AUTO_INCREMENT for table `MESSAGES`
+--
+ALTER TABLE `CATEGORIES`
+  MODIFY `MessageId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+--
+-- AUTO_INCREMENT for table `CATEGORIES`
+--
+ALTER TABLE `CATEGORIES`
+  MODIFY `category_ID` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+--
+-- AUTO_INCREMENT for table `DOCUMENTS`
+--
+ALTER TABLE `DOCUMENTS`
+  MODIFY `document_ID` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=115;
+--
+-- AUTO_INCREMENT for table `DOCUMENT_STATUS`
+--
+ALTER TABLE `DOCUMENT_STATUS`
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+--
+-- AUTO_INCREMENT for table `LOGIN_LOGS`
+--
+ALTER TABLE `LOGIN_LOGS`
+  MODIFY `log_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+--
+-- AUTO_INCREMENT for table `LOGS`
+--
+ALTER TABLE `LOGS`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=142;
+--
+-- AUTO_INCREMENT for table `OFFICERS`
+--
+ALTER TABLE `OFFICERS`
+  MODIFY `userID` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=59;
+--
+-- AUTO_INCREMENT for table `USER_DOC_STATUS`
+--
+ALTER TABLE `USER_DOC_STATUS`
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=80;
+--
+-- AUTO_INCREMENT for table `WATCH_ORDERS`
+--
+ALTER TABLE `WATCH_ORDERS`
+  MODIFY `Id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=231;
 --
 -- Constraints for dumped tables
 --
@@ -378,7 +507,3 @@ INSERT INTO `USER_DOC_STATUS` (`OfficerId`, `StatusId`, `DocumentId`, `StartDate
 --
 ALTER TABLE `DOCUMENTS`
   ADD CONSTRAINT `DOCUMENTS_ibfk_1` FOREIGN KEY (`Category_ID`) REFERENCES `CATEGORIES` (`category_ID`) ON DELETE CASCADE;
-
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

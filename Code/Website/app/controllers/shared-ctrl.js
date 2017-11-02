@@ -139,6 +139,30 @@ sharedModule.controller('sharedCtrl', ['$scope', 'sharedService', 'localStorageS
       });
   };
 
+  /***** GET ALL MESSAGES *****/
+  self.getMessages = function() {
+    sharedService.getMessages()
+      .then(
+        function (data) {
+
+          var messages = [];
+
+          for ( var x in data ) {
+            var tmp = new Object();
+            tmp.id = data[x].id;
+            tmp.officer_id = data[x].officer_id;
+            tmp.title = data[x].title;
+            tmp.created_at = data[x].createdAt;
+            tmp.udpated_at = data[x].updatedAt;
+              messages.push(tmp);
+          }
+          $scope.messages = messages;
+      },
+      function (error) {
+        console.log('Error: ' + error);
+      });
+  };
+
   /***** GET ALL DOCUMENTS *****/
   self.getDocuments = function () {
     sharedService.getDocuments()

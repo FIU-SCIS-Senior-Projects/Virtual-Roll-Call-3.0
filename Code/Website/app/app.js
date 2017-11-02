@@ -4,40 +4,6 @@ var adminModule = angular.module('admin', ['ngRoute', 'LocalStorageModule', 'sha
 var supervisorModule = angular.module('supervisor', ['ngRoute', 'LocalStorageModule', 'shared', 'flow', 'ui.bootstrap', 'ui.grid', 'ui.grid.selection', 'ui.grid.exporter']);
 var officerModule = angular.module('officer', ['ngRoute', 'LocalStorageModule', 'shared', 'flow', 'ui.bootstrap']);
 
-/*
-adminModule.config(function($routeProvider){
-	$routeProvider
-	.when('/categories', {
-		templateUrl: 'partials/category-management.html'//,
-		//controller: 'adminCtrl'
-	})
-	.when('/settings', {
-		templateUrl: 'partials/site-settings.html'//,
-		//controller: 'adminCtrl'
-	})
-	.when('/user-management', {
-		templateUrl: 'partials/user-management.html',//,
-		controller: 'adminCtrl'
-	})
-	.when('/password', {
-		templateUrl: 'partials/change-password.html'//,
-		//controller: 'sharedCtrl'
-	})
-	.when('/reporting', {
-		templateUrl: 'partials/reporting.html'//,
-		//controller: 'adminCtrl'
-	})
-	.when('/archive',{
-		templateUrl: 'partials/archive.html'//,
-		//#controller: 'adminCtrl'
-	})
-	.otherwise({
-		redirectTo: '/user-management'
-	});
-
-*/
-
-
 adminModule.config(function($routeProvider){
 	$routeProvider
 	.when('/categories', {
@@ -74,6 +40,12 @@ supervisorModule.config(function($routeProvider){
 	.when('/upload', {
 		templateUrl: 'partials/manage-documents.html'
 	})
+	.when('/manage-watch-orders', {
+		templateUrl: 'partials/manage-watch-orders.html'
+	})
+	.when('/freeText', {
+		templateUrl: 'partials/freeText.html'
+	})
 	.when('/reset', {
 		templateUrl: 'partials/reset-password.html'
 	})
@@ -99,6 +71,9 @@ officerModule.config(function($routeProvider){
 	})
 	.when('/documents/:selectedCategory/archived', {
 		templateUrl: 'partials/view-documents-archived.html'
+	})
+	.when('/watch-orders', {
+		templateUrl: 'partials/watch-orders.html'
 	})
 	.otherwise({
 		redirectTo: '/categories'

@@ -2,15 +2,8 @@
    Author's styles
    ---------------------------------------------------------*/
 
-  .navbar {
-    border-radius: 0;
-  }
-
-  a, a:hover{
-    /*color: #FFFFFF;*/
-    text-decoration: none;
-  }
-
+  .navbar { border-radius: 0; }
+  a, a:hover{ text-decoration: none; }
 
   .cat-holder {
     position: relative;
@@ -24,10 +17,7 @@
     transition: all .1s ease-in-out;
   }
 
-  .cat-holder:hover {
-    transform: scale(1.05);
-  }
-
+  .cat-holder:hover { transform: scale(1.05); }
   .cat-name {
     position: absolute;
     text-align: right;
@@ -40,8 +30,6 @@
     font-size: 1.5em;
     background-color: #0d67c1;
   }
-
-
 
   .cat-pendingCount[data-badge]:after {
      content:attr(data-badge);
@@ -66,7 +54,6 @@
     color: orange;
     margin-left: 16px;
   }
-
 
 /* ---------------------------------------------------------
    Print styles
@@ -104,9 +91,7 @@
     figure img { border:1px solid #000; }
   }
 
-  .acknowledge{
-    color: #2780e3;
-  }
+  .acknowledge{ color: #2780e3; }
 
   /*Night Mode*/
 
@@ -156,9 +141,7 @@
     background-color: #45b429;
   }
 
-
-
-
+  #map { height: 100%; }
 
   #night-mode{
     /*background-color: black;*/
