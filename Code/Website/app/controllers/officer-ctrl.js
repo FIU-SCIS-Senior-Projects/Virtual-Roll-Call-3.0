@@ -155,21 +155,6 @@ officerModule.controller('officerCtrl', ['$scope', 'localStorageService', 'dataS
        return sharedCtrl.getDisplayMode();
      };
 
-
-      /***********************
-     * GET WATCH ORDERS
-     ***********************/
-      function getWatchOrders(){
-
-        return new Promise(function(resolve, reject) {
-
-          dataService.viewWatchOrders()
-            .then(
-            function (data) {
-
-              //initialize an empty array to store results from the database
-              var watch_orders = [];
-
       /***********************
      * GET WATCH ORDERS
      ***********************/
@@ -271,10 +256,6 @@ officerModule.controller('officerCtrl', ['$scope', 'localStorageService', 'dataS
       }
 
 
-
-
-
-
     /***********************
    * GET ARCHIVED DOCUMENTS *
    ***********************/
@@ -350,7 +331,7 @@ officerModule.controller('officerCtrl', ['$scope', 'localStorageService', 'dataS
           console.log('Error: ' + error);
         });
 
-    }
+    };
 
     $scope.findDocAndUpdate = function (docs, document_id, status) {
       for (var i in docs) {
@@ -360,7 +341,7 @@ officerModule.controller('officerCtrl', ['$scope', 'localStorageService', 'dataS
           break; //Stop this loop, we found it!
         }
       }
-    }
+    };
 
     /***** ALERT FUNCTIONS *****/
     //alert functions (displays accordingly in views)

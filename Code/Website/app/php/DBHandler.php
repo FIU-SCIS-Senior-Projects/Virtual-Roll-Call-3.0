@@ -88,7 +88,6 @@ class DBHandler{
 		$result = ['RemovedAll' => false];
 		$sql = "DELETE FROM WATCH_ORDERS";
 		$stmt = $db_connection->prepare($sql);
-
 		if (!$stmt->execute())
 		{
 			return $result;

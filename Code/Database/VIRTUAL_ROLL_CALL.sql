@@ -37,12 +37,8 @@ INSERT INTO `CATEGORIES` (`category_ID`, `Category_Name`) VALUES
 (14, 'Officer Safety'),
 (2, 'Shift Line Up'),
 (5, 'Training'),
-<<<<<<< HEAD
 (15, 'Written Directives'),
 (16, 'Free Text');
-=======
-(15, 'Written Directives');
->>>>>>> feature/246-add-watch-orders
 
 -- --------------------------------------------------------
 
@@ -409,61 +405,6 @@ ALTER TABLE `DOCUMENTS`
   ADD PRIMARY KEY (`document_ID`),
   ADD UNIQUE KEY `Document_Name` (`Document_Name`),
   ADD KEY `Category_ID` (`Category_ID`);
-<<<<<<< HEAD
-
---
--- Indexes for table `DOCUMENT_STATUS`
---
-ALTER TABLE `DOCUMENT_STATUS`
-  ADD PRIMARY KEY (`Id`);
-
---
--- Indexes for table `LOGIN_LOGS`
---
-ALTER TABLE `LOGIN_LOGS`
-  ADD PRIMARY KEY (`log_id`);
-
---
--- Indexes for table `LOGS`
---
-ALTER TABLE `MESSAGES`
-  ADD PRIMARY KEY (`MessageId`);
-
---
--- Indexes for table `LOGS`
---
-ALTER TABLE `LOGS`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `OFFICERS`
---
-ALTER TABLE `OFFICERS`
-  ADD PRIMARY KEY (`userID`),
-  ADD UNIQUE KEY `Username` (`Username`),
-  ADD UNIQUE KEY `Username_2` (`Username`);
-
---
--- Indexes for table `USER_DOC_STATUS`
---
-ALTER TABLE `USER_DOC_STATUS`
-  ADD PRIMARY KEY (`Id`);
-
---
--- Indexes for table `WATCH_ORDERS`
---
-ALTER TABLE `WATCH_ORDERS`
-  ADD PRIMARY KEY (`Id`);
-
---
--- AUTO_INCREMENT for dumped tables
---
---
--- AUTO_INCREMENT for table `MESSAGES`
---
-ALTER TABLE `CATEGORIES`
-  MODIFY `MessageId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
-=======
 
 --
 -- Indexes for table `DOCUMENT_STATUS`
@@ -507,7 +448,6 @@ ALTER TABLE `WATCH_ORDERS`
 -- AUTO_INCREMENT for dumped tables
 --
 
->>>>>>> feature/246-add-watch-orders
 --
 -- AUTO_INCREMENT for table `CATEGORIES`
 --
