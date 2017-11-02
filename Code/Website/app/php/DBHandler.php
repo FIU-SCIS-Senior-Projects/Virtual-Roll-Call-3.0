@@ -61,6 +61,75 @@ class DBHandler{
 		return $result;
 	}
 
+	//ADD NEW WATCH ORDER TO DATABASE
+	function addWatchOrder($desc, $address, $lat, $long, $date) {
+		global $db_connection;
+
+		$result = ['Added' => false];
+		$sql = "INSERT INTO WATCH_ORDERS (`Desc`,`Address`,`Lat`,`Lng`,`Date`) VALUES (?,?,?,?,?)";
+		$stmt = $db_connection->prepare($sql);
+		if (!$stmt->bind_param('ssdds', $desc, $address, $lat, $long, $date))
+			echo "Binding parameters failed: (" . $stmt->errno . ") " . $stmt->error;
+		if (!$stmt->execute())
+		{
+			return $result;
+		}
+
+
+			$result['Added'] = true;
+		$stmt->close();
+		$db_connection->close();
+		return $result;
+	}
+
+	function removeWatchOrders() {
+		global $db_connection;
+
+		$result = ['RemovedAll' => false];
+		$sql = "DELETE FROM WATCH_ORDERS";
+		$stmt = $db_connection->prepare($sql);
+
+		if (!$stmt->execute())
+		{
+			return $result;
+		}
+
+		$result['RemovedAll'] = true;
+		$stmt->close();
+		$db_connection->close();
+		return $result;
+	}
+
+	function getWatchOrders() {
+		global $db_connection;
+
+		$orders = [];
+		$sql = "SELECT `Id`,`Desc`,`Address`,`Lat`,`Lng`,`Date` FROM WATCH_ORDERS";
+		$stmt = $db_connection->prepare($sql);
+		$stmt->execute();
+		$stmt->bind_result($Id, $Desc, $Address, $Lat, $Lng, $Date);
+		while($stmt->fetch()){
+			$tmp = ["Id" => $Id,
+			"Desc" => $Desc,
+			"Address" => $Address,
+			"Lat" => $Lat,
+			"Lng" => $Lng,
+			"Date" => $Date];
+
+			array_push($orders, $tmp);
+		}
+
+		$stmt->close();
+		$db_connection->close();
+		return $orders;
+	}
+
+
+
+
+
+
+
   //ADD NEW USER TO DATABASE
 	function addUser($first_name, $last_name, $username, $password, $role) {
 		global $db_connection;
