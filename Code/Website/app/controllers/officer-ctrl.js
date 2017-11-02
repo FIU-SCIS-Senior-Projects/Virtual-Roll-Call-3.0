@@ -43,7 +43,7 @@ officerModule.controller('officerCtrl', ['$scope', 'localStorageService', 'dataS
     $scope.logout = function () {
       sharedCtrl.logout();
     }
-    
+
     /***********************
    * GET ACTIVE DOCUMENTS *
    ***********************/
@@ -73,9 +73,9 @@ officerModule.controller('officerCtrl', ['$scope', 'localStorageService', 'dataS
               tmp.isDone = data[x].status == "Done" ? true : false;
               tmp.doneDisable = data[x].status == "Pending" || data[x].status == "Done" ? true : false;
 
-              if (data[x].pinned == 1) 
+              if (data[x].pinned == 1)
                 pinned_documents.push(tmp);
-              else 
+              else
                 unpinned_documents.push(tmp);
             }
           }
@@ -117,8 +117,6 @@ officerModule.controller('officerCtrl', ['$scope', 'localStorageService', 'dataS
    ***********************/
     function getPendingDocuments (user_id) {
 
-      //$scope.selected_cat = $routeParams.selectedCategory;
-
       dataService.viewDocuments(user_id)
         .then(
         function (data) {
@@ -139,6 +137,7 @@ officerModule.controller('officerCtrl', ['$scope', 'localStorageService', 'dataS
             }
           }
               $scope.pending_count = dict;
+
         },
         function (error) {
           console.log('Error: ' + error);
@@ -156,6 +155,20 @@ officerModule.controller('officerCtrl', ['$scope', 'localStorageService', 'dataS
        return sharedCtrl.getDisplayMode();
      };
 
+
+      /***********************
+     * GET WATCH ORDERS
+     ***********************/
+      function getWatchOrders(){
+
+        return new Promise(function(resolve, reject) {
+
+          dataService.viewWatchOrders()
+            .then(
+            function (data) {
+
+              //initialize an empty array to store results from the database
+              var watch_orders = [];
 
       /***********************
      * GET WATCH ORDERS
@@ -236,41 +249,10 @@ officerModule.controller('officerCtrl', ['$scope', 'localStorageService', 'dataS
           $scope.$apply(function () {
             $scope.markerCount = markerCount;
           });
+
+
           }
         );
-
-        var geocoder = new google.maps.Geocoder();
-
-        document.getElementById('submit').addEventListener('click', function() {
-          geocodeAddress(geocoder, map);
-        });
-
-        var contentString = "juan is cool";
-        var uluru = {lat: -25.363, lng: 131.044};
-        var uluru2 = {lat: -22.363, lng: 130.044};
-
-        var infowindow = new google.maps.InfoWindow({
-          content: contentString
-        });
-
-        var marker = new google.maps.Marker({
-          position: uluru,
-          label: "A",
-          map: map,
-          title: 'Uluru (Ayers Rock)'
-        });
-        marker.addListener('click', function() {
-          infowindow.open(map, marker);
-        });
-
-        var marker2 = new google.maps.Marker({
-          position: uluru2,
-          map: map,
-          title: 'Uluru (Ayers Rock)'
-        });
-        marker.addListener('click', function() {
-          infowindow.open(map, marker);
-        });
       };
 
       function geocodeAddress(geocoder, resultsMap) {
@@ -287,6 +269,11 @@ officerModule.controller('officerCtrl', ['$scope', 'localStorageService', 'dataS
           }
         });
       }
+
+
+
+
+
 
     /***********************
    * GET ARCHIVED DOCUMENTS *

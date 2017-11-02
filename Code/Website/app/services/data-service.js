@@ -111,7 +111,7 @@ loginModule.factory('dataService', function ($http, $q) {
           });
       });
     },
-    getTally: function( username ) 
+    getTally: function( username )
     {
         return $q(function (resolve) {
           $http.post('../app/php/get-tally.php', {'username': username})
@@ -128,7 +128,7 @@ loginModule.factory('dataService', function ($http, $q) {
             );
       });
     },
-    lockUser: function (userid) 
+    lockUser: function (userid)
     {
         return $q(function (resolve) {
           $http.post('../app/php/lockUser.php', {'userid': userid})
@@ -139,14 +139,15 @@ loginModule.factory('dataService', function ($http, $q) {
     {
         return $q(function(resolve) {
           $http.post('../app/php/resetLock.php', {'userid': userid})
-            .then( function(response) { 
+            .then( function(response) {
               resolve(response.data); });
-        }); 
+        });
     }
   }
 });
 
-//SERVICE for supervisor controller
+
+//SERVICE for admin controller
 adminModule.factory('dataService', function ($http, $q) {
   return {
     addUser: function (fname, lname, email, password, role) {
@@ -235,7 +236,7 @@ adminModule.factory('dataService', function ($http, $q) {
     },
     updateAppName: function (name) {
       return $q(function (resolve, reject) {
-        
+
         $http.post('../app/php/update-app-name.php', { 'name': name })
           .then(
           function (response) {
@@ -248,7 +249,7 @@ adminModule.factory('dataService', function ($http, $q) {
     },
     deleteArchive: function(from,to) {
       return $q(function (resolve, reject) {
-        
+
         $http.post('../app/php/delete-archive.php', { 'from': from,'to':to })
           .then(
           function (response) {
@@ -331,7 +332,7 @@ supervisorModule.factory('dataService', function ($http, $q) {
 
 //SERVICE for officer controller
 officerModule.factory('dataService', function ($http, $q) {
-  return {
+return {
     viewDocuments: function (user_id) {
       return $q(function (resolve, reject) {
         $http.post('../app/php/get-documents.php', {'type': 'active', 'user_id': user_id})

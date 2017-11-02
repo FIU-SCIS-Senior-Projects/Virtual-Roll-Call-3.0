@@ -36,6 +36,8 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.31/pdfmake.min.js.map"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.31/vfs_fonts.js"></script>
 
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAuubk4Obni7qiK7Umj7CdvUUxO23688cM"></script>
+  <script src="../app/vendor/papaparse.min.js"></script>
   <script src='../app/vendor/angular-route.min.js'></script>
   <script src='../app/vendor/jquery.table2excel.js'></script>
   <script src='../app/vendor/angular-local-storage.min.js'></script>
@@ -100,6 +102,7 @@
       <div class='col-sm-2 sidenav {{display_mode}}'>
         <ul class='nav nav-pills nav-stacked'>
           <li data-ng-class="{active: isActive('/upload')}"><a class='active' href='#upload'>Manage Documents</a></li>
+          <li data-ng-class="{active: isActive('/manage-watch-orders')}"><a class='active' href='#manage-watch-orders'>Manage Watch Orders</a></li>
           <li data-ng-class="{active: isActive('/reset')}"><a href='#reset'>Reset Password</a></li>
           <li data-ng-class="{active: isActive('/log')}"><a href='#log'>Logs</a></li>
         </ul>

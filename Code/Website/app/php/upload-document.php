@@ -13,6 +13,7 @@ if(isset($_POST['pinned']) && $_POST['pinned'] == '1'){
 }else{
     $pinned = 0;
 }
+date_default_timezone_set('America/New_York');
 $upload_date = date('Y-m-d');
 
 $ds = DIRECTORY_SEPARATOR;
@@ -23,7 +24,7 @@ echo "\n";
 echo $target_path;
 echo "\n";
 echo  $_FILES['document']['error'];
-	
+
 if (move_uploaded_file($tmp_doc_name, $target_path)){
 echo " This should mean that the file was upload ";
 }else{

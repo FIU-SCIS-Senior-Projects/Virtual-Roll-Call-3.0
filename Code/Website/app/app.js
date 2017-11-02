@@ -43,9 +43,12 @@ supervisorModule.config(function($routeProvider){
 	.when('/manage-watch-orders', {
 		templateUrl: 'partials/manage-watch-orders.html'
 	})
+<<<<<<< HEAD
 	.when('/freeText', {
 		templateUrl: 'partials/freeText.html'
 	})
+=======
+>>>>>>> feature/246-add-watch-orders
 	.when('/reset', {
 		templateUrl: 'partials/reset-password.html'
 	})
