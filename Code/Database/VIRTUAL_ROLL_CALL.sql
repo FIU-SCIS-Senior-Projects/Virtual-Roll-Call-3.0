@@ -14,6 +14,7 @@ SET time_zone = "+00:00";
 -- Database: `VIRTUAL_ROLL_CALL`
 --
 
+-- CREATE DATABASE VIRTUAL_ROLL_CALL;
 -- --------------------------------------------------------
 
 --
@@ -112,11 +113,6 @@ CREATE TABLE `LOGIN_LOGS` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `LOGIN_LOGS`
---
-
-INSERT INTO `LOGIN_LOGS` (`log_id`, `created_at`, `updated_at`, `lock_count`, `lock_status`) VALUES
-(2, '2017-10-19 12:53:01', '2017-10-26 17:59:23', 0, 0);
 
 -- --------------------------------------------------------
 
@@ -384,7 +380,7 @@ CREATE TABLE `WATCH_ORDERS` (
 
 INSERT INTO `WATCH_ORDERS` (`Id`, `Desc`, `Address`, `Lat`, `Lng`, `Date`) VALUES
 (228, 'robbery', '8888 SW 136th St, Miami, FL 33176, USA', 25.642885, -80.339722, '2017-10-27'),
-(229, 'emergency	', '7535 N Kendall Dr, Kendall, FL 33156, USA', 25.689037, -80.315445, '2017-10-27'),
+(229, 'emergency  ', '7535 N Kendall Dr, Kendall, FL 33156, USA', 25.689037, -80.315445, '2017-10-27'),
 (230, 'accident', '11000 Red Rd, Pinecrest, FL 33156, USA', 25.668188, -80.286591, '2017-10-27');
 
 --
@@ -421,6 +417,12 @@ ALTER TABLE `LOGIN_LOGS`
 --
 -- Indexes for table `LOGS`
 --
+ALTER TABLE `MESSAGES`
+  ADD PRIMARY KEY (`MessageId`);
+
+--
+-- Indexes for table `LOGS`
+--
 ALTER TABLE `LOGS`
   ADD PRIMARY KEY (`id`);
 
@@ -447,7 +449,11 @@ ALTER TABLE `WATCH_ORDERS`
 --
 -- AUTO_INCREMENT for dumped tables
 --
-
+--
+-- AUTO_INCREMENT for table `MESSAGES`
+--
+ALTER TABLE `MESSAGES`
+  MODIFY `MessageId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 --
 -- AUTO_INCREMENT for table `CATEGORIES`
 --

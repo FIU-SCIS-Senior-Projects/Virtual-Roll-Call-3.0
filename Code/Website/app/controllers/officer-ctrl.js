@@ -302,7 +302,7 @@ officerModule.controller('officerCtrl', ['$scope', 'localStorageService', 'dataS
     };
 
     $scope.document_log = function (user_id, document_id, list_name, status) {
-      dataService.documentSaveLog(user_id, document_id);
+      //dataService.documentSaveLog(user_id, document_id);
 
       if (status == 'Pending'){
         $scope.documentStatusUpdate(user_id, document_id, list_name, status);
@@ -319,6 +319,7 @@ officerModule.controller('officerCtrl', ['$scope', 'localStorageService', 'dataS
         .then(
         function (data) {
           console.log('Data: Id:' + data.id + ' Status:' + data.status);
+          alert('Data: Id:' + data.id + ' Status:' + data.status);
 
           if (list_name == 'pinned')
             $scope.findDocAndUpdate($scope.pinned_documents, data.id, data.status);

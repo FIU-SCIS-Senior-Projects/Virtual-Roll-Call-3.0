@@ -42,14 +42,14 @@
 						<div class="panel-heading {{display_mode}}">
 							{{d.name}}
 							<span class="label label-default label-as-badge {{d.status}}" >{{d.status}}</span>
-							<!--<h3 class="panel-title">Panel title</h3>-->
 						</div>
 						<div class="panel-body">
-
 							<div class="row">
 								<div class="col-md-3">
-										<i class="fa fa-file-text fa-5x"
-										 class="btn btn-info btn-lg" data-toggle="modal" data-target="#{{d.id}}"
+									<i class="fa fa-file-text fa-5x" 
+									   ng-click="document_log(id,d.id,'pinned', d.status)"
+									   class="btn btn-info btn-lg" 
+									   data-toggle="modal" data-target="#{{d.id}}"
 										 style="color: #2780e3; cursor: pointer;"></i>
 								  <!-- Modal -->
 								  <div class="modal fade" id="{{d.id}}" role="dialog">
@@ -69,7 +69,7 @@
 								      </div>
 								    </div>
 								  </div>
-								<br /><br />
+									<br /><br />
 								</div>
 								<div class="col-md-9">
 									<p>{{d.doc_description}}</p>
