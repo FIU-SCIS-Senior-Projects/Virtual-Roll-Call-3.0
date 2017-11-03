@@ -8,8 +8,8 @@ class DBHandler{
 		global $db_connection;
 		global $crypter;
 
-		$un = 'vrc';
-		$pw = 'VirtualRollCall';
+		$un = 'root';
+		$pw = 'root';
 		$dbName = 'VIRTUAL_ROLL_CALL';
 		$address = 'localhost';
 		$db_connection = new mysqli($address, $un, $pw, $dbName);
@@ -535,8 +535,8 @@ class DBHandler{
 		global $db_connection;
 		$result = ['Added' => false];
 		$archived = 0;
-		$sql = 'INSERT INTO 
-						DOCUMENTS (Document_Name, Category_ID, Upload_Date, Pinned, Uploaded_By, Upload_Name, Description, Manual_Archived) 
+		$sql = 'INSERT INTO
+						DOCUMENTS (Document_Name, Category_ID, Upload_Date, Pinned, Uploaded_By, Upload_Name, Description, Manual_Archived)
 						VALUES 	  (?,?,?,?,?,?,?,?)';
 		$stmt = $db_connection->prepare($sql);
 
@@ -805,7 +805,7 @@ class DBHandler{
 
 		//document is read by first time, status will be set to reviewed and start date time will be set as well
 		if($insert){
-			$sql = "INSERT INTO USER_DOC_STATUS (StartDateTime, EndDateTime, DocumentId,OfficerId,StatusId) 
+			$sql = "INSERT INTO USER_DOC_STATUS (StartDateTime, EndDateTime, DocumentId,OfficerId,StatusId)
 						   values(now(),now(),?,?,?) ";
 			$stmt = $db_connection->prepare($sql);
 			$stmt->bind_param('iii',$document_id,$user_id,$new_status_id);

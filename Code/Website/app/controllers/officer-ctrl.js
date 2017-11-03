@@ -256,7 +256,7 @@ officerModule.controller('officerCtrl', ['$scope', 'localStorageService', 'dataS
       }
 
 
-    /***********************
+    /*******************  ****
    * GET ARCHIVED DOCUMENTS *
    ***********************/
 
@@ -302,7 +302,7 @@ officerModule.controller('officerCtrl', ['$scope', 'localStorageService', 'dataS
     };
 
     $scope.document_log = function (user_id, document_id, list_name, status) {
-      //dataService.documentSaveLog(user_id, document_id);
+      dataService.documentSaveLog(user_id, document_id);
 
       if (status == 'Pending'){
         $scope.documentStatusUpdate(user_id, document_id, list_name, status);
@@ -318,8 +318,7 @@ officerModule.controller('officerCtrl', ['$scope', 'localStorageService', 'dataS
       dataService.documentStatusUpdate(user_id, document_id, status)
         .then(
         function (data) {
-          console.log('Data: Id:' + data.id + ' Status:' + data.status);
-          alert('Data: Id:' + data.id + ' Status:' + data.status);
+          //console.log('Data: Id:' + data.id + ' Status:' + data.status);
 
           if (list_name == 'pinned')
             $scope.findDocAndUpdate($scope.pinned_documents, data.id, data.status);
