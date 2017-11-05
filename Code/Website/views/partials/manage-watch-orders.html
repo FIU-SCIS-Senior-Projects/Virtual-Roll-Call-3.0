@@ -9,6 +9,37 @@
 	<br>
 	<br>
 
+	<!-- Add Single Watch Order Panel -->
+  <div class='panel panel-primary {{display_mode}}'>
+    <div class='panel-heading'>Add Watch Order</div>
+    <div class='panel-body'>
+
+      <!-- Add Watch Order Form -->
+      <form ng-submit='addSingleWatchOrder()'>
+
+        <label>Description</label>
+        <br>
+        <input class='fields {{display_mode}}' type='text' ng-model="order.desc" required>
+        <br>
+        <br>
+        <label>Address</label>
+        <br>
+        <input class='fields {{display_mode}}' type='text' ng-model="order.address" required>
+        <br>
+        <br>
+        <button type='submit' class='btn btn-success'>Add Watch Order</button>
+        <br>
+        <!-- display message accordingly -->
+        <div class='alert alert-danger' ng-show='errorMessage' style='margin-bottom: 0'>
+          {{message}}
+        </div>
+        <div class='alert alert-success' ng-show='successMessage' style='margin-bottom: 0'>
+          {{message}}
+        </div>
+      </form>
+    </div>
+  </div>
+
 	<!-- Edit Watch Order Panel -->
 	<div class='panel panel-primary' ng-init='getWatchOrders()'>
 		<div class='panel-heading'>Edit Watch Orders</div>
