@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html ng-app='supervisor' lang='en'>
- 
+
 <head>
   <meta charset='utf-8'>
   <title>VRC | Supervisor Dashboard</title>
@@ -10,7 +10,7 @@
   <!-- STYLE SHEETS -->
   <link href='style/normalize.css' rel='stylesheet' media='all'>
 <!--   <link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css' media='all'> -->
-  <link rel='stylesheet' href='../app/vendor/3.3.7.bootstrap.min.css' media='all'>  
+  <link rel='stylesheet' href='../app/vendor/3.3.7.bootstrap.min.css' media='all'>
   <link href='style/bootstrap.min.css' rel='stylesheet' media='all'>
   <link href='style/supervisor.css' rel='stylesheet' media='all'>
   <link rel='stylesheet' href='https://cdn.rawgit.com/angular-ui/bower-ui-grid/master/ui-grid.min.css' media='all'>
@@ -18,11 +18,11 @@
 
 
   <!-- SCRIPTS -->
-  <!-- <script src='https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js'></script> 
+  <!-- <script src='https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js'></script>
   <script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js'></script>
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.js"></script> -->
   <script src='../app/vendor/1.12.4.jquery.min.js'></script>
-  <script src='../app/vendor/3.3.7.bootstrap.min.js'></script> 
+  <script src='../app/vendor/3.3.7.bootstrap.min.js'></script>
   <script src="../app/vendor/1.5.8.angular.js"></script>
   <script src="https://cdn.datatables.net/1.10.7/js/jquery.dataTables.min.js"></script>
 
@@ -36,6 +36,8 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.31/pdfmake.min.js.map"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.31/vfs_fonts.js"></script>
 
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAuubk4Obni7qiK7Umj7CdvUUxO23688cM"></script>
+  <script src="../app/vendor/papaparse.min.js"></script>
   <script src='../app/vendor/angular-route.min.js'></script>
   <script src='../app/vendor/jquery.table2excel.js'></script>
   <script src='../app/vendor/angular-local-storage.min.js'></script>
@@ -55,7 +57,7 @@
 
 </head>
 
-<body ng-controller='supervisorCtrl' ng-init='getAppName()'>
+<body class= "{{display_mode}}" ng-controller='supervisorCtrl' ng-init='getAppName()'>
 
   <!-- Vertical Navigation -->
   <nav class='navbar navbar-default'>
@@ -64,7 +66,7 @@
         <button type='button' class='navbar-toggle' data-toggle='collapse' data-target='#myNavbar'>
           <span class='icon-bar'></span>
           <span class='icon-bar'></span>
-          <span class='icon-bar'></span>                        
+          <span class='icon-bar'></span>
         </button>
         <a class='navbar-brand' href='#'>Virtual Roll Call</a>
       </div>
@@ -77,6 +79,9 @@
           <li class='dropdown'>
             <a class='dropdown-toggle' data-toggle='dropdown'>{{name}} <b class='caret'></b></a>
             <ul class='dropdown-menu'>
+              <li>
+                <a href='' ng-click="changeDisplayMode()"><span class='glyphicon glyphicon-adjust'></span> Change to {{night_mode? "Day" : 'Night' }} Mode</a>
+              </li>
               <li>
                 <a href='#password'><span class='glyphicon glyphicon-cog'></span> Change Password</a>
               </li>
@@ -94,9 +99,10 @@
   <!-- Horizontal Navigation -->
   <div class='container-fluid text-center'>
     <div class='row content'>
-      <div class='col-sm-2 sidenav'>
+      <div class='col-sm-2 sidenav {{display_mode}}'>
         <ul class='nav nav-pills nav-stacked'>
           <li data-ng-class="{active: isActive('/upload')}"><a class='active' href='#upload'>Manage Documents</a></li>
+          <li data-ng-class="{active: isActive('/manage-watch-orders')}"><a class='active' href='#manage-watch-orders'>Manage Watch Orders</a></li>
           <li data-ng-class="{active: isActive('/reset')}"><a href='#reset'>Reset Password</a></li>
           <li data-ng-class="{active: isActive('/log')}"><a href='#log'>Logs</a></li>
         </ul>

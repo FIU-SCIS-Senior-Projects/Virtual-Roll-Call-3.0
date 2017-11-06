@@ -41,18 +41,26 @@ supervisorModule.config(function($routeProvider){
 		templateUrl: 'partials/manage-documents.html',
 		controller: 'supervisorCtrl'
 	})
+	.when('/manage-watch-orders', {
+		templateUrl: 'partials/manage-watch-orders.html',
+		controller: 'supervisorCtrl'
+	})
+	.when('/freeText', {
+		templateUrl: 'partials/freeText.html',
+		controller: 'supervisorCtrl'
+	})
 	.when('/reset', {
 		templateUrl: 'partials/reset-password.html',
 		controller: 'supervisorCtrl'
 	})
 	.when('/password', {
 		templateUrl: 'partials/change-password.html',
-		controller: 'sharedCtrl'
+		controller: 'supervisorCtrl'
 	})
 	.when('/log',{
-         templateUrl: 'partials/show-logs.html',
-         controlller: 'supervisorCtrol'
-        })
+		templateUrl: 'partials/show-logs.html',
+		controller: 'supervisorCtrl'
+	})
 	.otherwise({
 		redirectTo: '/upload'
 	});
@@ -61,14 +69,20 @@ supervisorModule.config(function($routeProvider){
 officerModule.config(function($routeProvider){
 	$routeProvider
 	.when('/categories', {
-		templateUrl: 'partials/view-categories.html',
+		templateUrl: 'partials/view-categories.html',//,
 		controller: 'officerCtrl'
-    })
+	})
 	.when('/documents/:selectedCategory', {
-		templateUrl: 'partials/view-documents.html'
+		templateUrl: 'partials/view-documents.html',
+		controller: 'officerCtrl'
 	})
 	.when('/documents/:selectedCategory/archived', {
-		templateUrl: 'partials/view-documents-archived.html'
+		templateUrl: 'partials/view-documents-archived.html',
+		controller: 'officerCtrl'
+	})
+	.when('/watch-orders', {
+		templateUrl: 'partials/watch-orders.html',
+		controller: 'officerCtrl'
 	})
 	.otherwise({
 		redirectTo: '/categories'

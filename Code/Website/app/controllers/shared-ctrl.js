@@ -26,8 +26,10 @@ sharedModule.controller('sharedCtrl', ['$scope', 'sharedService', 'localStorageS
     localStorageService.set('id', "");
     localStorageService.set('fname', "");
     localStorageService.set('lname', "");
+    localStorageService.clearAll();
     delete $scope.login;
   };
+
 
   self.redirect = function (login) {
     if (login == "")
@@ -114,6 +116,7 @@ sharedModule.controller('sharedCtrl', ['$scope', 'sharedService', 'localStorageS
 
   /***** GET ALL CATEGORIES *****/
   self.getCategories = function () {
+    //getPendingDocuments();
     sharedService.getCategories()
       .then(
       function (data) {
@@ -130,6 +133,30 @@ sharedModule.controller('sharedCtrl', ['$scope', 'sharedService', 'localStorageS
         }
         //update value in view for use in ng-repeat (to populate)
         $scope.categories = categories;
+      },
+      function (error) {
+        console.log('Error: ' + error);
+      });
+  };
+
+  /***** GET ALL MESSAGES *****/
+  self.getMessages = function() {
+    sharedService.getMessages()
+      .then(
+        function (data) {
+
+          var messages = [];
+
+          for ( var x in data ) {
+            var tmp = new Object();
+            tmp.id = data[x].id;
+            tmp.officer_id = data[x].officer_id;
+            tmp.title = data[x].title;
+            tmp.created_at = data[x].createdAt;
+            tmp.udpated_at = data[x].updatedAt;
+              messages.push(tmp);
+          }
+          $scope.messages = messages;
       },
       function (error) {
         console.log('Error: ' + error);
@@ -180,7 +207,30 @@ sharedModule.controller('sharedCtrl', ['$scope', 'sharedService', 'localStorageS
       });
   };
 
+  /*Night mode toggle */
+  self.changeDisplayMode = function(){
+    if(localStorageService.get('nightMode')){
+      localStorageService.set('nightMode', false);
+    }
+    //else: daytime set, or not in local storage
+    else {
+      localStorageService.set('nightMode', true);
+    }
+    $scope.display_mode = self.getDisplayMode();
+    $scope.night_mode = localStorageService.get('nightMode');
+    
+    window.location.reload();
 
+  };
+
+  self.getDisplayMode = function(){
+    if(localStorageService.get('nightMode')){
+      return "night-mode";
+    }
+    else {
+        return "day-mode";
+    }
+  };
 
   self.getlogs = function () {
 
@@ -219,5 +269,3 @@ sharedModule.controller('sharedCtrl', ['$scope', 'sharedService', 'localStorageS
   return self;
 
 }]);
-
-

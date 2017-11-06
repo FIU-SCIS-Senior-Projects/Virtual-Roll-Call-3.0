@@ -1,6 +1,5 @@
 <?php
 $fileName = $_GET['upload_name'];
-
 if(strtolower(substr($fileName, -4)) == ".pdf")
 {
     header('Content-Type: application/pdf');

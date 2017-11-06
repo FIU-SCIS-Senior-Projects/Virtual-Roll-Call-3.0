@@ -6,10 +6,9 @@
 
   <!-- RESET PASSWORD PANEL -->
   <!-- populate the reset password table on page load with list of officers -->
-  <div class='panel panel-primary' ng-init='getlogs()' style="height: 800px">
+  <div class='panel panel-primary {{display_mode}}' ng-init='getlogs()' style="height: 800px, color:black">
     <div class='panel-body'>
-      <div ui-grid="gridOptions" ui-grid-selection ui-grid-exporter class="grid"></div>
+      <div ui-grid="gridOptions " ui-grid-selection ui-grid-exporter class="grid"></div>
     </div>
   </div>
 </div>
-
