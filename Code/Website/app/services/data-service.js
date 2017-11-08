@@ -1,3 +1,6 @@
+
+const MAP_API_KEY = 'AIzaSyAuubk4Obni7qiK7Umj7CdvUUxO23688cM';
+
 //SERVICE for shared controller
 sharedModule.factory('sharedService', function ($http, $q) {
   return {
@@ -306,6 +309,43 @@ supervisorModule.factory('dataService', function ($http, $q) {
     removeWatchOrders: function () {
       return $q(function (resolve, reject) {
         $http.post('../app/php/remove-watch-orders.php')
+          .then(
+          function (response) {
+            resolve(response.data);
+          },
+          function (error) {
+            reject(error);
+          });
+      });
+    },
+    updateWatchOrder: function (id, desc, address) {
+      return $q(function (resolve, reject) {
+        $http.post('../app/php/edit-watch-order.php', { 'id': id, 'desc': desc, 'address': address})
+          .then(
+          function (response) {
+            resolve(response.data);
+          },
+          function (error) {
+            reject(error);
+          });
+      });
+    },
+
+    geoCodeAddress: function (address) {
+      return $q(function (resolve, reject) {
+
+        var params = {
+          address: address,
+        //  components: "administrative_area:Florida",  //only look for addresses in Florida
+          key: MAP_API_KEY
+        };
+
+        //encode query URL
+        var esc = encodeURIComponent;
+        var query = Object.keys(params)
+        .map(k => esc(k) + '=' + esc(params[k]))
+        .join('&');
+        $http.get('https://maps.googleapis.com/maps/api/geocode/json?' + query)
           .then(
           function (response) {
             resolve(response.data);

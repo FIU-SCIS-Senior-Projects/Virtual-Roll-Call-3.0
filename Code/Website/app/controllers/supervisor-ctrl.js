@@ -117,14 +117,61 @@ supervisorModule.controller('supervisorCtrl', ['$scope', 'localStorageService', 
 
         var message = "Parsed (" + results.data.length + ") watch orders from CSV file";
         document.getElementById("parseTitle").innerHTML = message;
-        geoCodeAddresses();
 
+        var orders = $scope.parsedWatchOrders;
+
+        //Geocode watch address
+        orders.forEach(function(order){
+
+          order.push(0,0);
+          geoCodeAddress(order).then(
+            function(data){
+              order = data;
+            },
+            function(error){
+              console.log('Error: ' + error);
+            });
+        });
+
+        $scope.parsedWatchOrders = orders;
       }
     });
     document.getElementById("parsedWatchOrdersPanel").style.display = "block";
     document.getElementById("successMessage").style.display = "none";
     document.getElementById("failMessage").style.display = "none";
   };
+
+
+  function geoCodeAddress(order)
+  {
+    return new Promise(function(resolve, reject) {
+
+
+    dataService.geoCodeAddress(order[1])
+    .then(
+      function(data){
+        if(data.status === "OK"){
+
+          order[1] = data.results[0].formatted_address;   //pick first formatted address returned
+          order[2] = data.results[0].geometry.location.lat;  // add lat coordinate
+          order[3] = data.results[0].geometry.location.lng;   // add long coordinate
+
+          resolve(order);
+
+        }
+        else{
+          console.log(data);
+          reject(error);
+        }
+      },
+      function(error){
+        console.log('Error: ' + error);
+        reject(error);
+      });
+
+    });
+
+  }
 
   /***** USE GOOGLE API TO CONVERT WATCH ORDER ADDRESSES FROM CSV TO COORDINATES*****/
   function geoCodeAddresses(){
@@ -146,7 +193,8 @@ supervisorModule.controller('supervisorCtrl', ['$scope', 'localStorageService', 
           $scope.$apply(function () {
             var index = $scope.parsedWatchOrders.indexOf(order);
             $scope.parsedWatchOrders[index][1] = results[0].formatted_address;   //pick first formatted address returned
-            $scope.parsedWatchOrders[index].push(results[0].geometry.viewport.f.b, results[0].geometry.viewport.b.b);   // add lat and long coordinates
+            $scope.parsedWatchOrders[index][2] = results[0].geometry.viewport.f.b;  // add lat coordinate
+            $scope.parsedWatchOrders[index][3] = results[0].geometry.viewport.b.b;   // add long coordinate
           });
 
         }
@@ -272,6 +320,75 @@ supervisorModule.controller('supervisorCtrl', ['$scope', 'localStorageService', 
             console.log('Error: ' + error);
           });
         };
+
+
+        /***** EDIT PARSED WATCH ORDER MODAL *****/
+        $scope.editParsedWatchOrder = function(index, desc, address){
+          $scope.updateIndex = index;
+          $scope.updateDesc = desc;
+          $scope.updateAddress = address;
+          $scope.display_mode_modal = sharedCtrl.getDisplayMode();
+          $('#editParseModal').modal('show');
+        };
+
+        $scope.updateParseUser = function(){
+          var index = $scope.updateIndex;
+          var desc = $scope.updateDesc;
+          var address = $scope.updateAddress;
+
+          var temp = $scope.parsedWatchOrders[index];
+          temp[0] = desc;
+          temp[1] = address;
+
+          geoCodeAddress(temp).then(
+            function(data){
+              $scope.parsedWatchOrders[index] = data;
+            },
+            function(error){
+              console.log('Error: ' + error);
+            });
+
+          $('#editParseModal').modal('hide');
+
+        };
+
+        /***** EDIT WATCH ORDER MODAL *****/
+        $scope.editWatchOrder = function(id, desc, address){
+          $scope.updateID = id;
+          $scope.updateDesc = desc;
+          $scope.updateAddress = address;
+          $scope.display_mode_modal = sharedCtrl.getDisplayMode();
+          $('#editModal').modal('show');
+        };
+
+        /***** EDIT WATCH ORDER DATA *****/
+        $scope.updateWatchOrder = function(){
+
+          var id = $scope.updateID;
+          var desc = $scope.updateDesc;
+          var address = $scope.updateAddress;
+
+          dataService.updateWatchOrder(id, desc, address)
+          .then(
+            function(data){
+              if(data['Updated'] === true){
+                $scope.alert.closeAll();
+                $scope.alert.addAlert('success', 'User successfully updated!');
+                sharedCtrl.getOfficers();
+                window.location.reload();
+                //$('#editModal').modal('hide');
+              }
+              else{
+                $scope.alert.closeAll();
+                $scope.alert.addAlert('danger', 'Could not update user!');
+                window.location.reload();
+                //$('#editModal').modal('hide');
+              }
+            },
+            function(error){
+              console.log('Error: ' + error);
+            });};
+
 
 
 
