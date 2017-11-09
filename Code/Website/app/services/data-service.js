@@ -318,9 +318,21 @@ supervisorModule.factory('dataService', function ($http, $q) {
           });
       });
     },
-    updateWatchOrder: function (id, desc, address) {
+    updateWatchOrder: function (id, desc, address, lat, lng) {
       return $q(function (resolve, reject) {
-        $http.post('../app/php/edit-watch-order.php', { 'id': id, 'desc': desc, 'address': address})
+        $http.post('../app/php/edit-watch-order.php', { 'id': id, 'desc': desc, 'address': address, 'lat': lat, 'lng': lng})
+          .then(
+          function (response) {
+            resolve(response.data);
+          },
+          function (error) {
+            reject(error);
+          });
+      });
+    },
+    removeWatchOrder: function (id) {
+      return $q(function (resolve, reject) {
+        $http.post('../app/php/remove-watch-order.php', { 'id': id })
           .then(
           function (response) {
             resolve(response.data);

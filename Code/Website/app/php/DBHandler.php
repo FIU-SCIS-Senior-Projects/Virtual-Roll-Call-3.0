@@ -99,6 +99,27 @@ class DBHandler{
 		return $result;
 	}
 
+	function removeWatchOrder($id) {
+		global $db_connection;
+		$result = ["Removed" => false];
+		$table = "WATCH_ORDERS";
+		$sql = "DELETE FROM $table
+		        WHERE `Id`=?";
+		$stmt = $db_connection->prepare($sql);
+		if( !$stmt->bind_param('d', $id) )
+		{
+			return $result;
+		}
+		if (!$stmt->execute())
+		{
+			return $result;
+		}
+		$result["Removed"] = true;
+		$stmt->close();
+		$db_connection->close();
+		return $result;
+	}
+
 	function getWatchOrders() {
 		global $db_connection;
 
@@ -121,6 +142,26 @@ class DBHandler{
 		$stmt->close();
 		$db_connection->close();
 		return $orders;
+	}
+
+	function editWatchOrder($id, $desc, $address, $lat, $lng) {
+		global $db_connection;
+		$result = ["Updated" => false];
+		$table = "WATCH_ORDERS";
+		$sql = "UPDATE $table SET `Desc`=?, `Address`=?, `Lat`=?, `Lng`=? WHERE `Id`=?";
+		$stmt = $db_connection->prepare($sql);
+		if( !$stmt->bind_param('ssssd', $desc, $address, $lat, $lng, $id) )
+		{
+			return $result;
+		}
+		if (!$stmt->execute())
+		{
+			return $result;
+		}
+		$result["Updated"] = true;
+		$stmt->close();
+		$db_connection->close();
+		return $result;
 	}
 
 

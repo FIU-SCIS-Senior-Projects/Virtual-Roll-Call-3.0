@@ -168,45 +168,9 @@ supervisorModule.controller('supervisorCtrl', ['$scope', 'localStorageService', 
         console.log('Error: ' + error);
         reject(error);
       });
-
-    });
-
-  }
-
-  /***** USE GOOGLE API TO CONVERT WATCH ORDER ADDRESSES FROM CSV TO COORDINATES*****/
-  function geoCodeAddresses(){
-
-    var orders = $scope.parsedWatchOrders;
-    var geocoder = new google.maps.Geocoder();
-    //change search boundary for South Florida
-    var southWest = new google.maps.LatLng({lat: 5.395327, lng:  -80.583131});
-    var northEast = new google.maps.LatLng({lat: 26.316590, lng: -80.075519});
-    var searchBoundary = new google.maps.LatLngBounds(northEast, southWest);
-
-    orders.forEach(function(order){
-
-      //convert address into geo coordinates
-      geocoder.geocode({address: order[1], bounds: searchBoundary }, function(results, status) {
-
-        if (status == google.maps.GeocoderStatus.OK) {
-
-          $scope.$apply(function () {
-            var index = $scope.parsedWatchOrders.indexOf(order);
-            $scope.parsedWatchOrders[index][1] = results[0].formatted_address;   //pick first formatted address returned
-            $scope.parsedWatchOrders[index][2] = results[0].geometry.viewport.f.b;  // add lat coordinate
-            $scope.parsedWatchOrders[index][3] = results[0].geometry.viewport.b.b;   // add long coordinate
-          });
-
-        }
-        else {
-          $scope.$apply(function () {
-            var index = $scope.parsedWatchOrders.indexOf(order);
-            $scope.parsedWatchOrders[index][1] = "Invalid Address";
-          });
-        }
-      });
     });
   }
+
 
 
   $scope.addSingleWatchOrder = function(){
@@ -352,6 +316,14 @@ supervisorModule.controller('supervisorCtrl', ['$scope', 'localStorageService', 
 
         };
 
+        $scope.removeParsedWatchOrder = function(){
+          var deleteOrder = window.confirm('Are you sure you want to delete this parsed watch order?');
+          if(deleteOrder){
+            $scope.parsedWatchOrders.splice($scope.updateIndex,1);
+            $('#editParseModal').modal('hide');
+          }
+        };
+
         /***** EDIT WATCH ORDER MODAL *****/
         $scope.editWatchOrder = function(id, desc, address){
           $scope.updateID = id;
@@ -367,30 +339,44 @@ supervisorModule.controller('supervisorCtrl', ['$scope', 'localStorageService', 
           var id = $scope.updateID;
           var desc = $scope.updateDesc;
           var address = $scope.updateAddress;
+          var order = [desc, address, 0, 0];
 
-          dataService.updateWatchOrder(id, desc, address)
-          .then(
+          geoCodeAddress(order).then(
             function(data){
-              if(data['Updated'] === true){
-                $scope.alert.closeAll();
-                $scope.alert.addAlert('success', 'User successfully updated!');
-                sharedCtrl.getOfficers();
-                window.location.reload();
-                //$('#editModal').modal('hide');
-              }
-              else{
-                $scope.alert.closeAll();
-                $scope.alert.addAlert('danger', 'Could not update user!');
-                window.location.reload();
-                //$('#editModal').modal('hide');
-              }
+              address = data[1];
+              lat = data[2];
+              lng = data[3];
+
+              dataService.updateWatchOrder(id, desc, address, lat, lng)
+              .then(
+                function(data){
+                  if(data['Updated'] === true){
+                    $scope.alert.closeAll();
+                    $scope.alert.addAlert('success', 'Watch Order successfully updated!');
+                    $scope.getWatchOrders();
+                    //window.location.reload();
+                    $('#editModal').modal('hide');
+                  }
+                  else{
+                    $scope.alert.closeAll();
+                    $scope.alert.addAlert('danger', 'Could not update watch order!');
+                  //  window.location.reload();
+                    $('#editModal').modal('hide');
+                  }
+
+                },
+                function(error){
+                  console.log('Error: ' + error);
+                });
+
             },
             function(error){
               console.log('Error: ' + error);
-            });};
+            });
 
 
 
+          };
 
         /***** ATTEMPT TO ADD A PARSED WATCH ORDER TO THE DATABASE *****/
         self.addWatchOrder = function(order){
@@ -461,6 +447,32 @@ supervisorModule.controller('supervisorCtrl', ['$scope', 'localStorageService', 
                 console.log('Error: ' + error);
               });
             };
+
+            /***** REMOVE WATCH ORDER *****/
+            $scope.removeWatchOrder = function(){
+              //when delete button selected, prompt user for confirmation
+              var deleteOrder = window.confirm('Are you sure you want to delete this watch order?');
+              if(deleteOrder){
+                var id = $scope.updateID;
+                dataService.removeWatchOrder(id)
+                .then(
+                  function(data){
+                    if(data['Removed'] === true){
+                      $scope.alert.closeAll();
+                      $scope.alert.addAlert('success', 'Watch Order successfully deleted!');
+                      $scope.getWatchOrders();
+                      //window.location.reload();
+                      $('#editModal').modal('hide');
+                    }else{
+                      $scope.alert.closeAll();
+                      $scope.alert.addAlert('danger', 'Could not delete watch order!');
+                      //window.location.reload();
+                      $('#editModal').modal('hide');
+                    }
+                  },
+                  function(error){
+                    console.log('Error: ' + error);
+                  });}};
 
             /***** ALERT FUNCTIONS *****/
             //alert functions (displays accordingly in views)

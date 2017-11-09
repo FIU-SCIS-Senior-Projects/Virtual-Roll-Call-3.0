@@ -73,7 +73,7 @@
 							<td>{{o.Lat}}</td>
 							<td>{{o.Lng}}</td>
 							<td>{{o.Date}}</td>
-							<td class='text-center'><button class="btn-default" ng-click='editWatchOrder(o.Id, o.Address, o.Desc)'><span class="glyphicon glyphicon-edit"></span> Edit</button></td>
+							<td class='text-center'><button class="btn-default" ng-click='editWatchOrder(o.Id, o.Desc, o.Address)'><span class="glyphicon glyphicon-edit"></span> Edit</button></td>
 						</tr>
 					</tbody>
 				</table>
@@ -92,12 +92,12 @@
 					<h4><span class="glyphicon glyphicon-pencil"></span> Edit Watch Order</h4>
 				</div>
 				<div class="modal-body" style="padding:40px 50px;">
-					<button ng-click='removeUser()' class="btn btn-danger pull-right"><span class="glyphicon glyphicon-remove"></span> Delete Watch Order</button>
+					<button ng-click='removeWatchOrder()' class="btn btn-danger pull-right"><span class="glyphicon glyphicon-remove"></span> Delete Watch Order</button>
 					<br>
 					<br>
 					<form role="form" ng-submit='updateWatchOrder()'>
 						<div class="form-group">
-							<label>Desc</label>
+							<label>Description</label>
 							<input type="text" class="form-control fields {{display_mode_modal}}" ng-model='updateDesc' required>
 						</div>
 						<div class="form-group">
@@ -196,7 +196,7 @@
 					<h4><span class="glyphicon glyphicon-pencil"></span> Edit Parsed Watch Order</h4>
 				</div>
 				<div class="modal-body" style="padding:40px 50px;">
-					<button ng-click='removeParsedUser()' class="btn btn-danger pull-right"><span class="glyphicon glyphicon-remove"></span> Delete User</button>
+					<button ng-click='removeParsedWatchOrder()' class="btn btn-danger pull-right"><span class="glyphicon glyphicon-remove"></span> Delete Watch Order</button>
 					<br>
 					<br>
 					<form role="form" ng-submit='updateParseUser()'>
