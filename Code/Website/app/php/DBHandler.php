@@ -88,13 +88,33 @@ class DBHandler{
 		$result = ['RemovedAll' => false];
 		$sql = "DELETE FROM WATCH_ORDERS";
 		$stmt = $db_connection->prepare($sql);
-
 		if (!$stmt->execute())
 		{
 			return $result;
 		}
 
 		$result['RemovedAll'] = true;
+		$stmt->close();
+		$db_connection->close();
+		return $result;
+	}
+
+	function removeWatchOrder($id) {
+		global $db_connection;
+		$result = ["Removed" => false];
+		$table = "WATCH_ORDERS";
+		$sql = "DELETE FROM $table
+		        WHERE `Id`=?";
+		$stmt = $db_connection->prepare($sql);
+		if( !$stmt->bind_param('d', $id) )
+		{
+			return $result;
+		}
+		if (!$stmt->execute())
+		{
+			return $result;
+		}
+		$result["Removed"] = true;
 		$stmt->close();
 		$db_connection->close();
 		return $result;
@@ -122,6 +142,26 @@ class DBHandler{
 		$stmt->close();
 		$db_connection->close();
 		return $orders;
+	}
+
+	function editWatchOrder($id, $desc, $address, $lat, $lng) {
+		global $db_connection;
+		$result = ["Updated" => false];
+		$table = "WATCH_ORDERS";
+		$sql = "UPDATE $table SET `Desc`=?, `Address`=?, `Lat`=?, `Lng`=? WHERE `Id`=?";
+		$stmt = $db_connection->prepare($sql);
+		if( !$stmt->bind_param('ssssd', $desc, $address, $lat, $lng, $id) )
+		{
+			return $result;
+		}
+		if (!$stmt->execute())
+		{
+			return $result;
+		}
+		$result["Updated"] = true;
+		$stmt->close();
+		$db_connection->close();
+		return $result;
 	}
 
 
@@ -535,17 +575,17 @@ class DBHandler{
 	function addDocument($document, $category, $upload_date, $pinned, $uploaded_by, $upload_name, $upload_description){
 		global $db_connection;
 		$result = ['Added' => false];
-		$sql = "INSERT INTO DOCUMENTS (Document_Name, Category_ID, Upload_Date, Pinned, Uploaded_By, Upload_Name, Description) VALUES (?,?,?,?,?,?,?)";
+		$archived = 0;
+		$sql = 'INSERT INTO
+						DOCUMENTS (Document_Name, Category_ID, Upload_Date, Pinned, Uploaded_By, Upload_Name, Description, Manual_Archived)
+						VALUES 	  (?,?,?,?,?,?,?,?)';
 		$stmt = $db_connection->prepare($sql);
 
-		if (!$stmt->bind_param('sdsdsss', $document, $category, $upload_date, $pinned, $uploaded_by, $upload_name, $upload_description))
-		{
+		if (!$stmt->bind_param('sdsdsssi', $document, $category, $upload_date, $pinned, $uploaded_by, $upload_name, $upload_description, $archived))
 			echo "Binding parameters failed: (" . $stmt->errno . ") " . $stmt->error;
-		}
 		if (!$stmt->execute())
-		{
-			return $result;
-		}
+			return "Execute Statement failed: (" . $stmt->errno . ") " . $stmt->error;//return $result;
+
 		$result['Added'] = true;
 		$stmt->close();
 		$db_connection->close();
@@ -723,7 +763,7 @@ class DBHandler{
 
 	function documentSaveLog($user_id,$document_id){
 		global $db_connection;
-		$sql = "insert into LOGS(DOC,documentid,userid) values(now(),?,?) ";
+		$sql = "insert into LOGS (DOC,documentid,userid) values(now(),?,?) ";
 		$stmt = $db_connection->prepare($sql);
 		$stmt->bind_param('ii',$document_id,$user_id);
 		$stmt->execute();
@@ -791,11 +831,8 @@ class DBHandler{
 		$result = [];
 
 		$new_status_id;
-
-		if($new_status == 'Pending')
-			$new_status_id = 2;
-		else if($new_status == 'Reviewed')
-			$new_status_id = 3;
+		if ( $new_status != 'Done' )
+			$new_status_id = $new_status == 'Pending' ?  2 : 3;
 
 		$sqlselect = "SELECT Id FROM USER_DOC_STATUS WHERE DocumentId=? AND OfficerId=?";
 		$stmselect = $db_connection->prepare($sqlselect);
@@ -809,7 +846,8 @@ class DBHandler{
 
 		//document is read by first time, status will be set to reviewed and start date time will be set as well
 		if($insert){
-			$sql = "insert into USER_DOC_STATUS(StartDateTime,DocumentId,OfficerId,StatusId) values(now(),?,?,?) ";
+			$sql = "INSERT INTO USER_DOC_STATUS (StartDateTime, EndDateTime, DocumentId,OfficerId,StatusId)
+						   values(now(),now(),?,?,?) ";
 			$stmt = $db_connection->prepare($sql);
 			$stmt->bind_param('iii',$document_id,$user_id,$new_status_id);
 
@@ -828,7 +866,7 @@ class DBHandler{
 		}
 		else{//document has been mark as done, status will be change to done and end date time will be set as well
 			//$EndDateTime = getdate();
-			$sql = "UPDATE USER_DOC_STATUS SET StatusId=?,EndDateTime=now() WHERE DocumentId=? AND OfficerId=?";
+			$sql = 'UPDATE USER_DOC_STATUS SET StatusId=?,EndDateTime=now() WHERE DocumentId=? AND OfficerId=?';
 			$stmt = $db_connection->prepare($sql);
 			if(!$stmt->bind_param('iii',$new_status_id,$document_id,$user_id)){
 				return result;
@@ -870,8 +908,6 @@ class DBHandler{
 			}
 
 		}
-
 		return $result;
 	}
-
 }

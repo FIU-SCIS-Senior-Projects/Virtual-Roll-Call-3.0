@@ -72,7 +72,7 @@
 							<td class='text-center'>{{$index + 1}}</td>
 							<td>{{d.name}}</td>
 							<td>{{d.cat_name}}</td>
-							<td>{{d.date}}</td>
+							<td>{{d.id}}</td>
 							<td>{{d.pinned}}</td>
 							<td>{{d.uploadedBy}}</td>
 							<td>{{d.archived}}</td>
@@ -103,7 +103,7 @@
 							<label>Categories</label>
                             <select class="form-control fields {{display_mode_modal}}" name="category_id"
                                     ng-options='category as category.name for category in categories track by category.name' ng-model='doc_cat_name'>
-					</select>
+							</select>
 						</div>
 						<div class="form-group">
 							<label>Pinned</label>

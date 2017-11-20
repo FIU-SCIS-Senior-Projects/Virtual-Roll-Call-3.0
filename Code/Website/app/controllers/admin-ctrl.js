@@ -192,14 +192,14 @@ adminModule.controller('adminCtrl', ['$scope', 'dataService', 'localStorageServi
                     $scope.alert.closeAll();
                     $scope.alert.addAlert('success', 'User successfully updated!');
                     sharedCtrl.getOfficers();
-                    window.location.reload();
-                    //$('#editModal').modal('hide');
+                    //window.location.reload();
+                    $('#editModal').modal('hide');
                   }
                   else{
                     $scope.alert.closeAll();
                     $scope.alert.addAlert('danger', 'Could not update user!');
-                    window.location.reload();
-                    //$('#editModal').modal('hide');
+                    //window.location.reload();
+                    $('#editModal').modal('hide');
                   }
                 },
                 function(error){

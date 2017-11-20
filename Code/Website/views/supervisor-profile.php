@@ -25,10 +25,9 @@
   <script src="../app/vendor/ui-grid.min.js"></script>
 
   <!--PDF-MAKE-CDN-->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.31/pdfmake.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.31/pdfmake.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.31/pdfmake.min.js.map"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.31/vfs_fonts.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/pdfmake@0.1.33/build/pdfmake.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/pdfmake@0.1.33/build/pdfmake.min.js.map"></script>
+  <script src="https://cdn.jsdelivr.net/npm/pdfmake@0.1.33/build/vfs_fonts.min.js"></script>
 
   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAuubk4Obni7qiK7Umj7CdvUUxO23688cM"></script>
   <script src="../app/vendor/papaparse.min.js"></script>
@@ -88,7 +87,7 @@
       </div>
     </div>
   </nav>
-        
+
   <!-- Horizontal Navigation -->
   <div class='container-fluid text-center'>
     <div class='row content'>

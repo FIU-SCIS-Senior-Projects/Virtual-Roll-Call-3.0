@@ -8,11 +8,9 @@ $document_description = $_POST['document_description'] == '' ? $new_name : $_POS
 $doc_extension = pathinfo($document_name,PATHINFO_EXTENSION);
 $category_id = $_POST['category_id'];
 $uploaded_by = $_POST['uploaded_by'];
-if(isset($_POST['pinned']) && $_POST['pinned'] == '1'){
-    $pinned = 1;
-}else{
-    $pinned = 0;
-}
+
+$pinned = (isset($_POST['pinned']) && $_POST['pinned'] == '1') ? 1 : 0;
+
 date_default_timezone_set('America/New_York');
 $upload_date = date('Y-m-d');
 
@@ -25,18 +23,9 @@ echo $target_path;
 echo "\n";
 echo  $_FILES['document']['error'];
 
-if (move_uploaded_file($tmp_doc_name, $target_path)){
-echo " This should mean that the file was upload ";
-}else{
-echo "This will mean that the file could not be able to move to the place ---------- ";
-}
-
-
-if(file_exists($target_path)){
-        echo "file Exist";
-}else{
-        echo "File does not exist";
-}
+echo move_uploaded_file($tmp_doc_name, $target_path) ? " This should mean that the file was upload "
+													 : "This will mean that the file could not be able to move to the place ---------- ";
+echo file_exists($target_path) ? "file Exists" : "File does not exist";
 
 $connection = new DBHandler();
 
