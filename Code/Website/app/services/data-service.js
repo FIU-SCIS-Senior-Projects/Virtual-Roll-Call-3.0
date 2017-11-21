@@ -282,9 +282,9 @@ adminModule.factory('dataService', function ($http, $q) {
 //SERVICE for supervisor controller
 supervisorModule.factory('dataService', function ($http, $q) {
   return {
-    addWatchOrder: function (desc, address, lat, long) {
+    addWatchOrder: function (desc, address, lat, long, expDate) {
       return $q(function (resolve, reject) {
-        $http.post('../app/php/add-watch-order.php', { 'desc': desc, 'address': address, 'lat': lat, 'long': long })
+        $http.post('../app/php/add-watch-order.php', { 'desc': desc, 'address': address, 'lat': lat, 'long': long, 'expDate': expDate })
           .then(
           function (response) {
             resolve(response.data);
@@ -318,9 +318,9 @@ supervisorModule.factory('dataService', function ($http, $q) {
           });
       });
     },
-    updateWatchOrder: function (id, desc, address, lat, lng) {
+    updateWatchOrder: function (id, desc, address, lat, lng, expDate) {
       return $q(function (resolve, reject) {
-        $http.post('../app/php/edit-watch-order.php', { 'id': id, 'desc': desc, 'address': address, 'lat': lat, 'lng': lng})
+        $http.post('../app/php/edit-watch-order.php', { 'id': id, 'desc': desc, 'address': address, 'lat': lat, 'lng': lng, 'expDate': expDate})
           .then(
           function (response) {
             resolve(response.data);

@@ -7,7 +7,8 @@ $desc = $request->desc;
 $address = $request->address;
 $lat = $request->lat;
 $lng = $request->lng;
+$expDate = $request->expDate;
 $connection = new DBHandler();
-$result = $connection->editWatchOrder($id, $desc, $address, $lat, $lng);
+$result = $connection->editWatchOrder($id, $desc, $address, $lat, $lng, $expDate);
 //convert the response to a json object
 die(json_encode($result));
