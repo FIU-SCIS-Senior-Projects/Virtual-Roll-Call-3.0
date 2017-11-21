@@ -62,13 +62,13 @@ class DBHandler{
 	}
 
 	//ADD NEW WATCH ORDER TO DATABASE
-	function addWatchOrder($desc, $address, $lat, $long, $date) {
+	function addWatchOrder($desc, $address, $lat, $long, $addDate, $expDate) {
 		global $db_connection;
 
 		$result = ['Added' => false];
-		$sql = "INSERT INTO WATCH_ORDERS (`Desc`,`Address`,`Lat`,`Lng`,`Date`) VALUES (?,?,?,?,?)";
+		$sql = "INSERT INTO WATCH_ORDERS (`Desc`,`Address`,`Lat`,`Lng`,`AddDate`,`ExpDate`) VALUES (?,?,?,?,?,?)";
 		$stmt = $db_connection->prepare($sql);
-		if (!$stmt->bind_param('ssdds', $desc, $address, $lat, $long, $date))
+		if (!$stmt->bind_param('ssddss', $desc, $address, $lat, $long, $addDate, $expDate))
 			echo "Binding parameters failed: (" . $stmt->errno . ") " . $stmt->error;
 		if (!$stmt->execute())
 		{
@@ -124,17 +124,18 @@ class DBHandler{
 		global $db_connection;
 
 		$orders = [];
-		$sql = "SELECT `Id`,`Desc`,`Address`,`Lat`,`Lng`,`Date` FROM WATCH_ORDERS";
+		$sql = "SELECT `Id`,`Desc`,`Address`,`Lat`,`Lng`,`AddDate`,`ExpDate` FROM WATCH_ORDERS";
 		$stmt = $db_connection->prepare($sql);
 		$stmt->execute();
-		$stmt->bind_result($Id, $Desc, $Address, $Lat, $Lng, $Date);
+		$stmt->bind_result($Id, $Desc, $Address, $Lat, $Lng, $AddDate, $ExpDate);
 		while($stmt->fetch()){
 			$tmp = ["Id" => $Id,
 			"Desc" => $Desc,
 			"Address" => $Address,
 			"Lat" => $Lat,
 			"Lng" => $Lng,
-			"Date" => $Date];
+			"AddDate" => $AddDate,
+			"ExpDate" => $ExpDate];
 
 			array_push($orders, $tmp);
 		}
@@ -144,13 +145,13 @@ class DBHandler{
 		return $orders;
 	}
 
-	function editWatchOrder($id, $desc, $address, $lat, $lng) {
+	function editWatchOrder($id, $desc, $address, $lat, $lng, $expDate) {
 		global $db_connection;
 		$result = ["Updated" => false];
 		$table = "WATCH_ORDERS";
-		$sql = "UPDATE $table SET `Desc`=?, `Address`=?, `Lat`=?, `Lng`=? WHERE `Id`=?";
+		$sql = "UPDATE $table SET `Desc`=?, `Address`=?, `Lat`=?, `Lng`=?, `ExpDate`=? WHERE `Id`=?";
 		$stmt = $db_connection->prepare($sql);
-		if( !$stmt->bind_param('ssssd', $desc, $address, $lat, $lng, $id) )
+		if( !$stmt->bind_param('sssssd', $desc, $address, $lat, $lng, $expDate, $id) )
 		{
 			return $result;
 		}

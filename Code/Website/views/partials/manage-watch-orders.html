@@ -27,6 +27,11 @@
         <input class='form-control fields {{display_mode}}' type='text' ng-model="order.address" required>
         <br>
         <br>
+				<label>Expiration Date (YYYY-MM-DD)</label>
+        <br>
+        <input class='form-control fields {{display_mode}}' type='text' ng-model="order.expDate" required>
+        <br>
+        <br>
         <button type='submit' class='btn btn-success'>Add Watch Order</button>
         <br>
         <!-- display message accordingly -->
@@ -59,9 +64,8 @@
 							<th class="text-center">#</th>
 							<th>Address</th>
 							<th>Description</th>
-							<th>Latitude</th>
-							<th>Longitude</th>
-							<th>Date</th>
+							<th>Add Date</th>
+							<th>Expiration Date</th>
 							<th class="text-center">Edit</th>
 						</tr>
 					</thead>
@@ -70,10 +74,9 @@
 							<td class='text-center'>{{$index + 1}}</td>
 							<td>{{o.Address}}</td>
 							<td>{{o.Desc}}</td>
-							<td>{{o.Lat}}</td>
-							<td>{{o.Lng}}</td>
-							<td>{{o.Date}}</td>
-							<td class='text-center'><button class="btn-default" ng-click='editWatchOrder(o.Id, o.Desc, o.Address)'><span class="glyphicon glyphicon-edit"></span> Edit</button></td>
+							<td>{{o.AddDate}}</td>
+							<td>{{o.ExpDate}}</td>
+							<td class='text-center'><button class="btn-default" ng-click='editWatchOrder(o.Id, o.Desc, o.Address, o.ExpDate)'><span class="glyphicon glyphicon-edit"></span> Edit</button></td>
 						</tr>
 					</tbody>
 				</table>
@@ -105,6 +108,11 @@
 							<input type="text" class="form-control fields {{display_mode_modal}}" ng-model='updateAddress' required>
 						</div>
 						<br>
+						<div class="form-group">
+							<label>Expiration Date (YYYY-MM-DD)</label>
+							<input type="text" class="form-control fields {{display_mode_modal}}" ng-model='updateExpDate' required>
+						</div>
+						<br>
 						<!-- TO DO: Don't show successful update message when no changes were made to the user -->
 						<button type="submit" class="btn btn-success btn-block">Update</button>
 						<br>
@@ -114,7 +122,7 @@
 		</div>
 	</div>
 
-	<!-- Batch Add Users Modal -->
+	<!-- Batch Add Watch Orders Modal -->
 	<div class="modal fade" id="batchWatchOrdersModal" role="dialog">
 		<div class="modal-dialog">
 
@@ -145,7 +153,6 @@
 						<!-- TO DO: Overflow not detected until page reloads -->
 						<div class='panel-body {{display_mode}}' style="height:350px; overflow-y:scroll">
 
-
 							<div>
 								<table class="table table-striped {{display_mode}} table-hover" style='margin:auto; width:100%'>
 									<form class="form-inline">
@@ -159,6 +166,7 @@
 											<th class="text-center">#</th>
 											<th>Description</th>
 											<th>Address</th>
+											<th>Expiration Date</th>
 											<th class="text-center">Edit</th>
 										</tr>
 									</thead>
@@ -167,7 +175,8 @@
 											<td class='text-center'>{{$index + 1}}</td>
 											<td>{{u[0]}}</td>
 											<td>{{u[1]}}</td>
-											<td class='text-center'><button class="btn-default" ng-click='editParsedWatchOrder($index, u[0], u[1])'><span class="glyphicon glyphicon-edit"></span> Edit</button></td>
+											<td>{{u[4]}}</td>
+											<td class='text-center'><button class="btn-default" ng-click='editParsedWatchOrder($index, u[0], u[1], u[4])'><span class="glyphicon glyphicon-edit"></span> Edit</button></td>
 										</tr>
 									</tbody>
 								</table>
@@ -207,6 +216,11 @@
 						<div class="form-group">
 							<label>Address</label>
 							<input type="text" class="form-control fields {{display_mode_modal}}" ng-model='updateAddress' required>
+						</div>
+						<br>
+						<div class="form-group">
+							<label>Expiration Date (YYYY-MM-DD)</label>
+							<input type="text" class="form-control fields {{display_mode_modal}}" ng-model='updateExpDate' required>
 						</div>
 						<br>
 						<!-- TO DO: Don't show successful update message when no changes were made to the watch order -->

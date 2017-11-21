@@ -151,10 +151,11 @@ supervisorModule.controller('supervisorCtrl', ['$scope', 'localStorageService', 
     .then(
       function(data){
         if(data.status === "OK"){
-
-          order[1] = data.results[0].formatted_address;   //pick first formatted address returned
+          var expDate = order[2];
+          order[1] = data.results[0].formatted_address;   // pick first formatted address returned
           order[2] = data.results[0].geometry.location.lat;  // add lat coordinate
           order[3] = data.results[0].geometry.location.lng;   // add long coordinate
+          order[4] = expDate;   // add exp date
 
           resolve(order);
 
@@ -191,6 +192,7 @@ supervisorModule.controller('supervisorCtrl', ['$scope', 'localStorageService', 
 
         order[1] = results[0].formatted_address;   //pick first formatted address returned
         order.push(results[0].geometry.viewport.f.b, results[0].geometry.viewport.b.b);   // add lat and long coordinates
+        order.push($scope.order.expDate);
         addWatchOrder(order).then(
           function(data){
             if(data == true )
@@ -201,13 +203,14 @@ supervisorModule.controller('supervisorCtrl', ['$scope', 'localStorageService', 
               //clear input fields
               $scope.order.desc = '';
               $scope.order.address = '';
+              $scope.order.expDate = '';
 
               $scope.getWatchOrders();
             }
             else
             {
               $scope.alert.closeAll();
-              $scope.alert.addAlert('danger', 'Could not add watch order! The watch order address is invalid.');
+              $scope.alert.addAlert('danger', 'Could not add watch order! The watch order address or date is invalid.');
             }
 
           });
@@ -215,7 +218,7 @@ supervisorModule.controller('supervisorCtrl', ['$scope', 'localStorageService', 
         else {
           $scope.$apply(function () {
             $scope.alert.closeAll();
-            $scope.alert.addAlert('danger', 'Could not add watch order! The watch order address is invalid.');
+            $scope.alert.addAlert('danger', 'Could not add watch order! The watch order address or date is invalid.');
           });
         }
       });
@@ -287,10 +290,11 @@ supervisorModule.controller('supervisorCtrl', ['$scope', 'localStorageService', 
 
 
         /***** EDIT PARSED WATCH ORDER MODAL *****/
-        $scope.editParsedWatchOrder = function(index, desc, address){
+        $scope.editParsedWatchOrder = function(index, desc, address, expDate){
           $scope.updateIndex = index;
           $scope.updateDesc = desc;
           $scope.updateAddress = address;
+          $scope.updateExpDate = expDate;
           $scope.display_mode_modal = sharedCtrl.getDisplayMode();
           $('#editParseModal').modal('show');
         };
@@ -299,10 +303,12 @@ supervisorModule.controller('supervisorCtrl', ['$scope', 'localStorageService', 
           var index = $scope.updateIndex;
           var desc = $scope.updateDesc;
           var address = $scope.updateAddress;
+          var expDate = $scope.updateExpDate;
 
           var temp = $scope.parsedWatchOrders[index];
           temp[0] = desc;
           temp[1] = address;
+          temp[2] = expDate;
 
           geoCodeAddress(temp).then(
             function(data){
@@ -325,10 +331,11 @@ supervisorModule.controller('supervisorCtrl', ['$scope', 'localStorageService', 
         };
 
         /***** EDIT WATCH ORDER MODAL *****/
-        $scope.editWatchOrder = function(id, desc, address){
+        $scope.editWatchOrder = function(id, desc, address, expDate){
           $scope.updateID = id;
           $scope.updateDesc = desc;
           $scope.updateAddress = address;
+          $scope.updateExpDate = expDate;
           $scope.display_mode_modal = sharedCtrl.getDisplayMode();
           $('#editModal').modal('show');
         };
@@ -339,7 +346,8 @@ supervisorModule.controller('supervisorCtrl', ['$scope', 'localStorageService', 
           var id = $scope.updateID;
           var desc = $scope.updateDesc;
           var address = $scope.updateAddress;
-          var order = [desc, address, 0, 0];
+          var expDate = $scope.updateExpDate;
+          var order = [desc, address, expDate, 0, 0];
 
           geoCodeAddress(order).then(
             function(data){
@@ -347,7 +355,7 @@ supervisorModule.controller('supervisorCtrl', ['$scope', 'localStorageService', 
               lat = data[2];
               lng = data[3];
 
-              dataService.updateWatchOrder(id, desc, address, lat, lng)
+              dataService.updateWatchOrder(id, desc, address, lat, lng, expDate)
               .then(
                 function(data){
                   if(data['Updated'] === true){
@@ -397,8 +405,30 @@ supervisorModule.controller('supervisorCtrl', ['$scope', 'localStorageService', 
               resolve(false);
               return;
             }
+            var expDate = order[4];
+            var splitDate = expDate.split("-");
 
-            dataService.addWatchOrder(desc, address, lat, long)
+            //check for valid year
+            if(Number(splitDate[0]) < 2017 || splitDate[0].length != 4 )
+            {
+              resolve(false);
+              return;
+            }
+            //check for valid month
+            if(Number(splitDate[1]) > 12 || Number(splitDate[1]) < 1 )
+            {
+              resolve(false);
+              return;
+            }
+            //todo: some months will different number of days
+            if(Number(splitDate[2]) > 31 || Number(splitDate[2]) < 1 )
+            {
+              resolve(false);
+              return;
+            }
+
+
+            dataService.addWatchOrder(desc, address, lat, long, expDate)
             .then(
               function(data){
                 if(data['Added'] === true){
@@ -425,6 +455,7 @@ supervisorModule.controller('supervisorCtrl', ['$scope', 'localStorageService', 
 
                 //initialize an empty array to store results from the database
                 var watch_orders = [];
+                var exp_watch_orders = [];
 
                 //for each category in the result
                 for (var x in data) {
@@ -436,16 +467,57 @@ supervisorModule.controller('supervisorCtrl', ['$scope', 'localStorageService', 
                   tmp.Address = data[x].Address;
                   tmp.Lat = data[x].Lat;
                   tmp.Lng = data[x].Lng;
-                  tmp.Date = data[x].Date;
-
-                  watch_orders.push(tmp);
+                  tmp.AddDate = data[x].AddDate;
+                  tmp.ExpDate = data[x].ExpDate;
+                  if(validDate(tmp)){
+                    watch_orders.push(tmp);
+                  }
+                  else {
+                    exp_watch_orders.push(tmp);
+                  }
                 }
+
                 //update for use in view
                 $scope.watch_orders = watch_orders;
+
+                //remove expired watch orders
+                removeExpiredWatchOrders(exp_watch_orders);
               },
               function (error) {
                 console.log('Error: ' + error);
               });
+            };
+
+            //compare current date with expiration date
+            self.validDate = function(order){
+
+              var today = new Date();
+              var currDay = today.getDate();
+              var currMonth = today.getMonth();
+              var currYear = today.getFullYear();
+
+              var expDate = order.ExpDate.split("-");
+              var expDay = Number(expDate[2]);
+              var expMonth = Number(expDate[1]);
+              var expYear = Number(expDate[0]);
+
+              var expiration = new Date();
+              expiration.setFullYear(expYear, expMonth - 1, expDay);
+
+              if(expiration < today)
+              {
+                return false;
+              }
+              return true;
+
+            };
+
+            //Remove expired watch orders
+            self.removeExpiredWatchOrders =function(exp_watch_orders){
+
+                  exp_watch_orders.forEach(function(order){
+                    dataService.removeWatchOrder(order.Id);
+                  });
             };
 
             /***** REMOVE WATCH ORDER *****/

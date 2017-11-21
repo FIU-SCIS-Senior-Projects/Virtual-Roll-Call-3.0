@@ -157,6 +157,7 @@ officerModule.controller('officerCtrl', ['$scope', 'localStorageService', 'dataS
 
       /***********************
      * GET WATCH ORDERS
+     To do: move to shared ctrl
      ***********************/
       function getWatchOrders(){
 
@@ -179,7 +180,8 @@ officerModule.controller('officerCtrl', ['$scope', 'localStorageService', 'dataS
                   tmp.Address = data[x].Address;
                   tmp.Lat = data[x].Lat;
                   tmp.Lng = data[x].Lng;
-                  tmp.Date = data[x].Date;
+                  tmp.AddDate = data[x].AddDate;
+                  tmp.ExpDate = data[x].ExpDate;
 
                   watch_orders.push(tmp);
               }
@@ -213,7 +215,8 @@ officerModule.controller('officerCtrl', ['$scope', 'localStorageService', 'dataS
 
               var contentString = "<h5><b>" + order.Address + "</b> </h5><hr>";
               contentString += "<p><b>Description:</b> " + order.Desc + "</p>";
-              contentString += "<p><b>Date Added:</b> " + order.Date + "</p>";
+              contentString += "<p><b>Date Added:</b> " + order.AddDate + "</p>";
+              contentString += "<p><b>Expiration:</b> " + order.ExpDate + "</p>";
 
               var infowindow = new google.maps.InfoWindow({
                 content: contentString
