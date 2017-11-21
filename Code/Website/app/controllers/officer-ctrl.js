@@ -210,6 +210,9 @@ officerModule.controller('officerCtrl', ['$scope', 'localStorageService', 'dataS
         getWatchOrders().then(
           function (data) {
 
+            //update for use in view
+            $scope.watch_orders = data;
+
             var markerCount = 0;
             data.forEach(function(order){
 
