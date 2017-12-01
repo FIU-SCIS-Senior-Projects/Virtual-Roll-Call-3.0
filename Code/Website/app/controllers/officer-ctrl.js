@@ -35,8 +35,8 @@ officerModule.controller('officerCtrl', ['$scope', 'localStorageService', 'dataS
     $scope.logout = function () { sharedCtrl.logout(); }
     $scope.getCategories = function () {  sharedCtrl.getCategories(); };
     $scope.refresh = function(){ setTimeout(function(){ window.location.reload(); }, 100); }
-    $scope.takeQuiz = function ( doc, qa, officerId, documentId, categoryId, doc_status, answers, score ) 
-    { 
+    $scope.takeQuiz = function ( doc, qa, officerId, documentId, categoryId, doc_status, answers, score )
+    {
         if ( doc_status === 'Pending' )
           alert('Quiz available Only after revewing document!');
         else
@@ -81,10 +81,10 @@ officerModule.controller('officerCtrl', ['$scope', 'localStorageService', 'dataS
         }
     };
 
-    function shuffle( qa ) 
+    function shuffle( qa )
     {
         var m = qa.length, t, i;
-        while(m) 
+        while(m)
         {
             i = Math.floor(Math.random() * m--);
             t = qa[m]; qa[m] = qa[i]; qa[i] = t;
@@ -115,13 +115,13 @@ officerModule.controller('officerCtrl', ['$scope', 'localStorageService', 'dataS
       var pinned_documents = [];
           var unpinned_documents = [];
           if ( data )
-            for (var x in data) 
+            for (var x in data)
             {
                 var tmp = new Object();
                 tmp.id = data[x].id;
                 tmp.name = data[x].name;
                 tmp.catid = data[x].catid;
-                
+
                 tmp.upload_name = data[x].upload_name;
                 tmp.doc_description = data[x].doc_description;
                 tmp.status = data[x].status;
@@ -164,25 +164,34 @@ officerModule.controller('officerCtrl', ['$scope', 'localStorageService', 'dataS
     $scope.changeDisplayMode = function changeDisplayMode() { sharedCtrl.changeDisplayMode(); };
     function getDisplayMode(){ return sharedCtrl.getDisplayMode(); };
 
-      /***********************
+
+    /***********************
      * GET WATCH ORDERS
+     To do: move to shared ctrl
      ***********************/
       function getWatchOrders(){
+
         return new Promise(function(resolve, reject) {
+
           dataService.viewWatchOrders()
             .then(
             function (data) {
 
+              //initialize an empty array to store results from the database
               var watch_orders = [];
-              for (var x in data) 
-              {
+
+              //for each category in the result
+              for (var x in data) {
+
+                //create an object and set object properties
                   var tmp = new Object();
                   tmp.Id = data[x].Id;
                   tmp.Desc = data[x].Desc;
                   tmp.Address = data[x].Address;
                   tmp.Lat = data[x].Lat;
                   tmp.Lng = data[x].Lng;
-                  tmp.Date = data[x].Date;
+                  tmp.AddDate = data[x].AddDate;
+                  tmp.ExpDate = data[x].ExpDate;
 
                   watch_orders.push(tmp);
               }
@@ -198,10 +207,11 @@ officerModule.controller('officerCtrl', ['$scope', 'localStorageService', 'dataS
       }
 
       //Initialize map
-      $scope.initMap = function initMap() 
-      {
+      $scope.initMap = function initMap() {
+
         $scope.markerCount = 0;
         var defaultLocation = {lat: 25.6622835, lng: -80.307}; //default location set in Pinecrest,FL
+
         var map = new google.maps.Map(document.getElementById('map'), {
           zoom: 13,
           center: defaultLocation
@@ -209,26 +219,38 @@ officerModule.controller('officerCtrl', ['$scope', 'localStorageService', 'dataS
 
         getWatchOrders().then(
           function (data) {
+
+            //update for use in view
+            $scope.watch_orders = data;
+
             var markerCount = 0;
-            data.forEach(function(order)
-            {
-                var contentString = "<h5><b>" + order.Address + "</b> </h5><hr>";
-                contentString += "<p><b>Description:</b> " + order.Desc + "</p>";
-                contentString += "<p><b>Date Added:</b> " + order.Date + "</p>";
+            data.forEach(function(order){
 
-                var infowindow = new google.maps.InfoWindow({ content: contentString });
-                var marker = new google.maps.Marker
-                ({
-                  position: {lat: order.Lat, lng: order.Lng},
-                  label: String(++markerCount),
-                  map: map
-                });
+              var contentString = "<h5><b>" + order.Address + "</b> </h5><hr>";
+              contentString += "<p><b>Description:</b> " + order.Desc + "</p>";
+              contentString += "<p><b>Date Added:</b> " + order.AddDate + "</p>";
+              contentString += "<p><b>Expiration:</b> " + order.ExpDate + "</p>";
 
-                marker.addListener('click', function() { infowindow.open(map, marker); });
+              var infowindow = new google.maps.InfoWindow({
+                content: contentString
+              });
+
+              var marker = new google.maps.Marker({
+                position: {lat: order.Lat, lng: order.Lng},
+                label: String(++markerCount),
+                map: map
+              });
+
+              marker.addListener('click', function() {
+                infowindow.open(map, marker);
+              });
             }
           );
 
-          $scope.$apply(function () { $scope.markerCount = markerCount; });
+          $scope.$apply(function () {
+            $scope.markerCount = markerCount;
+          });
+
 
           }
         );
@@ -249,22 +271,24 @@ officerModule.controller('officerCtrl', ['$scope', 'localStorageService', 'dataS
         });
       }
 
-    $scope.document_log = function (user_id, document_id, category_id, list_name, status) 
+
+
+    $scope.document_log = function (user_id, document_id, category_id, list_name, status)
     {
       if (status == 'Pending')
         $scope.documentStatusUpdate(user_id, document_id, category_id, list_name, status);
     }
 
-    $scope.documentStatusUpdate = function (user_id, document_id, category_id, list_name, status) 
+    $scope.documentStatusUpdate = function (user_id, document_id, category_id, list_name, status)
     {
         dataService.documentStatusUpdate(user_id, document_id, category_id, status)
           .then(
             function (data) {
               console.log('Data: Id:' + data.id + ' Status:' + data.status);
               var docs = (list_name == 'pinned') ? $scope.pinned_documents : $scope.unpinned_documents;
-              for (var i in docs) 
+              for (var i in docs)
               {
-                  if (docs[i].id == data.id) 
+                  if (docs[i].id == data.id)
                   {
                     docs[i].status = data.status;
                     docs[i].doneDisable = data.status == "Pending" || data.status == "Done" ? true : false;

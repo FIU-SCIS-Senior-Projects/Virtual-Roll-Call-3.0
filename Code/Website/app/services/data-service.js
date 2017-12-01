@@ -1,3 +1,5 @@
+const MAP_API_KEY = 'AIzaSyAuubk4Obni7qiK7Umj7CdvUUxO23688cM';
+
 //SERVICE for shared controller
 sharedModule.factory('sharedService', function ($http, $q) {
   return {
@@ -281,9 +283,9 @@ adminModule.factory('dataService', function ($http, $q) {
 //SERVICE for supervisor controller
 supervisorModule.factory('dataService', function ($http, $q) {
   return {
-    addWatchOrder: function (desc, address, lat, long) {
+    addWatchOrder: function (desc, address, lat, long, expDate) {
       return $q(function (resolve, reject) {
-        $http.post('../app/php/add-watch-order.php', { 'desc': desc, 'address': address, 'lat': lat, 'long': long })
+        $http.post('../app/php/add-watch-order.php', { 'desc': desc, 'address': address, 'lat': lat, 'long': long, 'expDate': expDate })
           .then(
           function (response) {
             resolve(response.data);
@@ -308,6 +310,54 @@ supervisorModule.factory('dataService', function ($http, $q) {
     removeWatchOrders: function () {
       return $q(function (resolve, reject) {
         $http.post('../app/php/remove-watch-orders.php')
+          .then(
+          function (response) {
+            resolve(response.data);
+          },
+          function (error) {
+            reject(error);
+          });
+      });
+    },
+    updateWatchOrder: function (id, desc, address, lat, lng, expDate) {
+      return $q(function (resolve, reject) {
+        $http.post('../app/php/edit-watch-order.php', { 'id': id, 'desc': desc, 'address': address, 'lat': lat, 'lng': lng, 'expDate': expDate})
+          .then(
+          function (response) {
+            resolve(response.data);
+          },
+          function (error) {
+            reject(error);
+          });
+      });
+    },
+    removeWatchOrder: function (id) {
+      return $q(function (resolve, reject) {
+        $http.post('../app/php/remove-watch-order.php', { 'id': id })
+          .then(
+          function (response) {
+            resolve(response.data);
+          },
+          function (error) {
+            reject(error);
+          });
+      });
+    },
+    geoCodeAddress: function (address) {
+      return $q(function (resolve, reject) {
+
+        var params = {
+          address: address,
+        //  components: "administrative_area:Florida",  //only look for addresses in Florida
+          key: MAP_API_KEY
+        };
+
+        //encode query URL
+        var esc = encodeURIComponent;
+        var query = Object.keys(params)
+        .map(k => esc(k) + '=' + esc(params[k]))
+        .join('&');
+        $http.get('https://maps.googleapis.com/maps/api/geocode/json?' + query)
           .then(
           function (response) {
             resolve(response.data);

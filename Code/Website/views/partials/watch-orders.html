@@ -1,11 +1,11 @@
 <div style="margin: auto; width: 85%" class = "{{display_mode}}" ng-init='initMap();' >
-    <h3>Watch Orders: {{markerCount}}</h3>
-    
-  <hr class="style18">  
+    <h3>Watch Orders</h3>
+
+  <hr class="style18">
   <section class="design-process-section" id="process-tab">
     <div class="container">
       <div class="row">
-        <div class="col-xs-12"> 
+        <div class="col-xs-12">
           <ul class="nav nav-tabs process-model more-icon-preocess" role="tablist">
             <li role="presentation" class="active">
               <a href="#" style="cursor:pointer;" aria-controls="discover" role="tab" data-toggle="tab">
@@ -21,7 +21,7 @@
               <p><b>{{markerCount}}</b></p>
             </li>
           </ul>
-          <!-- end design process steps--> 
+          <!-- end design process steps-->
           <!-- Tab panes -->
           </div>
         </div>
@@ -29,10 +29,6 @@
     </div>
   </section>
 </div>
-
-<div  >
-  <div style="margin: auto; width: 90%;" class="container" >
-  </div>
 
 <div style="margin: auto; width: 90%;">
   <div class='panel panel-primary {{display_mode}}'>
@@ -42,6 +38,37 @@
         <div id="map"></div>
       </div>
     </div>
+
+    <!-- TO DO: Overflow not detected until page reloads -->
+    <div class='panel-body {{display_mode}}' style="height:350px; overflow-y:scroll">
+      <div>
+        <table class="table table-striped {{display_mode}} table-hover" style='margin:auto; width:100%'>
+          <form class="form-inline">
+            <div class="form-group">
+              <label>Search</label>
+              <input type="text" ng-model="search" class="form-control fields {{display_mode}}" placeholder="Search">
+            </div>
+          </form>
+          <thead>
+            <tr>
+              <th class="text-center">#</th>
+              <th>Address</th>
+              <th>Description</th>
+              <th>Add Date</th>
+              <th>Expiration Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr {{display_mode}} ng-repeat='o in watch_orders|filter:search'>
+              <td class='text-center'>{{$index + 1}}</td>
+              <td>{{o.Address}}</td>
+              <td>{{o.Desc}}</td>
+              <td>{{o.AddDate}}</td>
+              <td>{{o.ExpDate}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
   </div>
-</div>
 </div>
