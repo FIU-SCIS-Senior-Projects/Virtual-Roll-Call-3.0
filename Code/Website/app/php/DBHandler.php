@@ -9,8 +9,8 @@ class DBHandler
 		global $crypter;
 		global $stmt;
 
-		$un = 'vrc';
-		$pw = 'VirtualRollCall';
+		$un = 'root';
+		$pw = 'root';
 		$dbName = 'VIRTUAL_ROLL_CALL';
 		$address = 'localhost';
 		$db_connection = new mysqli($address, $un, $pw, $dbName);
