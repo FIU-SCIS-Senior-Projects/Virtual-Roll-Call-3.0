@@ -9,42 +9,6 @@
 	<br>
 	<br>
 
-	<!-- Add Single Watch Order Panel -->
-  <div class='panel panel-primary {{display_mode}}'>
-    <div class='panel-heading'>Add Watch Order</div>
-    <div class='panel-body'>
-
-      <!-- Add Watch Order Form -->
-      <form ng-submit='addSingleWatchOrder()'>
-
-        <label>Description</label>
-        <br>
-        <input class='form-control fields {{display_mode}}' type='text' ng-model="order.desc" required>
-        <br>
-        <br>
-        <label>Address</label>
-        <br>
-        <input class='form-control fields {{display_mode}}' type='text' ng-model="order.address" required>
-        <br>
-        <br>
-				<label>Expiration Date (YYYY-MM-DD)</label>
-        <br>
-        <input class='form-control fields {{display_mode}}' type='text' ng-model="order.expDate" required>
-        <br>
-        <br>
-        <button type='submit' class='btn btn-success'>Add Watch Order</button>
-        <br>
-        <!-- display message accordingly -->
-        <div class='alert alert-danger' ng-show='errorMessage' style='margin-bottom: 0'>
-          {{message}}
-        </div>
-        <div class='alert alert-success' ng-show='successMessage' style='margin-bottom: 0'>
-          {{message}}
-        </div>
-      </form>
-    </div>
-  </div>
-
 	<!-- Edit Watch Order Panel -->
 	<div class='panel panel-primary' ng-init='getWatchOrders()'>
 		<div class='panel-heading'>Edit Watch Orders</div>
@@ -64,8 +28,9 @@
 							<th class="text-center">#</th>
 							<th>Address</th>
 							<th>Description</th>
-							<th>Add Date</th>
-							<th>Expiration Date</th>
+							<th>Latitude</th>
+							<th>Longitude</th>
+							<th>Date</th>
 							<th class="text-center">Edit</th>
 						</tr>
 					</thead>
@@ -74,9 +39,10 @@
 							<td class='text-center'>{{$index + 1}}</td>
 							<td>{{o.Address}}</td>
 							<td>{{o.Desc}}</td>
-							<td>{{o.AddDate}}</td>
-							<td>{{o.ExpDate}}</td>
-							<td class='text-center'><button class="btn-default" ng-click='editWatchOrder(o.Id, o.Desc, o.Address, o.ExpDate)'><span class="glyphicon glyphicon-edit"></span> Edit</button></td>
+							<td>{{o.Lat}}</td>
+							<td>{{o.Lng}}</td>
+							<td>{{o.Date}}</td>
+							<td class='text-center'><button class="btn-default" ng-click='editUser(o.id, o.firstName, o.lastName, o.username, o.role)'><span class="glyphicon glyphicon-edit"></span> Edit</button></td>
 						</tr>
 					</tbody>
 				</table>
@@ -84,7 +50,7 @@
 		</div>
 	</div>
 
-	<!-- Edit Watch Order Modal -->
+	<!-- Edit User Modal -->
 	<div class="modal fade" id="editModal" role="dialog">
 		<div class="modal-dialog">
 
@@ -92,25 +58,32 @@
 			<div class="modal-content {{display_mode_modal}}">
 				<div class="modal-header" style="padding:15px 15px;">
 					<button type="button" class="close" data-dismiss="modal" ng-click='updateErrorMessage = updateSuccessMessage = false'>&times;</button>
-					<h4><span class="glyphicon glyphicon-pencil"></span> Edit Watch Order</h4>
+					<h4><span class="glyphicon glyphicon-pencil"></span> Edit User</h4>
 				</div>
 				<div class="modal-body" style="padding:40px 50px;">
-					<button ng-click='removeWatchOrder()' class="btn btn-danger pull-right"><span class="glyphicon glyphicon-remove"></span> Delete Watch Order</button>
+					<button ng-click='removeUser()' class="btn btn-danger pull-right"><span class="glyphicon glyphicon-remove"></span> Delete User</button>
 					<br>
 					<br>
-					<form role="form" ng-submit='updateWatchOrder()'>
+					<form role="form" ng-submit='updateUser()'>
 						<div class="form-group">
-							<label>Description</label>
-							<input type="text" class="form-control fields {{display_mode_modal}}" ng-model='updateDesc' required>
+							<label>First Name</label>
+							<input type="text" class="form-control fields {{display_mode_modal}}" ng-model='updateFirst' required>
 						</div>
 						<div class="form-group">
-							<label>Address</label>
-							<input type="text" class="form-control fields {{display_mode_modal}}" ng-model='updateAddress' required>
+							<label>Last Name</label>
+							<input type="text" class="form-control fields {{display_mode_modal}}" ng-model='updateLast' required>
 						</div>
-						<br>
 						<div class="form-group">
-							<label>Expiration Date (YYYY-MM-DD)</label>
-							<input type="text" class="form-control fields {{display_mode_modal}}" ng-model='updateExpDate' required>
+							<label>Username</label>
+							<input type="text" class="form-control fields {{display_mode_modal}}" ng-model='updateUsername' required>
+						</div>
+						<div class="form-group">
+							<label>Role</label>
+							<select ng-model='updateRole' class="form-control fields {{display_mode_modal}}">
+								<option value='Officer'>Officer</option>
+								<option value='Supervisor'>Supervisor</option>
+								<option value='Administrator'>Administrator</option>
+							</select>
 						</div>
 						<br>
 						<!-- TO DO: Don't show successful update message when no changes were made to the user -->
@@ -122,7 +95,7 @@
 		</div>
 	</div>
 
-	<!-- Batch Add Watch Orders Modal -->
+	<!-- Batch Add Users Modal -->
 	<div class="modal fade" id="batchWatchOrdersModal" role="dialog">
 		<div class="modal-dialog">
 
@@ -153,6 +126,7 @@
 						<!-- TO DO: Overflow not detected until page reloads -->
 						<div class='panel-body {{display_mode}}' style="height:350px; overflow-y:scroll">
 
+
 							<div>
 								<table class="table table-striped {{display_mode}} table-hover" style='margin:auto; width:100%'>
 									<form class="form-inline">
@@ -166,7 +140,6 @@
 											<th class="text-center">#</th>
 											<th>Description</th>
 											<th>Address</th>
-											<th>Expiration Date</th>
 											<th class="text-center">Edit</th>
 										</tr>
 									</thead>
@@ -175,8 +148,7 @@
 											<td class='text-center'>{{$index + 1}}</td>
 											<td>{{u[0]}}</td>
 											<td>{{u[1]}}</td>
-											<td>{{u[4]}}</td>
-											<td class='text-center'><button class="btn-default" ng-click='editParsedWatchOrder($index, u[0], u[1], u[4])'><span class="glyphicon glyphicon-edit"></span> Edit</button></td>
+											<td class='text-center'><button class="btn-default" ng-click='editParsedUser($index, u[0], u[1])'><span class="glyphicon glyphicon-edit"></span> Edit</button></td>
 										</tr>
 									</tbody>
 								</table>
@@ -189,41 +161,56 @@
 								<button class="btn btn-success btn-block center-block " ng-click='addParsedWatchOrders()'><span class="glyphicon glyphicon-circle-arrow-right"></span> Add All</button>
 							</div>
 						</div>
+
 					</div>
+
+
 				</div>
 			</div>
 		</div>
 	</div>
 
-	<!-- Edit Parsed Watch order Modal -->
+	<!-- Edit Parsed User Modal -->
 	<div class="modal fade" id="editParseModal" role="dialog">
 		<div class="modal-dialog">
+
 			<!-- Modal content-->
 			<div class="modal-content {{display_mode_modal}}">
 				<div class="modal-header" style="padding:15px 15px;">
 					<button type="button" class="close" data-dismiss="modal" ng-click='updateErrorMessage = updateSuccessMessage = false'>&times;</button>
-					<h4><span class="glyphicon glyphicon-pencil"></span> Edit Parsed Watch Order</h4>
+					<h4><span class="glyphicon glyphicon-pencil"></span> Edit Parsed User</h4>
 				</div>
 				<div class="modal-body" style="padding:40px 50px;">
-					<button ng-click='removeParsedWatchOrder()' class="btn btn-danger pull-right"><span class="glyphicon glyphicon-remove"></span> Delete Watch Order</button>
+					<button ng-click='removeParsedUser()' class="btn btn-danger pull-right"><span class="glyphicon glyphicon-remove"></span> Delete User</button>
 					<br>
 					<br>
 					<form role="form" ng-submit='updateParseUser()'>
 						<div class="form-group">
-							<label>Description</label>
-							<input type="text" class="form-control fields {{display_mode_modal}}" ng-model='updateDesc' required>
+							<label>First Name</label>
+							<input type="text" class="form-control fields {{display_mode_modal}}" ng-model='updateFirst' required>
 						</div>
 						<div class="form-group">
-							<label>Address</label>
-							<input type="text" class="form-control fields {{display_mode_modal}}" ng-model='updateAddress' required>
+							<label>Last Name</label>
+							<input type="text" class="form-control fields {{display_mode_modal}}" ng-model='updateLast' required>
 						</div>
-						<br>
 						<div class="form-group">
-							<label>Expiration Date (YYYY-MM-DD)</label>
-							<input type="text" class="form-control fields {{display_mode_modal}}" ng-model='updateExpDate' required>
+							<label>Username</label>
+							<input type="text" class="form-control fields {{display_mode_modal}}" ng-model='updateUsername' required>
+						</div>
+						<div class="form-group">
+							<label>Password</label>
+							<input type="text" class="form-control fields {{display_mode_modal}}" ng-model='updatePassword' required>
+						</div>
+						<div class="form-group">
+							<label>Role</label>
+							<select ng-model='updateRole' class="form-control fields {{display_mode_modal}}">
+								<option value='Officer'>Officer</option>
+								<option value='Supervisor'>Supervisor</option>
+								<option value='Administrator'>Administrator</option>
+							</select>
 						</div>
 						<br>
-						<!-- TO DO: Don't show successful update message when no changes were made to the watch order -->
+						<!-- TO DO: Don't show successful update message when no changes were made to the user -->
 						<button type="submit" class="btn btn-success btn-block">Update</button>
 						<br>
 					</form>

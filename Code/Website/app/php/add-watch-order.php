@@ -6,10 +6,9 @@ $desc = $request->desc;
 $address = $request->address;
 $lat = $request->lat;
 $long = $request->long;
-$expDate = $request->expDate;
 date_default_timezone_set('America/New_York');
-$addDate= date('Y-m-d');
+$date= date('Y-m-d');
 $connection = new DBHandler();
-$result = $connection->addWatchOrder($desc, $address, $lat, $long, $addDate, $expDate);
+$result = $connection->addWatchOrder($desc, $address, $lat, $long, $date);
 //convert the response to a json object
 die(json_encode($result));

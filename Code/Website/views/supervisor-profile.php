@@ -25,9 +25,10 @@
   <script src="../app/vendor/ui-grid.min.js"></script>
 
   <!--PDF-MAKE-CDN-->
-  <script src="https://cdn.jsdelivr.net/npm/pdfmake@0.1.33/build/pdfmake.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/pdfmake@0.1.33/build/pdfmake.min.js.map"></script>
-  <script src="https://cdn.jsdelivr.net/npm/pdfmake@0.1.33/build/vfs_fonts.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.31/pdfmake.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.31/pdfmake.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.31/pdfmake.min.js.map"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.31/vfs_fonts.js"></script>
 
   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAuubk4Obni7qiK7Umj7CdvUUxO23688cM"></script>
   <script src="../app/vendor/papaparse.min.js"></script>
@@ -41,8 +42,6 @@
   <script src='../app/services/data-service.js' type='text/javascript'></script>
   <script src="../app/vendor/ng-flow/dist/ng-flow-standalone.min.js"></script>
   <style> .grid { width: 100%; height: 750px; } </style>
-
-
 </head>
 
 <body class= "{{display_mode}}" ng-controller='supervisorCtrl' ng-init='getAppName()'>
@@ -87,14 +86,14 @@
       </div>
     </div>
   </nav>
-
+        
   <!-- Horizontal Navigation -->
   <div class='container-fluid text-center'>
     <div class='row content'>
       <div class='col-sm-2 sidenav {{display_mode}}'>
         <ul class='nav nav-pills nav-stacked'>
           <li data-ng-class="{active: isActive('/upload')}"><a class='active' href='#upload'>Manage Documents</a></li>
-          <li data-ng-class="{active: isActive('/freeText')}"><a href='#freeText'>Free Messages</a></li>
+          <li data-ng-class="{active: isActive('/manage-freetext')}"><a href='#manage-freetext'>Manage Free Messages</a></li>
           <li data-ng-class="{active: isActive('/manage-watch-orders')}"><a class='active' href='#manage-watch-orders'>Manage Watch Orders</a></li>
           <li data-ng-class="{active: isActive('/reset')}"><a href='#reset'>Reset Password</a></li>
           <li data-ng-class="{active: isActive('/log')}"><a href='#log'>Logs</a></li>
@@ -120,5 +119,4 @@
   </script>
 
 </body>
-
 </html>

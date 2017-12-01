@@ -31,7 +31,7 @@
 	</section>
 </div>
 
-<div style="margin: auto; width: 75%;" ng-init='getActiveDocuments(id)'>
+<div style="margin: auto; width: 75%;"  ng-init='getActiveDocuments()'>
 	<div class='panel panel-primary {{display_mode}}'>
 		<div class='panel-heading '>Pinned Documents</div>
 
@@ -46,10 +46,87 @@
 						<div class="panel-body">
 							<div class="row">
 								<div class="col-md-3">
-									<i class="fa fa-file-text fa-5x" 
-									   ng-click="document_log(id,d.id,'pinned', d.status)"
+									<i class="fa fa-file-text fa-5x" ng-click="document_log(id, d.id, d.catid, 'pinned', d.status)"
 									   class="btn btn-info btn-lg" 
-									   data-toggle="modal" data-target="#{{d.id}}"
+									   data-toggle="modal" data-target="#{{d.id}}" style="color: #2780e3; cursor: pointer;"></i>
+								  <!-- Modal -->
+								  <div class="modal fade" id="{{d.id}}" role="dialog">
+								    <div class="modal-dialog modal-lg" style="width:98%;">
+								      <div class="modal-content" >
+								        <div class="modal-header">
+								          <button type="button" class="close" data-dismiss="modal">&times;</button>
+								          <h4 class="modal-title">
+								          	<b>{{ selected_cat == 'Free Text' ? 'Quick Message ...' : d.name}}</b>
+								          </h4>
+								        </div>
+								        <div class="modal-body" style="width:98%; min-height:700px; height:100%;" >
+								          <iframe align="center" style="margin:0 auto; position:absolute; border: 0; height:98%; width:100%;" 
+								          		  src='{{ selected_cat == "Free Text" 
+								          		  			? "../app/php/download-message.php?message_id=" + d.id 
+								          		  			: "../app/php/download-document.php?upload_name=" + d.upload_name }}'></iframe>
+								        </div>
+								        <div class="modal-footer">
+								          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+								        </div>
+								      </div>
+								    </div>
+								  </div>
+									<br /><br />
+								</div>
+								<div class="col-md-9">
+									<p>{{d.doc_description}}<br>
+										<a style='cursor: pointer' ng-click="takeQuiz(d.name, d.questions, id, d.id, d.catid, d.status, d.answers, d.score)">
+										<span class='{{d.quiz ? "glyphicon glyphicon-new-window" : "" }}'></span> {{ d.quiz ? "Quiz" : "" }}
+										</a>
+								</div>
+							</div>
+
+							<div class="row">
+								<div class="col-md-9 acknowledge {{display_mode}}">
+									<p style="font-size: small;">
+										<div ng-show="{{d.quiz}}">
+											By <b>taking the quiz</b>, <br>I acknowledge to have read and understood the content of this document.
+										</div>
+										<div ng-show="{{!d.quiz}}">
+											By <b>clicking on the check mark</b>, <br>I acknowledge I have read</a> and understood the content of this document.
+										</div>
+									</p>
+								</div>
+								<div class="col-md-3">
+									<input style="height: 30px;width: 30px;" 
+										   type="checkbox" class="form-check-input pull-right" 
+										   ng-model="d.isDone" ng-disabled="d.doneDisable || d.quiz" 
+										   ng-click="documentStatusUpdate(id, d.id, d.catid, 'pinned', d.status)">
+								</div>
+							</div>
+
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class='panel panel-primary {{display_mode}}'>
+		<div class='panel-heading'>Unpinned Documents</div>
+
+		<!-- TO DO: Overflow not detected until page reloads -->
+		<div class='panel-body'>
+			<div class="row">
+				<div class="cat col-lg-4" ng-repeat='d in unpinned_documents'>
+
+					<div class="panel panel-default {{display_mode}}">
+						<div class="panel-heading {{display_mode}}">
+							{{d.name}}
+							<span class="label label-default label-as-badge {{d.status}}" >{{d.status}}</span>
+							<!--<h3 class="panel-title">Panel title</h3>-->
+						</div>
+						<div class="panel-body">
+
+							<div class="row">
+								<div class="col-md-3">
+									<i class="fa fa-file-text fa-5x"  ng-click="document_log(id, d.id, d.catid, 'unpinned', d.status)"
+									   class="btn btn-info btn-lg"  data-toggle="modal" data-target="#{{d.id}}"
 										 style="color: #2780e3; cursor: pointer;"></i>
 								  <!-- Modal -->
 								  <div class="modal fade" id="{{d.id}}" role="dialog">
@@ -57,11 +134,15 @@
 								      <div class="modal-content" >
 								        <div class="modal-header">
 								          <button type="button" class="close" data-dismiss="modal">&times;</button>
-								          <h4 class="modal-title"><b>{{d.name}}</b></h4>
+								          <h4 class="modal-title">
+								          	<b>{{ selected_cat == 'Free Text' ? 'Quick Message ...' : d.name}}</b>
+								          </h4>
 								        </div>
 								        <div class="modal-body" style="width:98%; min-height:700px; height:100%;" >
 								          <iframe align="center" style="margin:0 auto; position:absolute; border: 0; height:98%; width:100%; " 
-								          		  src='{{"../app/php/download-document.php?upload_name=" + d.upload_name}}'></iframe>
+								          		  src='{{ selected_cat == "Free Text" 
+								          		  			? "../app/php/download-message.php?message_id=" + d.id 
+								          		  			: "../app/php/download-document.php?upload_name=" + d.upload_name }}'></iframe>
 								        </div>
 								        <div class="modal-footer">
 								          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -83,7 +164,7 @@
 									</p>
 								</div>
 								<div class="col-md-3">
-									<input style="height: 30px;width: 30px;" type="checkbox" class="form-check-input pull-right" ng-model="d.isDone" ng-disabled="d.doneDisable" ng-click="documentStatusUpdate(id,d.id,'pinned', d.status)">
+									<input style="height: 30px;width: 30px;" type="checkbox" class="form-check-input pull-right" ng-model="d.isDone" ng-disabled="d.doneDisable" ng-click="documentStatusUpdate(id,d.id, d.catid, 'unpinned',d.status)">
 								</div>
 							</div>
 
@@ -95,53 +176,65 @@
 		</div>
 	</div>
 
+	<div class="modal fade" id="quizModal" role="dialog" ng-controller='officerCtrl'>
+		<div class="modal-dialog">
+
+			<!-- Modal content-->
+			<div class="modal-content {{display_mode_modal}}" >
+				<div class="modal-header " style="padding:15px 15px;">
+					<button type="button" class="close" data-dismiss="modal" ng-click='updateErrorMessage = updateSuccessMessage = false'>&times;</button>
+					<h4><span class="glyphicon glyphicon-tasks"></span> <b>Test Your Knowledge</b></h4>
+				</div>
+				<div class="modal-body" style="padding:40px 50px;">
+
+
+
+<div style="margin: auto; width: 100%;" >
 	<div class='panel panel-primary {{display_mode}}'>
-		<div class='panel-heading'>Unpinned Documents</div>
-
-		<!-- TO DO: Overflow not detected until page reloads -->
+		<div class='panel-heading '><span class="glyphicon glyphicon-new-window"></span> <b>{{ q_doc }} {{quiz_submitted ? " | Score: " + score : ""}}</b></div> 
 		<div class='panel-body'>
+			<form action="../app/php/post-quiz.php" method="post" target="dummyframe">
 			<div class="row">
-				<div class="cat col-lg-4" ng-repeat='d in unpinned_documents'>
-
-					<div class="panel panel-default {{display_mode}}">
+				<div class="cat col-lg-4" ng-repeat='q in questions' >
+					<div class="panel panel-default {{display_mode}}" >
 						<div class="panel-heading {{display_mode}}">
-							{{d.name}}
-							<span class="badge badge-warning" style="background-color: #f0ad4e;">{{d.status}}</span>
-							<!--<h3 class="panel-title">Panel title</h3>-->
+							<b>{{q.question}}</b>
 						</div>
 						<div class="panel-body">
-
 							<div class="row">
-								<div class="col-md-3">
-									<a target="_blank" ng-click="document_log(id,d.id,'unpinned',d.status)" href='../app/php/download-document.php?upload_name={{d.upload_name}}'>
-										<!-- <a href='../app/php/upload/{{d.upload_name}}'> -->
-										<!--<img border="0" src="img/document_icon.png" alt="File Icon" width="100" height="140">-->
-										<i class="fa fa-file-text fa-5x" style="color: #2780e3;"></i>
-										<br />
-										<br />
-									</a>
+								<div class="col-md-3" style='width:100%' ng-show="{{!quiz_submitted}}">
+									<span ng-show="q.answer_1"><input type="radio" name="{{q.q_order}}"  value="{{q.answer_1}}"> &nbsp; {{q.answer_1}} <br></span>
+									<span ng-show="q.answer_2"><input type="radio" name="{{q.q_order}}"  value="{{q.answer_2}}"> &nbsp; {{q.answer_2}} <br></span>
+									<span ng-show="q.answer_3"><input type="radio" name="{{q.q_order}}"  value="{{q.answer_3}}"> &nbsp; {{q.answer_3}} <br></span>
+									<span ng-show="q.answer_4"><input type="radio" name="{{q.q_order}}"  value="{{q.answer_4}}"> &nbsp; {{q.answer_4}} </span>
 								</div>
-								<div class="col-md-9">
-									<p>{{d.doc_description}}</p>
+								<div class="col-md-3" style='width:100%' ng-show="{{quiz_submitted}}">
+									<span ng-show="q.answer_1"> <span class="glyphicon glyphicon-ok"></span> &nbsp; {{q.answer_1}} <br></span>
+									<span ng-show="q.answer_2"> <span class='glyphicon glyphicon-{{ q.answer_2 === q.officer_answer ? "remove" : "unchecked"}}'></span> &nbsp; {{q.answer_2}} <br></span>
+									<span ng-show="q.answer_3"> <span class='glyphicon glyphicon-{{ q.answer_3 === q.officer_answer ? "remove" : "unchecked"}}'></span> &nbsp; {{q.answer_3}} <br></span>
+									<span ng-show="q.answer_4"> <span class='glyphicon glyphicon-{{ q.answer_4 === q.officer_answer ? "remove" : "unchecked"}}'></span> &nbsp; {{q.answer_4}} </span>
 								</div>
 							</div>
-
-							<div class="row">
-								<div class="col-md-9 acknowledge {{display_mode}}">
-									<p style="font-size: small;">
-										By clicking on the check mark, I acknowledge I have read and understood the content of this document.
-									</p>
-								</div>
-								<div class="col-md-3">
-									<input style="height: 30px;width: 30px;" type="checkbox" class="form-check-input pull-right" ng-model="d.isDone" ng-disabled="d.doneDisable" ng-click="documentStatusUpdate(id,d.id,'unpinned',d.status)">
-								</div>
-							</div>
-
 						</div>
 					</div>
+				</div>
+			</div>
+			<!-- TO DO: Don't show successful update message when no changes were made to the user -->
+			<input type='hidden' name='answers' ng-model='answers' value="{{answers}}" />
+			<input type='hidden' name='ids' ng-model='ids' value="{{ids}}" />
+			<div ng-show="!quiz_submitted"><br><button type='submit' class='btn btn-success' ng-click="refresh()"><span class="glyphicon glyphicon-upload"></span> Submit Quiz</button><br></div>
+			<div ng-show="quiz_submitted"><br><button type="button" class='btn btn-success' data-dismiss="modal" ng-click='updateErrorMessage = updateSuccessMessage = false'><span class="glyphicon glyphicon-upload"></span> Close Window</button><br></div>
+			
+			</form>
+
+		</div>
+	</div>
+
 
 				</div>
 			</div>
 		</div>
 	</div>
+
 </div>
+<iframe width="0" height="0" border="0" name="dummyframe" id="dummyframe" style="display:none"></iframe>

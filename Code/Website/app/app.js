@@ -38,29 +38,23 @@ adminModule.config(function($routeProvider){
 supervisorModule.config(function($routeProvider){
 	$routeProvider
 	.when('/upload', {
-		templateUrl: 'partials/manage-documents.html',
-		controller: 'supervisorCtrl'
+		templateUrl: 'partials/manage-documents.html'
 	})
 	.when('/manage-watch-orders', {
-		templateUrl: 'partials/manage-watch-orders.html',
-		controller: 'supervisorCtrl'
+		templateUrl: 'partials/manage-watch-orders.html'
 	})
-	.when('/freeText', {
-		templateUrl: 'partials/freeText.html',
-		controller: 'supervisorCtrl'
+	.when('/manage-freetext', {
+		templateUrl: 'partials/manage-freetext.php'
 	})
 	.when('/reset', {
-		templateUrl: 'partials/reset-password.html',
-		controller: 'supervisorCtrl'
+		templateUrl: 'partials/reset-password.html'
 	})
 	.when('/password', {
-		templateUrl: 'partials/change-password.html',
-		controller: 'supervisorCtrl'
+		templateUrl: 'partials/change-password.html'
 	})
 	.when('/log',{
-		templateUrl: 'partials/show-logs.html',
-		controller: 'supervisorCtrl'
-	})
+         templateUrl: 'partials/show-logs.html'
+        })
 	.otherwise({
 		redirectTo: '/upload'
 	});
@@ -71,18 +65,15 @@ officerModule.config(function($routeProvider){
 	.when('/categories', {
 		templateUrl: 'partials/view-categories.html',//,
 		controller: 'officerCtrl'
-	})
+    })
 	.when('/documents/:selectedCategory', {
-		templateUrl: 'partials/view-documents.html',
-		controller: 'officerCtrl'
+		templateUrl: 'partials/view-documents.html'
 	})
 	.when('/documents/:selectedCategory/archived', {
-		templateUrl: 'partials/view-documents-archived.html',
-		controller: 'officerCtrl'
+		templateUrl: 'partials/view-documents-archived.html'
 	})
 	.when('/watch-orders', {
-		templateUrl: 'partials/watch-orders.html',
-		controller: 'officerCtrl'
+		templateUrl: 'partials/watch-orders.html'
 	})
 	.otherwise({
 		redirectTo: '/categories'

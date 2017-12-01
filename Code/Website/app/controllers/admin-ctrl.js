@@ -70,19 +70,9 @@ adminModule.controller('adminCtrl', ['$scope', 'dataService', 'localStorageServi
     })
   }
 
-  $scope.logout = function(){
-    sharedCtrl.logout();
-  }
-
-  /***** GET ALL OFFCIERS *****/
-  $scope.getOfficers = function(){
-    sharedCtrl.getOfficers();
-  };
-
-  /***** GET DOCUMENT CATEGORIES ****/
-  $scope.getCategories = function(){
-    sharedCtrl.getCategories();
-  };
+  $scope.logout = function(){ sharedCtrl.logout(); }
+  $scope.getOfficers = function(){ sharedCtrl.getOfficers(); };
+  $scope.getCategories = function(){ sharedCtrl.getCategories(); };
 
   /***********************
   * Toggle between day and night mode*
@@ -192,14 +182,14 @@ adminModule.controller('adminCtrl', ['$scope', 'dataService', 'localStorageServi
                     $scope.alert.closeAll();
                     $scope.alert.addAlert('success', 'User successfully updated!');
                     sharedCtrl.getOfficers();
-                    //window.location.reload();
-                    $('#editModal').modal('hide');
+                    window.location.reload();
+                    //$('#editModal').modal('hide');
                   }
                   else{
                     $scope.alert.closeAll();
                     $scope.alert.addAlert('danger', 'Could not update user!');
-                    //window.location.reload();
-                    $('#editModal').modal('hide');
+                    window.location.reload();
+                    //$('#editModal').modal('hide');
                   }
                 },
                 function(error){

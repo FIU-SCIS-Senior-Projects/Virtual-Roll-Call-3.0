@@ -76,10 +76,9 @@ loginModule.controller('loginCtrl', ['$scope', 'localStorageService', 'dataServi
 
                             if( minutes > 60 ) {
                                 dataService.resetLock(data['userID']);
-                                count = 0;
+                                count = 1;
                             }
                           }
-
                           $scope.alert.closeAll();
                           if (userid != null)
                           {
