@@ -1,28 +1,18 @@
 -- phpMyAdmin SQL Dump
--- version 4.7.4
+-- version 4.7.3
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1:3306
--- Generation Time: Dec 01, 2017 at 04:15 AM
--- Server version: 5.7.19
--- PHP Version: 5.6.31
+-- Host: localhost:8889
+-- Generation Time: Dec 05, 2017 at 08:49 PM
+-- Server version: 5.6.35
+-- PHP Version: 7.1.8
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-SET AUTOCOMMIT = 0;
-START TRANSACTION;
 SET time_zone = "+00:00";
-
-
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8mb4 */;
 
 --
 -- Database: `virtual_roll_call`
 --
-CREATE DATABASE IF NOT EXISTS `virtual_roll_call` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
-USE `virtual_roll_call`;
 
 -- --------------------------------------------------------
 
@@ -30,13 +20,10 @@ USE `virtual_roll_call`;
 -- Table structure for table `categories`
 --
 
-DROP TABLE IF EXISTS `categories`;
-CREATE TABLE IF NOT EXISTS `categories` (
-  `category_ID` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `Category_Name` varchar(50) NOT NULL,
-  PRIMARY KEY (`category_ID`),
-  UNIQUE KEY `category_name` (`Category_Name`)
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=latin1;
+CREATE TABLE `categories` (
+  `category_ID` int(10) UNSIGNED NOT NULL,
+  `Category_Name` varchar(50) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `categories`
@@ -59,9 +46,8 @@ INSERT INTO `categories` (`category_ID`, `Category_Name`) VALUES
 -- Table structure for table `documents`
 --
 
-DROP TABLE IF EXISTS `documents`;
-CREATE TABLE IF NOT EXISTS `documents` (
-  `document_ID` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+CREATE TABLE `documents` (
+  `document_ID` int(10) UNSIGNED NOT NULL,
   `Document_Name` varchar(50) NOT NULL,
   `Category_ID` int(10) UNSIGNED NOT NULL,
   `Upload_Date` date NOT NULL,
@@ -70,11 +56,8 @@ CREATE TABLE IF NOT EXISTS `documents` (
   `Upload_Name` varchar(255) NOT NULL,
   `Description` varchar(200) NOT NULL,
   `Manual_Archived` tinyint(1) NOT NULL,
-  `Has_Quiz` int(11) NOT NULL,
-  PRIMARY KEY (`document_ID`),
-  UNIQUE KEY `Document_Name` (`Document_Name`),
-  KEY `Category_ID` (`Category_ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=130 DEFAULT CHARSET=latin1;
+  `Has_Quiz` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `documents`
@@ -95,7 +78,8 @@ INSERT INTO `documents` (`document_ID`, `Document_Name`, `Category_ID`, `Upload_
 (115, 'Pension', 15, '2017-11-02', 1, 'Super Super', 'pension_sample_letter.pdf', 'this is a sample description', 0, 0),
 (116, 'Jesper CV', 5, '2017-11-10', 1, 'Admin Admin', 'Jesper Reeh - CV.pdf', 'CV document for an orientation', 0, 0),
 (125, 'Father Lincoln', 15, '2017-11-18', 0, 'Admin Admin', 'ourfather.jpg', 'The American Ancestor', 0, 1),
-(129, 'Village Calendar', 1, '2017-11-20', 1, 'Admin Admin', 'ShowImage.jpeg', 'The Village Address by the Mayer', 0, 1);
+(129, 'Village Calendar', 6, '2017-11-20', 1, 'Admin Admin', 'ShowImage.jpeg', 'The Village Address by the Mayer', 0, 1),
+(130, 'Graph', 5, '2017-12-01', 1, 'Jason Cohen', 'Screenshot at Nov 23 13-52-56.png', 'graph', 0, 0);
 
 -- --------------------------------------------------------
 
@@ -103,12 +87,10 @@ INSERT INTO `documents` (`document_ID`, `Document_Name`, `Category_ID`, `Upload_
 -- Table structure for table `document_status`
 --
 
-DROP TABLE IF EXISTS `document_status`;
-CREATE TABLE IF NOT EXISTS `document_status` (
-  `Id` int(11) NOT NULL AUTO_INCREMENT,
-  `Description` text NOT NULL,
-  PRIMARY KEY (`Id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+CREATE TABLE `document_status` (
+  `Id` int(11) NOT NULL,
+  `Description` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `document_status`
@@ -125,22 +107,21 @@ INSERT INTO `document_status` (`Id`, `Description`) VALUES
 -- Table structure for table `login_logs`
 --
 
-DROP TABLE IF EXISTS `login_logs`;
-CREATE TABLE IF NOT EXISTS `login_logs` (
-  `log_id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `login_logs` (
+  `log_id` int(11) NOT NULL,
   `created_at` datetime NOT NULL,
   `updated_at` datetime DEFAULT NULL,
   `lock_count` tinyint(4) NOT NULL,
-  `lock_status` int(11) NOT NULL,
-  PRIMARY KEY (`log_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+  `lock_status` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `login_logs`
 --
 
 INSERT INTO `login_logs` (`log_id`, `created_at`, `updated_at`, `lock_count`, `lock_status`) VALUES
-(3, '2017-11-19 11:33:52', '2017-11-19 11:33:48', 0, 0);
+(2, '2017-11-30 23:56:37', NULL, 1, 0),
+(3, '2017-12-01 18:46:37', '2017-12-01 18:46:29', 0, 0);
 
 -- --------------------------------------------------------
 
@@ -148,15 +129,13 @@ INSERT INTO `login_logs` (`log_id`, `created_at`, `updated_at`, `lock_count`, `l
 -- Table structure for table `logs`
 --
 
-DROP TABLE IF EXISTS `logs`;
-CREATE TABLE IF NOT EXISTS `logs` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `logs` (
+  `id` int(11) NOT NULL,
   `DOC` datetime NOT NULL,
   `userid` int(11) NOT NULL,
   `documentid` int(11) NOT NULL,
-  `categoryid` int(11) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=40 DEFAULT CHARSET=latin1;
+  `categoryid` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `logs`
@@ -201,7 +180,48 @@ INSERT INTO `logs` (`id`, `DOC`, `userid`, `documentid`, `categoryid`) VALUES
 (36, '2017-11-25 10:25:11', 23, 100, 4),
 (37, '2017-11-25 10:36:11', 23, 115, 15),
 (38, '2017-11-25 10:41:34', 23, 115, 15),
-(39, '2017-11-25 12:03:14', 23, 104, 4);
+(39, '2017-11-25 12:03:14', 23, 104, 4),
+(40, '2017-11-30 23:58:16', 1, 113, 2),
+(41, '2017-11-30 23:58:28', 1, 100, 4),
+(42, '2017-11-30 23:58:38', 1, 100, 4),
+(43, '2017-11-30 23:58:39', 1, 112, 4),
+(44, '2017-12-01 02:17:59', 1, 129, 4),
+(45, '2017-12-01 02:18:04', 1, 104, 4),
+(46, '2017-12-01 02:18:20', 1, 105, 4),
+(47, '2017-12-01 02:18:31', 1, 129, 4),
+(48, '2017-12-01 15:09:41', 1, 112, 4),
+(49, '2017-12-01 15:11:20', 1, 112, 4),
+(50, '2017-12-01 15:11:22', 1, 105, 4),
+(51, '2017-12-01 15:11:27', 1, 104, 4),
+(52, '2017-12-01 15:13:23', 1, 129, 6),
+(53, '2017-12-01 15:13:42', 1, 129, 6),
+(54, '2017-12-01 15:15:04', 1, 11, 16),
+(55, '2017-12-01 15:15:16', 1, 12, 16),
+(56, '2017-12-01 15:15:22', 1, 12, 16),
+(57, '2017-12-01 15:15:45', 1, 100, 4),
+(58, '2017-12-01 15:19:51', 1, 130, 5),
+(59, '2017-12-01 15:19:59', 1, 130, 5),
+(60, '2017-12-01 15:21:21', 1, 113, 2),
+(61, '2017-12-01 17:20:25', 1, 129, 6),
+(62, '2017-12-01 17:20:38', 1, 129, 6),
+(63, '2017-12-01 18:17:59', 1, 11, 16),
+(64, '2017-12-01 18:21:38', 1, 129, 6),
+(65, '2017-12-01 18:22:05', 1, 129, 6),
+(66, '2017-12-01 18:31:50', 1, 112, 4),
+(67, '2017-12-01 18:32:07', 1, 112, 4),
+(68, '2017-12-01 18:37:48', 1, 104, 4),
+(69, '2017-12-01 18:49:34', 1, 100, 4),
+(70, '2017-12-01 18:49:53', 1, 100, 4),
+(71, '2017-12-01 19:03:45', 1, 105, 4),
+(72, '2017-12-01 19:26:19', 1, 112, 4),
+(73, '2017-12-01 19:26:38', 1, 112, 4),
+(74, '2017-12-01 19:36:48', 1, 129, 6),
+(75, '2017-12-01 19:46:45', 1, 105, 4),
+(76, '2017-12-01 19:46:48', 1, 104, 4),
+(77, '2017-12-01 19:57:07', 1, 100, 4),
+(78, '2017-12-01 19:57:45', 1, 100, 4),
+(79, '2017-12-01 19:57:46', 1, 104, 4),
+(80, '2017-12-01 19:59:03', 1, 129, 6);
 
 -- --------------------------------------------------------
 
@@ -209,9 +229,8 @@ INSERT INTO `logs` (`id`, `DOC`, `userid`, `documentid`, `categoryid`) VALUES
 -- Table structure for table `messages`
 --
 
-DROP TABLE IF EXISTS `messages`;
-CREATE TABLE IF NOT EXISTS `messages` (
-  `MessageId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+CREATE TABLE `messages` (
+  `MessageId` int(10) UNSIGNED NOT NULL,
   `Pinned` tinyint(1) NOT NULL DEFAULT '0',
   `Title` varchar(100) NOT NULL,
   `Description` varchar(100) DEFAULT NULL,
@@ -220,17 +239,17 @@ CREATE TABLE IF NOT EXISTS `messages` (
   `Created_at` datetime NOT NULL,
   `Updated_by` int(11) DEFAULT NULL,
   `Updated_at` datetime DEFAULT NULL,
-  `Manual_Archived` tinyint(1) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`MessageId`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=latin1;
+  `Manual_Archived` tinyint(1) NOT NULL DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `messages`
 --
 
 INSERT INTO `messages` (`MessageId`, `Pinned`, `Title`, `Description`, `Message`, `Created_by`, `Created_at`, `Updated_by`, `Updated_at`, `Manual_Archived`) VALUES
-(9, 0, 'Than you, boss!', 'A note for my boss', 'Thanks for converting our mistakes into lessons, pressure into productivity and skills into strengths. You really know how to bring out the best in us.\r\nYou are to us what Warren Buffet would be to an apprentice investor, Gordon Ramsay would be to an aspiring chef, David Beckham would be to an aspiring footballer and Brad Pitt would be to an aspiring actor â€“ Demigod. Thanks boss.', 2, '2017-11-08 19:56:00', NULL, NULL, 0),
-(11, 1, 'A Message from the Director.', 'Research and Findings', '2015 was a year during which the breadth and reach of our membership grew with faculty from the departments of Public Health and Bioengineering and Biostatistics, as well as up-and-coming talents such as Elaine Hsiao who studies microbial cells and Hakwan Lau who elucidates the psychophysics of visual perception.\r\n\r\nAt the same time, our researchers continued to make significant breakthroughs in basic and clinical neuroscience. Lara Rayâ€™s recent study confirmed that Naltrexone, a drug helped into clinical practice here by Walter Ling, lessens the drug cravings of methamphetamine addicts. This work continues the long history of the preeminence of UCLA addiction researchers. \r\n\r\nHowever, with Walterâ€™s Lingâ€™s retirement and several other departures from the ISAP, we have lost key figures in the addiction research community. I hope that the recent establishment of the BRI\'s Integrative Center for Addictive Disorders will attract new scientific talent to UCLA, and develop even closer collaborations between neuroscientists and clinicians across campus. ', 2, '2017-11-08 20:11:24', 2, '2017-11-08 20:29:57', 0);
+(9, 0, 'Than you, boss!', 'A note for my boss', 'Thanks for converting our mistakes into lessons, pressure into productivity and skills into strengths. You really know how to bring out the best in us.\nYou are to us what Warren Buffet would be to an apprentice investor, Gordon Ramsay would be to an aspiring chef, David Beckham would be to an aspiring footballer and Brad Pitt would be to an aspiring actor â€“ Demigod. Thanks boss.2', 2, '2017-11-08 19:56:00', 1, '2017-12-01 02:14:51', 0),
+(11, 1, 'A Message from the Director.', 'Research and Findings', '2015 was a year during which the breadth and reach of our membership grew with faculty from the departments of Public Health and Bioengineering and Biostatistics, as well as up-and-coming talents such as Elaine Hsiao who studies microbial cells and Hakwan Lau who elucidates the psychophysics of visual perception.\r\n\r\nAt the same time, our researchers continued to make significant breakthroughs in basic and clinical neuroscience. Lara Rayâ€™s recent study confirmed that Naltrexone, a drug helped into clinical practice here by Walter Ling, lessens the drug cravings of methamphetamine addicts. This work continues the long history of the preeminence of UCLA addiction researchers. \r\n\r\nHowever, with Walterâ€™s Lingâ€™s retirement and several other departures from the ISAP, we have lost key figures in the addiction research community. I hope that the recent establishment of the BRI\'s Integrative Center for Addictive Disorders will attract new scientific talent to UCLA, and develop even closer collaborations between neuroscientists and clinicians across campus. ', 2, '2017-11-08 20:11:24', 2, '2017-11-08 20:29:57', 0),
+(12, 1, 'something', 'something in here', 'some text in here.', 1, '2017-12-01 15:14:36', 1, '2017-12-01 17:14:14', 0);
 
 -- --------------------------------------------------------
 
@@ -238,19 +257,15 @@ INSERT INTO `messages` (`MessageId`, `Pinned`, `Title`, `Description`, `Message`
 -- Table structure for table `officers`
 --
 
-DROP TABLE IF EXISTS `officers`;
-CREATE TABLE IF NOT EXISTS `officers` (
-  `userID` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+CREATE TABLE `officers` (
+  `userID` int(10) UNSIGNED NOT NULL,
   `First_Name` varchar(20) NOT NULL,
   `Last_Name` varchar(20) NOT NULL,
   `Username` varchar(20) NOT NULL,
   `Password` varchar(60) NOT NULL,
   `Role` varchar(40) NOT NULL,
-  `Active` tinyint(1) NOT NULL DEFAULT '1',
-  PRIMARY KEY (`userID`),
-  UNIQUE KEY `Username` (`Username`),
-  UNIQUE KEY `Username_2` (`Username`)
-) ENGINE=InnoDB AUTO_INCREMENT=61 DEFAULT CHARSET=latin1;
+  `Active` tinyint(1) NOT NULL DEFAULT '1'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `officers`
@@ -261,12 +276,17 @@ INSERT INTO `officers` (`userID`, `First_Name`, `Last_Name`, `Username`, `Passwo
 (2, 'Super', 'Super', 'supervisor', '$2y$10$iXegOwJ96slhTLcMFTz6W.e5yMyfZQ6F5oeXP4I/.dG4IaKZoW43e', 'Supervisor', 1),
 (3, 'Juan', 'Gonzales', 'officer', '$2y$10$vFzGKTZEco3hF.dWzJQRXeBQYNfMf0qR8wxE7JBQFj9nJBBTzky4S', 'Officer', 1),
 (13, 'Ivana', 'Rodriguez', 'irodr041', '$2y$10$qNa2mOnevOnHvn7BdG6tY.W8cmgIHWx24IKM5kxkahSbD77HIGxP2', 'Supervisor', 1),
-(15, 'Shonda', 'Witherspoon', 'swith004', '$2y$10$mUBvXvLxY2DfIwZG1OsmSeMK8lLBa6aETdbjJwKlX8.ph8ND6PGVG', 'Supervisor', 1),
+(15, 'Shonda2', 'Witherspoon', 'swith004', '$2y$10$mUBvXvLxY2DfIwZG1OsmSeMK8lLBa6aETdbjJwKlX8.ph8ND6PGVG', 'Administrator', 1),
 (16, 'Frank', 'Alvarado', 'falva001', '$2y$10$0CftMSQ9naAKHyW2u/.F5.u0h9MxWoo6GcRxIZ85gWyRpEzxvleJ6', 'Administrator', 1),
-(22, 'Test', 'Tester', 'test001', '$2y$10$brSJDzFjow79t.62DY0VF.p.O2qdFoKh81N3/GBOiQosHEl6rjrYe', 'Officer', 1),
 (23, 'Admin', 'Admin', 'administrator', '$2y$10$lThJX.sp5ftsZ.WBBCx5RenM/MwrYOIOE140Yrw09G6nVdIsGF9ui', 'Administrator', 1),
 (25, 'Tomas', 'Smith', 'tomas', '$2y$10$iH9.7NqjBFo1jGCBInb78uXTcYnddmrotvXSSHuW.MhwtQelyNjSe', 'Officer', 1),
-(60, 'Juan', 'Gonzales', 'officer 2', '$2y$10$J.Bl3AyWveiHed.uBhlCNONcbw0MKjJjp.G55i4WKDJmjDoEK/7ky', 'Officer', 1);
+(60, 'Juan', 'Gonzales', 'officer 2', '$2y$10$J.Bl3AyWveiHed.uBhlCNONcbw0MKjJjp.G55i4WKDJmjDoEK/7ky', 'Officer', 1),
+(77, 'tom ', 'smith', 'toms1', '$2y$10$dDJ/f3IEWaNcKcAAPnc4eeSw1bTozzR9/qi8SXa0NpikD1NvoG3OC', 'Administrator', 1),
+(78, 'tom ', 'smith', 'tom2', '$2y$10$zPWw3HhXJWUqABfhfr0N/eHusDDSLllIt/9jsJnk5JoUYUN25tu5y', 'Supervisor', 1),
+(79, 'tom ', 'smith', 'tom3', '$2y$10$.Bjd59ezYY5bss2EkhlmQeqvG9yL3QKEqdp/BKUtOJJqBZmzsI92e', 'Supervisor', 1),
+(80, 'tom ', 'smith', 'tom4', '$2y$10$aWVu4hEqt.qH3n77Apuiv.bCbCoeCa6Tv92psMZiQTrfVWahflUQW', 'Supervisor', 1),
+(88, 'tom ', 'smith', 'toms12', '$2y$10$nxkmv7dqqTS1NLYyYuK5G.Jl2IL8elJJBQfv/d7HmIAvRtC7rfsPe', 'Administrator', 1),
+(94, 'tom ', 'smith', 'tom256', '$2y$10$unAivQugohM3.kYd36FzxOaah1EEamdF3EfN/k1LGM3.g.lWTzLdq', 'Supervisor', 1);
 
 -- --------------------------------------------------------
 
@@ -274,14 +294,11 @@ INSERT INTO `officers` (`userID`, `First_Name`, `Last_Name`, `Username`, `Passwo
 -- Table structure for table `quizzes`
 --
 
-DROP TABLE IF EXISTS `quizzes`;
-CREATE TABLE IF NOT EXISTS `quizzes` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `quizzes` (
+  `id` int(11) NOT NULL,
   `document_name` varchar(50) NOT NULL,
-  `QA` text NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `document_id` (`document_name`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
+  `QA` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `quizzes`
@@ -297,25 +314,21 @@ INSERT INTO `quizzes` (`id`, `document_name`, `QA`) VALUES
 -- Table structure for table `quiz_logs`
 --
 
-DROP TABLE IF EXISTS `quiz_logs`;
-CREATE TABLE IF NOT EXISTS `quiz_logs` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `quiz_logs` (
+  `id` int(11) NOT NULL,
   `officer_id` int(11) NOT NULL,
   `document_id` int(11) NOT NULL,
   `score` decimal(3,2) NOT NULL,
   `answers` text NOT NULL,
-  `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
+  `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `quiz_logs`
 --
 
 INSERT INTO `quiz_logs` (`id`, `officer_id`, `document_id`, `score`, `answers`, `created_at`) VALUES
-(3, 23, 125, '0.00', '[\"Uncle Sam\",\"No. He adopted.\"]', '2017-11-19 20:39:42'),
-(5, 3, 129, '1.00', '[\"12\\/06\\/2017 7:00 PM\",\"The Mayor\",\"11000 Red Road\",\"Hospitals\"]', '2017-11-21 00:26:10'),
-(6, 23, 129, '0.00', '[\"12\\/01\\/2017 7:00 PM\",\"The People\",\"9000 Blue Road\",\"Finance\"]', '2017-11-24 02:48:42');
+(11, 1, 129, '0.50', '[\"12\\/16\\/2017 7:00 PM\",\"The City\",\"11000 Red Road\",\"Hospitals\"]', '2017-12-01 19:59:03');
 
 -- --------------------------------------------------------
 
@@ -323,8 +336,7 @@ INSERT INTO `quiz_logs` (`id`, `officer_id`, `document_id`, `score`, `answers`, 
 -- Table structure for table `settings`
 --
 
-DROP TABLE IF EXISTS `settings`;
-CREATE TABLE IF NOT EXISTS `settings` (
+CREATE TABLE `settings` (
   `Application_Name` varchar(255) NOT NULL,
   `Department_Name` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -342,39 +354,15 @@ INSERT INTO `settings` (`Application_Name`, `Department_Name`) VALUES
 -- Table structure for table `user_doc_status`
 --
 
-DROP TABLE IF EXISTS `user_doc_status`;
-CREATE TABLE IF NOT EXISTS `user_doc_status` (
+CREATE TABLE `user_doc_status` (
   `OfficerId` int(11) NOT NULL,
   `StatusId` int(11) NOT NULL,
   `DocumentId` int(11) NOT NULL,
   `CategoryId` int(11) NOT NULL,
   `StartDateTime` datetime NOT NULL,
   `EndDateTime` datetime NOT NULL,
-  `Id` int(11) NOT NULL AUTO_INCREMENT,
-  PRIMARY KEY (`Id`)
-) ENGINE=InnoDB AUTO_INCREMENT=127 DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `user_doc_status`
---
-
-INSERT INTO `user_doc_status` (`OfficerId`, `StatusId`, `DocumentId`, `CategoryId`, `StartDateTime`, `EndDateTime`, `Id`) VALUES
-(23, 3, 107, 4, '2017-11-10 10:30:31', '2017-11-10 11:49:31', 93),
-(23, 3, 112, 4, '2017-11-10 11:34:06', '2017-11-10 11:34:17', 94),
-(23, 3, 105, 4, '2017-11-10 11:57:21', '2017-11-21 01:17:43', 95),
-(23, 3, 11, 16, '2017-11-10 15:02:52', '2017-11-10 15:05:54', 96),
-(23, 3, 3, 16, '2017-11-10 19:22:17', '2017-11-10 19:22:21', 97),
-(23, 3, 125, 15, '2017-11-18 21:46:03', '2017-11-19 20:39:42', 98),
-(3, 3, 129, 1, '2017-11-20 23:47:02', '2017-11-21 00:26:10', 116),
-(3, 2, 112, 4, '2017-11-21 00:47:54', '2017-11-21 00:47:54', 117),
-(23, 2, 102, 4, '2017-11-21 01:17:51', '2017-11-21 01:17:51', 118),
-(23, 3, 129, 1, '2017-11-24 02:46:55', '2017-11-24 02:48:42', 119),
-(23, 2, 113, 2, '2017-11-25 00:33:37', '2017-11-25 00:33:37', 120),
-(23, 3, 111, 4, '2017-11-25 02:09:12', '2017-11-25 02:09:17', 121),
-(23, 2, 116, 5, '2017-11-25 02:32:38', '2017-11-25 02:32:38', 122),
-(23, 2, 100, 4, '2017-11-25 10:25:11', '2017-11-25 10:25:11', 123),
-(23, 2, 115, 15, '2017-11-25 10:41:34', '2017-11-25 10:41:34', 125),
-(23, 2, 104, 4, '2017-11-25 12:03:14', '2017-11-25 12:03:14', 126);
+  `Id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -382,26 +370,160 @@ INSERT INTO `user_doc_status` (`OfficerId`, `StatusId`, `DocumentId`, `CategoryI
 -- Table structure for table `watch_orders`
 --
 
-DROP TABLE IF EXISTS `watch_orders`;
-CREATE TABLE IF NOT EXISTS `watch_orders` (
-  `Id` int(10) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `watch_orders` (
+  `Id` int(10) NOT NULL,
   `Desc` varchar(60) DEFAULT 'No Description',
   `Address` varchar(100) NOT NULL,
   `Lat` float(10,6) NOT NULL,
   `Lng` float(10,6) NOT NULL,
-  `Date` date NOT NULL,
-  PRIMARY KEY (`Id`)
-) ENGINE=InnoDB AUTO_INCREMENT=231 DEFAULT CHARSET=utf8;
+  `AddDate` date NOT NULL,
+  `ExpDate` date NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `watch_orders`
 --
 
-INSERT INTO `watch_orders` (`Id`, `Desc`, `Address`, `Lat`, `Lng`, `Date`) VALUES
-(228, 'robbery', '8888 SW 136th St, Miami, FL 33176, USA', 25.642885, -80.339722, '2017-10-27'),
-(229, 'emergency  ', '7535 N Kendall Dr, Kendall, FL 33156, USA', 25.689037, -80.315445, '2017-10-27'),
-(230, 'accident', '11000 Red Rd, Pinecrest, FL 33156, USA', 25.668188, -80.286591, '2017-10-27');
+INSERT INTO `watch_orders` (`Id`, `Desc`, `Address`, `Lat`, `Lng`, `AddDate`, `ExpDate`) VALUES
+(271, 'townhouse', '1400 NW 96th Ave, Doral, FL 33172, USA', 25.787062, -80.351112, '2017-12-01', '2017-12-13'),
+(272, 'house', '11000 Red Rd, Pinecrest, FL 33156, USA', 25.669537, -80.285240, '2017-12-01', '2017-12-15'),
+(273, 'apartment', '1040 W Flagler St, Miami, FL 33130, USA', 25.773518, -80.212059, '2017-12-01', '2017-12-14');
 
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `categories`
+--
+ALTER TABLE `categories`
+  ADD PRIMARY KEY (`category_ID`),
+  ADD UNIQUE KEY `category_name` (`Category_Name`);
+
+--
+-- Indexes for table `documents`
+--
+ALTER TABLE `documents`
+  ADD PRIMARY KEY (`document_ID`),
+  ADD UNIQUE KEY `Document_Name` (`Document_Name`),
+  ADD KEY `Category_ID` (`Category_ID`);
+
+--
+-- Indexes for table `document_status`
+--
+ALTER TABLE `document_status`
+  ADD PRIMARY KEY (`Id`);
+
+--
+-- Indexes for table `login_logs`
+--
+ALTER TABLE `login_logs`
+  ADD PRIMARY KEY (`log_id`);
+
+--
+-- Indexes for table `logs`
+--
+ALTER TABLE `logs`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `messages`
+--
+ALTER TABLE `messages`
+  ADD PRIMARY KEY (`MessageId`);
+
+--
+-- Indexes for table `officers`
+--
+ALTER TABLE `officers`
+  ADD PRIMARY KEY (`userID`),
+  ADD UNIQUE KEY `Username` (`Username`),
+  ADD UNIQUE KEY `Username_2` (`Username`);
+
+--
+-- Indexes for table `quizzes`
+--
+ALTER TABLE `quizzes`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `document_id` (`document_name`);
+
+--
+-- Indexes for table `quiz_logs`
+--
+ALTER TABLE `quiz_logs`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `user_doc_status`
+--
+ALTER TABLE `user_doc_status`
+  ADD PRIMARY KEY (`Id`);
+
+--
+-- Indexes for table `watch_orders`
+--
+ALTER TABLE `watch_orders`
+  ADD PRIMARY KEY (`Id`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `categories`
+--
+ALTER TABLE `categories`
+  MODIFY `category_ID` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+--
+-- AUTO_INCREMENT for table `documents`
+--
+ALTER TABLE `documents`
+  MODIFY `document_ID` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=131;
+--
+-- AUTO_INCREMENT for table `document_status`
+--
+ALTER TABLE `document_status`
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+--
+-- AUTO_INCREMENT for table `login_logs`
+--
+ALTER TABLE `login_logs`
+  MODIFY `log_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+--
+-- AUTO_INCREMENT for table `logs`
+--
+ALTER TABLE `logs`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=81;
+--
+-- AUTO_INCREMENT for table `messages`
+--
+ALTER TABLE `messages`
+  MODIFY `MessageId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+--
+-- AUTO_INCREMENT for table `officers`
+--
+ALTER TABLE `officers`
+  MODIFY `userID` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=95;
+--
+-- AUTO_INCREMENT for table `quizzes`
+--
+ALTER TABLE `quizzes`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+--
+-- AUTO_INCREMENT for table `quiz_logs`
+--
+ALTER TABLE `quiz_logs`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+--
+-- AUTO_INCREMENT for table `user_doc_status`
+--
+ALTER TABLE `user_doc_status`
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `watch_orders`
+--
+ALTER TABLE `watch_orders`
+  MODIFY `Id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=274;
 --
 -- Constraints for dumped tables
 --
@@ -411,8 +533,3 @@ INSERT INTO `watch_orders` (`Id`, `Desc`, `Address`, `Lat`, `Lng`, `Date`) VALUE
 --
 ALTER TABLE `documents`
   ADD CONSTRAINT `DOCUMENTS_ibfk_1` FOREIGN KEY (`Category_ID`) REFERENCES `categories` (`category_ID`) ON DELETE CASCADE;
-COMMIT;
-
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
