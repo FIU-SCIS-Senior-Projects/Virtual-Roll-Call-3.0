@@ -120,7 +120,7 @@ supervisorModule.controller('supervisorCtrl', ['$scope', 'localStorageService', 
 
     var file = $('#files')[0].files[0];
 
-    if(file.type != "text/csv")
+    if(file.type != "text/csv" && file.type != ".csv" && file.type != "application/vnd.ms-excel")
     {
       alert("The file must of type CSV.");
       return;
@@ -234,8 +234,11 @@ supervisorModule.controller('supervisorCtrl', ['$scope', 'localStorageService', 
             }
             else
             {
-              $scope.alert.closeAll();
-              $scope.alert.addAlert('danger', 'Could not add watch order! The watch order address or date is invalid.');
+              $scope.$apply(function () {
+                $scope.alert.closeAll();
+                $scope.alert.addAlert('danger', 'Could not add watch order! The watch order address or date is invalid.');
+              });
+
             }
 
           });
