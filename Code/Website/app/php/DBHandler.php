@@ -11,7 +11,7 @@ class DBHandler
 
 		$un = 'root';
 		$pw = 'root';
-		$dbName = 'VIRTUAL_ROLL_CALL';
+		$dbName = 'virtual_roll_call';
 		$address = 'localhost';
 		$db_connection = new mysqli($address, $un, $pw, $dbName);
 		$crypter = new JCrypter();
