@@ -35,6 +35,8 @@ adminModule.directive('mydatepickerto', function () {
 
 adminModule.controller('adminCtrl', ['$scope', 'dataService', 'localStorageService', '$window', '$controller', '$location', function($scope, dataService, localStorageService, $window, $controller, $location){
 
+  $("[data-toggle=popover]").popover();
+  $('[data-toggle="tooltip"]').tooltip();
   /***** GLOBALS *****/
   //get name from local storage for user profile customization
   var fname = localStorageService.get('fname');

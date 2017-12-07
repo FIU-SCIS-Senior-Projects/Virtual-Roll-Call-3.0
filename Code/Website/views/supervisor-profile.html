@@ -115,7 +115,7 @@
   <script>
     $(document).ready(function () {
       var table = $('#logs').DataTable();
-      //  alert("Hello");
+      $('[data-toggle="popover"]').popover();
 
       $('#btn-export').on('click', function () {
         $('#logs').append(table.$('tr').clone()).table2excel({

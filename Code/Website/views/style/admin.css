@@ -208,3 +208,16 @@ tr.found {
   padding:0px 15px;
   font-size: small;
 }
+
+.glyphicon-question-sign{
+  font-size: 25px;
+}
+
+.glyphicon-download{
+  font-size: 25px;
+  margin-left: 10px;
+}
+
+.popover{
+    max-width: 100%; /* Max Width of the popover (depending on the container!) */
+}

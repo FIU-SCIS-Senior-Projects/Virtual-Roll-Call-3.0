@@ -9,6 +9,8 @@
 	<br>
 	<br>
 
+
+
 	<!-- Add Single Watch Order Panel -->
   <div class='panel panel-primary {{display_mode}}'>
     <div class='panel-heading'>Add Watch Order</div>
@@ -84,6 +86,7 @@
 		</div>
 	</div>
 
+
 	<!-- Edit Watch Order Modal -->
 	<div class="modal fade" id="editModal" role="dialog">
 		<div class="modal-dialog">
@@ -122,6 +125,8 @@
 		</div>
 	</div>
 
+
+
 	<!-- Batch Add Watch Orders Modal -->
 	<div class="modal fade" id="batchWatchOrdersModal" role="dialog">
 		<div class="modal-dialog">
@@ -132,15 +137,19 @@
 					<button type="button" class="close" data-dismiss="modal" ng-click='updateErrorMessage = updateSuccessMessage = false'>&times;</button>
 					<h4> <span class="glyphicon glyphicon-th-list"></span> Batch Add Watch Orders</h4>
 				</div>
-				<div class="modal-body" style="padding:40px 50px;">
+				<br>
+				<a href="./misc/watch-orders.csv" data-toggle="tooltip" title="Download Sample CSV File" download ="watch-orders.csv" class="glyphicon glyphicon-download {{display_mode_modal}}"></a>
+				<span class="glyphicon glyphicon-question-sign question-icon" data-toggle="popover" title="CSV Row Format"
+				data-content="[Description],[Address],[Expiration Date (YYYY-MM-DD)]"
+				></span>
 
+				<div class="modal-body" style="padding:40px 50px;">
 
 					<!-- TO DO: Overflow not detected until page reloads -->
 					<input type="file" id="files" accept="text/csv" class = "center-block">
 					<br>
 					<button class="btn btn-success btn-block center-block" ng-click='parseCSV()'><span class="glyphicon glyphicon-refresh"></span> Parse</button>
 					<br>
-
 
 					<div class='panel panel-primary'id="parsedWatchOrdersPanel">
 						<div class='panel-heading' id="parseTitle">Parsed Watch Orders</div>

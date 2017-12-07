@@ -1,6 +1,9 @@
 //CONTROLLER for supervisor app
 supervisorModule.controller('supervisorCtrl', ['$scope', 'localStorageService', 'dataService', '$controller', '$location', function($scope, localStorageService, dataService, $controller, $location){
 
+  $("[data-toggle=popover]").popover();
+  $('[data-toggle="tooltip"]').tooltip();
+
   //TO DO: SAVE AS GLOBALS OR IN SHAREDCTRL
   /***** GLOBALS *****/
   //get name from local storage for user profile customization
