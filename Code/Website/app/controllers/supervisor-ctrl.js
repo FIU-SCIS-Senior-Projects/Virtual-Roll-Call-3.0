@@ -423,8 +423,8 @@ supervisorModule.controller('supervisorCtrl', ['$scope', 'localStorageService', 
           return new Promise(function(resolve, reject) {
 
             //get values from parsed watch order
-            var desc = order[0];
-            var address = order[1];
+            var desc = order[0].trim();
+            var address = order[1].trim();
 
             if(!address || address == "Invalid Address" ){
               resolve(false);
@@ -436,7 +436,7 @@ supervisorModule.controller('supervisorCtrl', ['$scope', 'localStorageService', 
               resolve(false);
               return;
             }
-            var expDate = order[4];
+            var expDate = order[4].trim();
             var splitDate = expDate.split("-");
 
             //check for valid year

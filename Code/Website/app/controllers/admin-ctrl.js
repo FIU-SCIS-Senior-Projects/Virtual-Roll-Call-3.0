@@ -307,11 +307,11 @@ adminModule.controller('adminCtrl', ['$scope', 'dataService', 'localStorageServi
                   return new Promise(function(resolve, reject) {
 
                     //get values from parsed user
-                    var first_name = user[0];
-                    var last_name = user[1];
-                    var username = user[2];
-                    var password = user[3];
-                    var role = user[4];
+                    var first_name = user[0].trim();
+                    var last_name = user[1].trim();
+                    var username = user[2].trim();
+                    var password = user[3].trim();
+                    var role = user[4].trim();
 
                     if(password.length < 8){
                       resolve(false);
