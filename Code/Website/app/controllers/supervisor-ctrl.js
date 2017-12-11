@@ -68,7 +68,7 @@ supervisorModule.controller('supervisorCtrl', ['$scope', 'localStorageService', 
   $scope.removeMessage = function()
   {
       var dialogResult = window.confirm("Are you sure you want to remove '" + $scope.updateTitle + "' message?");
-      if ( dialogResult ) 
+      if ( dialogResult )
       {
         var id = $scope.updateMsgId;
         dataService.removeMessage(id);
@@ -100,7 +100,7 @@ supervisorModule.controller('supervisorCtrl', ['$scope', 'localStorageService', 
   {
     var id = $scope.doc_deletedId;
     var dialogResult = window.confirm("Are you sure you want to delete '" + $scope.doc_name + "'?");
-    if ( dialogResult ) 
+    if ( dialogResult )
     {
       dataService.removeUploadedDocument(id);
       $scope.refresh();
@@ -138,7 +138,8 @@ supervisorModule.controller('supervisorCtrl', ['$scope', 'localStorageService', 
 
     var file = $('#files')[0].files[0];
 
-    if(file.type != "text/csv" && file.type != ".csv" && file.type != "application/vnd.ms-excel")
+    if(file.type != "text/csv" && file.type != ".csv" && file.type != "application/vnd.ms-excel"
+    && (file.type == "" && !file.name.includes(".csv")))
     {
       alert("The file must of type CSV.");
       return;
