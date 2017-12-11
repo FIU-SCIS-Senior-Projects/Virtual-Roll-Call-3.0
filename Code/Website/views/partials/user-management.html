@@ -155,9 +155,13 @@
 					<button type="button" class="close" data-dismiss="modal" ng-click='updateErrorMessage = updateSuccessMessage = false'>&times;</button>
 					<h4><span class="glyphicon glyphicon-th-list"></span> Batch Add Users</h4>
 				</div>
+				<br>
+				<a href="./misc/users.csv" data-toggle="tooltip" title="Download Sample CSV File" download ="users.csv" class="glyphicon glyphicon-download {{display_mode_modal}}"></a>
+				<span class="glyphicon glyphicon-question-sign question-icon" data-toggle="popover" title="CSV Row Format"
+				data-content="[First Name],[Last Name],[User Name],[Password],[Role]"
+				></span>
+
 				<div class="modal-body" style="padding:40px 50px;">
-
-
 					<!-- TO DO: Overflow not detected until page reloads -->
 
 					<input type="file" id="files" accept="text/csv" class = "center-block">

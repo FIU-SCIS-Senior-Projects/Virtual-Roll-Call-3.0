@@ -1,3 +1,5 @@
+const MAP_API_KEY = 'AIzaSyAuubk4Obni7qiK7Umj7CdvUUxO23688cM';
+
 //SERVICE for shared controller
 sharedModule.factory('sharedService', function ($http, $q) {
   return {
@@ -13,25 +15,11 @@ sharedModule.factory('sharedService', function ($http, $q) {
           });
       });
     },
-    getDocuments: function () {
+    getPendingCount: function (id) {
       return $q(function (resolve, reject) {
-        $http.post('../app/php/get-documents.php', {'type': 'all', 'user_id': 0})
+        $http.post('../app/php/get-pendingdocs.php', { 'user_id': id })
           .then(
-          function (response) {
-            resolve(response.data);
-          },
-          function (error) {
-            reject(error);
-          });
-      });
-    },
-    getMessages: function() {
-      return $q(function (resolve, reject) {
-        $http.post('../app/php/get-messages.php', {})
-          .then(
-          function (response) {
-            resolve(response.data);
-          },
+          function (response) { resolve(response.data); },
           function (error) {
             reject(error);
           });
@@ -40,6 +28,22 @@ sharedModule.factory('sharedService', function ($http, $q) {
     getCategories: function () {
       return $q(function (resolve, reject) {
         $http.post('../app/php/get-categories.php', {})
+          .then(
+          function (response) { resolve(response.data); },
+          function (error) { reject(error); });
+      });
+    },
+    getDocuments: function () {
+      return $q(function (resolve, reject) {
+        $http.post('../app/php/get-documents.php', {'type': 'all', 'user_id': 0, 'cat' : ''})
+          .then(
+          function (response) { resolve(response.data); },
+          function (error) { reject(error); });
+      });
+    },
+    getMessages: function( id ) {
+      return $q(function (resolve, reject) {
+        $http.post('../app/php/get-messages.php', { 'id': id })
           .then(
           function (response) {
             resolve(response.data);
@@ -81,7 +85,8 @@ sharedModule.factory('sharedService', function ($http, $q) {
       		function (error) {reject(error);})
       	});
     },
-   changePassword: function (id, curr_pass, new_pass) {
+
+   changePassword: function(id, curr_pass, new_pass) {
       return $q(function (resolve, reject) {
         $http.post('../app/php/change-password.php', { 'id': id, 'current': curr_pass, 'new': new_pass })
           .then(
@@ -111,7 +116,7 @@ loginModule.factory('dataService', function ($http, $q) {
           });
       });
     },
-    getTally: function( username ) 
+    getTally: function( username )
     {
         return $q(function (resolve) {
           $http.post('../app/php/get-tally.php', {'username': username})
@@ -128,7 +133,7 @@ loginModule.factory('dataService', function ($http, $q) {
             );
       });
     },
-    lockUser: function (userid) 
+    lockUser: function (userid)
     {
         return $q(function (resolve) {
           $http.post('../app/php/lockUser.php', {'userid': userid})
@@ -139,14 +144,15 @@ loginModule.factory('dataService', function ($http, $q) {
     {
         return $q(function(resolve) {
           $http.post('../app/php/resetLock.php', {'userid': userid})
-            .then( function(response) { 
+            .then( function(response) {
               resolve(response.data); });
-        }); 
+        });
     }
   }
 });
 
-//SERVICE for supervisor controller
+
+//SERVICE for admin controller
 adminModule.factory('dataService', function ($http, $q) {
   return {
     addUser: function (fname, lname, email, password, role) {
@@ -235,7 +241,7 @@ adminModule.factory('dataService', function ($http, $q) {
     },
     updateAppName: function (name) {
       return $q(function (resolve, reject) {
-        
+
         $http.post('../app/php/update-app-name.php', { 'name': name })
           .then(
           function (response) {
@@ -248,7 +254,7 @@ adminModule.factory('dataService', function ($http, $q) {
     },
     deleteArchive: function(from,to) {
       return $q(function (resolve, reject) {
-        
+
         $http.post('../app/php/delete-archive.php', { 'from': from,'to':to })
           .then(
           function (response) {
@@ -278,9 +284,9 @@ adminModule.factory('dataService', function ($http, $q) {
 //SERVICE for supervisor controller
 supervisorModule.factory('dataService', function ($http, $q) {
   return {
-    addWatchOrder: function (desc, address, lat, long) {
+    addWatchOrder: function (desc, address, lat, long, expDate) {
       return $q(function (resolve, reject) {
-        $http.post('../app/php/add-watch-order.php', { 'desc': desc, 'address': address, 'lat': lat, 'long': long })
+        $http.post('../app/php/add-watch-order.php', { 'desc': desc, 'address': address, 'lat': lat, 'long': long, 'expDate': expDate })
           .then(
           function (response) {
             resolve(response.data);
@@ -314,6 +320,81 @@ supervisorModule.factory('dataService', function ($http, $q) {
           });
       });
     },
+    removeUploadedDocument: function (document_id) {
+      return $q(function (resolve, reject) {
+          $http.post('../app/php/remove-document.php', { 'id': document_id })
+            .then (
+              function(response) { alert(JSON.stringify(resonse.data)); resolve(response.data); },
+              function(error) { reject(error); }
+            );
+      });
+    },
+    updateWatchOrder: function (id, desc, address, lat, lng, expDate) {
+      return $q(function (resolve, reject) {
+        $http.post('../app/php/edit-watch-order.php', { 'id': id, 'desc': desc, 'address': address, 'lat': lat, 'lng': lng, 'expDate': expDate})
+          .then(
+          function (response) {
+            resolve(response.data);
+          },
+          function (error) {
+            reject(error);
+          });
+      });
+    },
+    removeWatchOrder: function (id) {
+      return $q(function (resolve, reject) {
+        $http.post('../app/php/remove-watch-order.php', { 'id': id })
+          .then(
+          function (response) {
+            resolve(response.data);
+          },
+          function (error) {
+            reject(error);
+          });
+      });
+    },
+    geoCodeAddress: function (address) {
+      return $q(function (resolve, reject) {
+
+        var params = {
+          address: address,
+        //  components: "administrative_area:Florida",  //only look for addresses in Florida
+          key: MAP_API_KEY
+        };
+
+        //encode query URL
+        var esc = encodeURIComponent;
+        var query = Object.keys(params)
+        .map(k => esc(k) + '=' + esc(params[k]))
+        .join('&');
+        $http.get('https://maps.googleapis.com/maps/api/geocode/json?' + query)
+          .then(
+          function (response) {
+            resolve(response.data);
+          },
+          function (error) {
+            reject(error);
+          });
+      });
+    },
+    updateMessage: function (id, officerId, title, message, description) {
+      return $q(function (resolve, reject) {
+          $http.post('../app/php/update-message.php', { 'id': id, 'officerId': officerId, 'title': title, 'message': message, 'description': description })
+            .then (
+              function(respoonse) { resolve(response.data); },
+              function(error) { reject(error); }
+            );
+      });
+    },
+    removeMessage: function (message_id) {
+      return $q(function (resolve, reject) {
+          $http.post('../app/php/delete-message.php', { 'id': message_id })
+            .then (
+              function(respoonse) { resolve(response.data); },
+              function(error) { reject(error); }
+            );
+      });
+    },
     resetPassword: function (id, reset_pass) {
       return $q(function (resolve, reject) {
         $http.post('../app/php/reset-password.php', { 'id': id, 'reset_pass': reset_pass })
@@ -331,30 +412,14 @@ supervisorModule.factory('dataService', function ($http, $q) {
 
 //SERVICE for officer controller
 officerModule.factory('dataService', function ($http, $q) {
-  return {
-    viewDocuments: function (user_id) {
+return {
+    viewDocuments: function (user_id, doc_category, $type) {
       return $q(function (resolve, reject) {
-        $http.post('../app/php/get-documents.php', {'type': 'active', 'user_id': user_id})
+        $http.post('../app/php/get-documents.php', {'type': $type, 'user_id': user_id, 'cat': doc_category })
           .then(
-          function (response) {
-            resolve(response.data);
-          },
-          function (error) {
-            reject(error);
+                function (response) { resolve(response.data); },
+                function (error) { reject(error); });
           });
-      });
-    },
-    viewArchivedDocuments: function (user_id) {
-      return $q(function (resolve, reject) {
-        $http.post('../app/php/get-documents.php', {'type': 'archived', 'user_id': user_id})
-          .then(
-          function (response) {
-            resolve(response.data);
-          },
-          function (error) {
-            reject(error);
-          });
-      });
     },
     downloadDocument: function (upload_name) {
       return $q(function (resolve, reject) {
@@ -381,9 +446,9 @@ officerModule.factory('dataService', function ($http, $q) {
           });
       });
     },
-    documentStatusUpdate: function (user_id, document_id, new_status) {
+    documentStatusUpdate: function (user_id, document_id, category_id, new_status) {
       return $q(function (resolve, reject) {
-        $http.post('../app/php/documentStatusUpdate.php', { 'user_id': user_id, 'document_id': document_id, 'new_status': new_status })
+        $http.post('../app/php/documentStatusUpdate.php', { 'user_id': user_id, 'document_id': document_id, 'category_id': category_id, 'new_status': new_status })
           .then(
           function (response) {
             console.log(response.data);

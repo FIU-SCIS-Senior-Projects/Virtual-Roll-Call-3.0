@@ -141,8 +141,26 @@
     background-color: #45b429;
   }
 
-  #map { height: 100%; }
+  #map {
+  height: 100%;
+}
 
-  #night-mode{
-    /*background-color: black;*/
-  }
+.table-hover tbody tr:hover td, .table-hover tbody tr:hover th {
+  background-color: #2e82f4;
+}
+.table-striped>tbody>tr:nth-child(odd):hover> td{
+  background-color: #2e82f4;
+}
+
+.night-mode.table-striped>tbody>tr:nth-child(odd):hover> td{
+  background-color: #2e82f4;
+}
+
+.night-mode.table-striped>tbody>tr:nth-child(odd)>td,
+tr.found {
+  background-color:#454545;
+}
+
+.gm-style-iw {
+   color:black !important;
+}

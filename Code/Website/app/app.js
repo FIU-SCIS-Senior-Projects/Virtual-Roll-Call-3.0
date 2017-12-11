@@ -38,19 +38,23 @@ adminModule.config(function($routeProvider){
 supervisorModule.config(function($routeProvider){
 	$routeProvider
 	.when('/upload', {
-		templateUrl: 'partials/manage-documents.html'
+		templateUrl: 'partials/manage-documents.html',
+		controller: 'supervisorCtrl'
 	})
 	.when('/manage-watch-orders', {
-		templateUrl: 'partials/manage-watch-orders.html'
+		templateUrl: 'partials/manage-watch-orders.html',
+		controller: 'supervisorCtrl'
 	})
-	.when('/freeText', {
-		templateUrl: 'partials/freeText.html'
+	.when('/manage-freetext', {
+		templateUrl: 'partials/manage-freetext.php'
 	})
 	.when('/reset', {
-		templateUrl: 'partials/reset-password.html'
+		templateUrl: 'partials/reset-password.html',
+		controller: 'supervisorCtrl'
 	})
 	.when('/password', {
-		templateUrl: 'partials/change-password.html'
+		templateUrl: 'partials/change-password.html',
+		controller: 'supervisorCtrl'
 	})
 	.when('/log',{
          templateUrl: 'partials/show-logs.html'

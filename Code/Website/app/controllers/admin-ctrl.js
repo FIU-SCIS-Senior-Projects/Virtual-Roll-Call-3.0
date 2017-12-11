@@ -35,6 +35,8 @@ adminModule.directive('mydatepickerto', function () {
 
 adminModule.controller('adminCtrl', ['$scope', 'dataService', 'localStorageService', '$window', '$controller', '$location', function($scope, dataService, localStorageService, $window, $controller, $location){
 
+  $("[data-toggle=popover]").popover();
+  $('[data-toggle="tooltip"]').tooltip();
   /***** GLOBALS *****/
   //get name from local storage for user profile customization
   var fname = localStorageService.get('fname');
@@ -70,19 +72,9 @@ adminModule.controller('adminCtrl', ['$scope', 'dataService', 'localStorageServi
     })
   }
 
-  $scope.logout = function(){
-    sharedCtrl.logout();
-  }
-
-  /***** GET ALL OFFCIERS *****/
-  $scope.getOfficers = function(){
-    sharedCtrl.getOfficers();
-  };
-
-  /***** GET DOCUMENT CATEGORIES ****/
-  $scope.getCategories = function(){
-    sharedCtrl.getCategories();
-  };
+  $scope.logout = function(){ sharedCtrl.logout(); }
+  $scope.getOfficers = function(){ sharedCtrl.getOfficers(); };
+  $scope.getCategories = function(){ sharedCtrl.getCategories(); };
 
   /***********************
   * Toggle between day and night mode*
@@ -192,14 +184,14 @@ adminModule.controller('adminCtrl', ['$scope', 'dataService', 'localStorageServi
                     $scope.alert.closeAll();
                     $scope.alert.addAlert('success', 'User successfully updated!');
                     sharedCtrl.getOfficers();
-                    window.location.reload();
-                    //$('#editModal').modal('hide');
+                    //window.location.reload();
+                    $('#editModal').modal('hide');
                   }
                   else{
                     $scope.alert.closeAll();
                     $scope.alert.addAlert('danger', 'Could not update user!');
-                    window.location.reload();
-                    //$('#editModal').modal('hide');
+                    //window.location.reload();
+                    $('#editModal').modal('hide');
                   }
                 },
                 function(error){
@@ -228,14 +220,11 @@ adminModule.controller('adminCtrl', ['$scope', 'dataService', 'localStorageServi
 
                   var file = $('#files')[0].files[0];
 
-                  if(file.type != "text/csv")
+                  if(file.type != "text/csv" && file.type != ".csv" && file.type != "application/vnd.ms-excel")
                   {
                     alert("The file must of type CSV.");
                     return;
                   }
-
-                  //var csvfile = document.getElementById("files").files[0];
-
                   Papa.parse(file, {
                     complete: function(results) {
                       $scope.$apply(function () {
@@ -318,11 +307,11 @@ adminModule.controller('adminCtrl', ['$scope', 'dataService', 'localStorageServi
                   return new Promise(function(resolve, reject) {
 
                     //get values from parsed user
-                    var first_name = user[0];
-                    var last_name = user[1];
-                    var username = user[2];
-                    var password = user[3];
-                    var role = user[4];
+                    var first_name = user[0].trim();
+                    var last_name = user[1].trim();
+                    var username = user[2].trim();
+                    var password = user[3].trim();
+                    var role = user[4].trim();
 
                     if(password.length < 8){
                       resolve(false);

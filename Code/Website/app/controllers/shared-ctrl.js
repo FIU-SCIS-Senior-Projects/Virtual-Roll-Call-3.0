@@ -10,15 +10,9 @@ sharedModule.controller('sharedCtrl', ['$scope', 'sharedService', 'localStorageS
   //alert functions (displays accordingly in views)
   self.alert = {
     alerts: [],
-    addAlert: function (type, msg) {
-      $scope.alert.alerts.push({ type: type, msg: msg });
-    },
-    closeAlert: function (index) {
-      $scope.alert.alerts.splice(index, 1);
-    },
-    closeAll: function () {
-      $scope.alert.alerts = [];
-    }
+    addAlert: function (type, msg) { $scope.alert.alerts.push({ type: type, msg: msg }); },
+    closeAlert: function (index) { $scope.alert.alerts.splice(index, 1); },
+    closeAll: function () { $scope.alert.alerts = []; }
   };
 
   self.logout = function () {
@@ -87,11 +81,45 @@ sharedModule.controller('sharedCtrl', ['$scope', 'sharedService', 'localStorageS
     }
   };
 
+  //Get all the documents Categories
+  self.getCategories = function ()
+  {
+      sharedService.getCategories()
+        .then(
+        function (data) {
+            var categories = [];
+            var doc_categories = [];
+            for (var x in data)
+            {
+                var tmp = new Object();
+                tmp.id = data[x].id;
+                tmp.name = data[x].name;
+                categories.push(tmp);
+                if ( data[x].name !== "Free Text")
+                  doc_categories.push(tmp);
+            }
+            $scope.categories = categories;
+            $scope.doc_categories = doc_categories;
+        },
+        function (error) {});
+  };
+
+  self.getPendingCount = function (id)
+  {
+      sharedService.getPendingCount( id )
+        .then( function (data) {
+              var dict = {};
+              for (var x in data)
+                  dict[ data[x].category ] = data[x].pending;
+              $scope.pending_count = dict;
+            },
+            function (error) { alert('Error: ' + error); });
+  };
+
   /***** GET ALL USERS *****/
   self.getOfficers = function () {
     sharedService.getOfficers()
-      .then(
-      function (data) {
+      .then( function (data) {
         //initialize an empty array to store results from the database
         var officers = [];
         //for each officer in the result
@@ -114,46 +142,25 @@ sharedModule.controller('sharedCtrl', ['$scope', 'sharedService', 'localStorageS
       });
   };
 
-  /***** GET ALL CATEGORIES *****/
-  self.getCategories = function () {
-    //getPendingDocuments();
-    sharedService.getCategories()
-      .then(
-      function (data) {
-        //initialize an empty array to store results from the database
-        var categories = [];
-        //for each category in the result
-        for (var x in data) {
-          //create an object and set object properties (i.e. categories data)
-          var tmp = new Object();
-          tmp.id = data[x].id;
-          tmp.name = data[x].name;
-          //store results in categories
-          categories.push(tmp);
-        }
-        //update value in view for use in ng-repeat (to populate)
-        $scope.categories = categories;
-      },
-      function (error) {
-        console.log('Error: ' + error);
-      });
-  };
-
   /***** GET ALL MESSAGES *****/
   self.getMessages = function() {
-    sharedService.getMessages()
+    var id = localStorageService.get('id');
+
+    sharedService.getMessages( id )
       .then(
         function (data) {
-
           var messages = [];
 
           for ( var x in data ) {
             var tmp = new Object();
             tmp.id = data[x].id;
-            tmp.officer_id = data[x].officer_id;
-            tmp.title = data[x].title;
-            tmp.created_at = data[x].createdAt;
-            tmp.udpated_at = data[x].updatedAt;
+            tmp.title = data[x].name;
+            tmp.message = data[x].message;
+            tmp.description = data[x].msg_description;
+            tmp.officer_id = data[x].created_by;
+            tmp.created_at = data[x].date;
+            tmp.updated_at = data[x].updated_at;
+            tmp.updated_by = data[x].updated_by;
               messages.push(tmp);
           }
           $scope.messages = messages;
@@ -170,14 +177,14 @@ sharedModule.controller('sharedCtrl', ['$scope', 'sharedService', 'localStorageS
       function (data) {
         //initialize an empty array to store results from the database
         var documents = [];
-
         //for each category in the result
         for (var x in data) {
           //create an object and set object properties (i.e. documents data)
           var tmp = new Object();
           tmp.id = data[x].id;
           tmp.name = data[x].name;
-          tmp.cat_name = data[x].cat_name;
+          tmp.cat_name = data[x].category;
+          tmp.catid = data[x].catid;
           tmp.date = data[x].date;
           tmp.pinned = data[x].pinned;
           tmp.uploadedBy = data[x].uploadedBy;
@@ -218,7 +225,7 @@ sharedModule.controller('sharedCtrl', ['$scope', 'sharedService', 'localStorageS
     }
     $scope.display_mode = self.getDisplayMode();
     $scope.night_mode = localStorageService.get('nightMode');
-    
+
     window.location.reload();
 
   };

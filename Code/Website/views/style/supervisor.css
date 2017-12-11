@@ -246,3 +246,16 @@ color: white !important;
 .ui-grid-selection-row-header-buttons{
   color: white !important;
 }
+
+.glyphicon-question-sign{
+  font-size: 25px;
+}
+
+.glyphicon-download{
+  font-size: 25px;
+  margin-left: 10px;
+}
+
+.popover{
+    max-width: 100%; /* Max Width of the popover (depending on the container!) */
+}

@@ -54,7 +54,7 @@
                 if ($_SESSION["officer_role"] == 'Administrator')
                     echo "<li><a href='admin-profile.php'>Administrator</a></li>";
                 if ($_SESSION["officer_role"] == 'Administrator' || $_SESSION["officer_role"] == 'Supervisor')
-                    echo "<li><a href='Supervisor-profile.php'>Supervisor</a></li>";
+                    echo "<li><a href='supervisor-profile.php'>Supervisor</a></li>";
             }
         ?>
           <li class='active'><a class='active'>Officer</a></li>

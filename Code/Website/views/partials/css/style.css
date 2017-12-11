@@ -66,6 +66,7 @@
     color: #606060;
 }
 .process-model li.active,
+.process-model li.night-mode,
 .process-model li.visited {
     color: #57b87b;
 }
@@ -106,10 +107,10 @@
     font-weight: normal
 }
 .process-model.contact-us-tab li::after  {
-    display: none; 
+    display: none;
 }
 .process-model.contact-us-tab li.visited i {
-    border-color: #e5e5e5; 
+    border-color: #e5e5e5;
 }
 
 
@@ -124,7 +125,7 @@
         top: 24px;
     }
 }
-@media screen and (max-width: 380px) { 
+@media screen and (max-width: 380px) {
     .process-model.more-icon-preocess li {
         width: 16%;
     }
